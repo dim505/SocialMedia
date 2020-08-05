@@ -1,0 +1,180 @@
+.MuiSnackbarContent-message {
+  position: relative;
+  margin: auto;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+body {
+  background: #f7f7f7;
+}
+
+/* NAV BAR STYLE  */
+.appBarShift {
+  width: calc(100% - 240px) !important ;
+  position: absolute !important;
+  right: 0 !important;
+  transition: width 0.25s !important;
+}
+
+.appBarClosed {
+  transition: width 0.25s !important;
+  width: 100% !important ;
+}
+
+.AppBarStyle {
+  z-index: 1300 !important;
+}
+
+.DrawerStyleClosed {
+  width: 60px;
+  transition: width 0.25s !important;
+}
+
+.CloseDrawerIcon {
+  position: relative;
+  left: 90px;
+}
+
+.DrawerStyle {
+  width: 240px;
+  transition: width 0.25s !important;
+}
+
+.search {
+  padding-right: 15px;
+  margin-left: 50px !important;
+  padding: 5px;
+  display: inline;
+  position: relative;
+  margin-left: 0;
+  margin-right: 16px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: padding-right 2s !important;
+}
+
+.search:hover {
+  padding-right: 150px;
+}
+
+.SearchIconContainer {
+  display: inline;
+}
+
+.SearchIcon {
+  margin-bottom: -5px;
+}
+
+body {
+  margin: 0px;
+}
+
+.GridContainer {
+  margin-top: 45px !important;
+}
+
+#PostStatus {
+  margin-left: 25px;
+}
+
+.PostIconStyle {
+  position: relative;
+  margin: auto;
+  margin-right: 0;
+}
+
+.TextAllignLeft {
+  text-align: left;
+}
+
+.ShareIconModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.AddPostInput {
+  width: 100%;
+}
+
+.AddPostModal {
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  width: 40%;
+}
+
+.PostCommentTitle {
+  font-size: 10px !important;
+}
+
+.PostCommentSubheader {
+  color: black !important;
+  font-size: 12px !important;
+}
+
+.PostCommentActionButton {
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  padding-top: 0 !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  padding-bottom: 0 !important;
+}
+
+.FavoriteIconStyle {
+  fill: red !important;
+}
+
+.FavoriteIconButton {
+  padding-right: 3px !important;
+}
+
+.NumFavorite {
+  color: #777;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.EditPostCommentButton {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.AvatarStyle {
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 36px !important;
+  margin: auto;
+}
+
+.EditProfileName {
+  padding-top: 15px !important;
+}
+
+.EditProfileCard {
+  padding: 15px !important;
+}
+
+.ImpactHeader {
+  background-color: #339cff;
+  padding-left: 5px;
+  text-align: left;
+  color: white;
+}
+
+.ProfileTitle {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 16px;
+  /* font-weight: 500; */
+  margin: 32px 32px 0;
+}
+
+.MainBodyStyle {
+  margin-left: 70px;
+}
