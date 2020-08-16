@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import LogInScreen from "./Components/LogIn/LogInScreen";
 import NavBar from "./Components/NavBar/NavBar";
 import MainFeed from "./Components/MainPage/MainFeed";
-import ProfileQuickStats from "./Components/ProfileQuickStats";
+import ProfileQuickStats from "./Components/ProfilePage/ProfileQuickStats";
 import "./Global.css";
+import { Route } from "react-router-dom";
+import PeoplePage from "./Components/PeoplePage/PeoplePage";
 //gets app data upon load
 class App extends Component {
   constructor(props) {
@@ -33,13 +35,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <LogInScreen />
-        <div className="MainBodyStyle">
-          <NavBar />
-          <MainFeed />
-          <p>PROFILE SECTION </p>
-          <ProfileQuickStats />
-        </div>
+        {1 === 2 ? (
+          <LogInScreen />
+        ) : (
+          <div className="MainBodyStyle">
+            <NavBar />
+            <Route exact path="/">
+              <MainFeed />
+            </Route>
+
+            <Route path="/Profile">
+              <p>PROFILE SECTION </p>
+              <ProfileQuickStats />
+            </Route>
+            <Route path="/People">
+              <PeoplePage />
+            </Route>
+          </div>
+        )}
       </div>
     );
   }

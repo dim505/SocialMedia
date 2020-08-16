@@ -17,9 +17,22 @@ import HomeIcon from "@material-ui/icons/Home";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PeopleIcon from "@material-ui/icons/People";
 import Slide from "@material-ui/core/Slide";
+import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckStatsEditProDiag";
+import { NavLink } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
+import Popover from "@material-ui/core/Popover";
+import SearchBar from "./SearchBar";
 
 export default class NavBar extends Component {
-  state = { OpenDrawer: false, ShowPage: "Home" };
+  state = {
+    OpenDrawer: false,
+    ShowPage: "Home",
+    PopOverAnchorEl: null,
+    SearchBarAnchorEl: null,
+    OpenDialog: false,
+    OpenSearchBarDropdown: false,
+    SearchTerm: "",
+  };
 
   OpenDrawer = () => {
     this.setState({
@@ -36,6 +49,30 @@ export default class NavBar extends Component {
   HandleMenuClick = (ShowPage) => {
     this.setState({
       ShowPage: ShowPage,
+    });
+  };
+
+  OpenPopOver = (event) => {
+    this.setState({
+      PopOverAnchorEl: event.currentTarget,
+    });
+  };
+
+  ClosePopOver = (event) => {
+    this.setState({
+      PopOverAnchorEl: null,
+    });
+  };
+
+  OpenDialog = () => {
+    this.setState({
+      OpenDialog: true,
+    });
+  };
+
+  CloseDialog = () => {
+    this.setState({
+      OpenDialog: false,
     });
   };
   render() {
@@ -57,29 +94,48 @@ export default class NavBar extends Component {
           <Divider />
 
           <List>
-            <ListItem button onClick={() => this.HandleMenuClick("Home")}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
+            <NavLink
+              exact={true}
+              className="navbar__link"
+              activeClassName="navbar__link--active"
+              to="/"
+            >
+              <ListItem button onClick={() => this.HandleMenuClick("Home")}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
 
-              <ListItemText primary="Home" />
-            </ListItem>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </NavLink>
 
-            <ListItem button onClick={() => this.HandleMenuClick("Profile")}>
-              <ListItemIcon>
-                <AccountCircleIcon />
-              </ListItemIcon>
+            <NavLink
+              className="navbar__link"
+              activeClassName="navbar__link--active"
+              to="/Profile"
+            >
+              <ListItem button onClick={() => this.HandleMenuClick("Profile")}>
+                <ListItemIcon>
+                  <AccountCircleIcon />
+                </ListItemIcon>
 
-              <ListItemText primary="Profile" />
-            </ListItem>
+                <ListItemText primary="Profile" />
+              </ListItem>
+            </NavLink>
 
-            <ListItem button onClick={() => this.HandleMenuClick("People")}>
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
+            <NavLink
+              className="navbar__link"
+              activeClassName="navbar__link--active"
+              to="/People"
+            >
+              <ListItem button onClick={() => this.HandleMenuClick("People")}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
 
-              <ListItemText primary="People" />
-            </ListItem>
+                <ListItemText primary="People" />
+              </ListItem>
+            </NavLink>
           </List>
         </Drawer>
         <AppBar
@@ -98,21 +154,47 @@ export default class NavBar extends Component {
               {" "}
               {this.state.ShowPage}
             </Typography>
-            <div className="search">
-              <div className="SearchIconContainer">
-                <SearchIcon
-                  classes={{
-                    root: "SearchIcon",
+
+            <SearchBar />
+            <div className={"NavIconsRight"}>
+              <div>
+                <IconButton
+                  onClick={(event) => {
+                    this.OpenPopOver(event);
                   }}
-                />
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                >
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </IconButton>
+                <Popover
+                  onClose={this.ClosePopOver}
+                  open={Boolean(this.state.PopOverAnchorEl)}
+                  anchorEl={this.state.PopOverAnchorEl}
+                >
+                  <List>
+                    <ListItem button onClick={() => this.OpenDialog()}>
+                      <ListItemText primary="My Account" />
+                    </ListItem>
+
+                    <ListItem
+                      button
+                      // onClick={() => this.HandleMenuClick("Profile")}
+                    >
+                      <ListItemText primary="Log Out" />
+                    </ListItem>
+                  </List>
+                </Popover>
               </div>
-              <InputBase
-                placeholder="Find posts and people...."
-                inputProps={{ "aria-label": "search" }}
-              />
             </div>
           </Toolbar>
         </AppBar>
+
+        <ProQckStatsEditProDiag
+          OpenDialog={this.state.OpenDialog}
+          CloseDialog={this.CloseDialog}
+        />
       </div>
     );
   }

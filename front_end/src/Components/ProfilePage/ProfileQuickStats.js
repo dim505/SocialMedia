@@ -8,12 +8,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import PostParent from "./MainPage/Post/PostParent";
+import PostParent from "../MainPage/Post/PostParent";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import ProfileQuickStatsEditProfile from "./ProfileQuickStatsEditProfile";
 
 export default class ProfileQuickStats extends Component {
   render() {
@@ -23,34 +24,7 @@ export default class ProfileQuickStats extends Component {
           <Grid item xs={2} />
 
           <Grid item xs={3}>
-            <Paper
-              classes={{
-                root: "EditProfileCard",
-              }}
-              square={false}
-              elevation={3}
-            >
-              <div className="AvatarCenter">
-                <Avatar
-                  classes={{
-                    root: "AvatarStyle",
-                  }}
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
-                />
-              </div>
-              <Typography
-                classes={{
-                  root: "EditProfileName",
-                }}
-                variant="h5"
-                gutterBottom
-              >
-                Bob
-              </Typography>
-
-              <Button color="primary">Edit Profile</Button>
-            </Paper>
+            <ProfileQuickStatsEditProfile />
           </Grid>
 
           <Grid item xs={3}>
