@@ -10,7 +10,7 @@ export default class PostMenu extends Component {
         anchorEl={this.props.anchorEl}
         keepMounted
         open={Boolean(this.props.anchorEl)}
-        onClose={this.ClosePostMenu}
+        onClose={this.props.ClosePostMenu}
       >
         <MenuItem onClick={() => this.props.HandlePostMenClick("Edit")}>
           Edit

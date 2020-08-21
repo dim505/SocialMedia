@@ -25,6 +25,13 @@ export default class PostParent extends Component {
     };
   }
 
+  handleClickAway = () => {
+    console.log("nein nein nein");
+    this.setState({
+      anchorEl: null,
+    });
+  };
+
   //function opens payment portal modal
   OpnModal = (ModalToOpen) => {
     this.setState({
@@ -152,6 +159,7 @@ export default class PostParent extends Component {
           DisableSharing={this.state.DisableSharing}
           HandlePostMenClick={this.HandlePostMenClick}
           DisableAddComments={this.state.DisableAddComments}
+          ClosePostMenu={this.ClosePostMenu}
         />
 
         <SnackBar

@@ -22,6 +22,7 @@ import { NavLink } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Popover from "@material-ui/core/Popover";
 import SearchBar from "./SearchBar";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 
 export default class NavBar extends Component {
   state = {
@@ -64,6 +65,18 @@ export default class NavBar extends Component {
     });
   };
 
+  OpenNotiPopOver = (event) => {
+    this.setState({
+      PopOverNotiAnchorEl: event.currentTarget,
+    });
+  };
+
+  CloseNotiPopOver = (event) => {
+    this.setState({
+      PopOverNotiAnchorEl: null,
+    });
+  };
+
   OpenDialog = () => {
     this.setState({
       OpenDialog: true,
@@ -94,13 +107,14 @@ export default class NavBar extends Component {
           <Divider />
 
           <List>
-            <NavLink
-              exact={true}
-              className="navbar__link"
-              activeClassName="navbar__link--active"
-              to="/"
-            >
-              <ListItem button onClick={() => this.HandleMenuClick("Home")}>
+            <NavLink exact={true} className="navbar__link" to="/">
+              <ListItem
+                classes={{
+                  root: this.state.ShowPage === "Home" ? "ActivePage" : "",
+                }}
+                button
+                onClick={() => this.HandleMenuClick("Home")}
+              >
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -114,7 +128,13 @@ export default class NavBar extends Component {
               activeClassName="navbar__link--active"
               to="/Profile"
             >
-              <ListItem button onClick={() => this.HandleMenuClick("Profile")}>
+              <ListItem
+                classes={{
+                  root: this.state.ShowPage === "Profile" ? "ActivePage" : "",
+                }}
+                button
+                onClick={() => this.HandleMenuClick("Profile")}
+              >
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
@@ -128,7 +148,13 @@ export default class NavBar extends Component {
               activeClassName="navbar__link--active"
               to="/People"
             >
-              <ListItem button onClick={() => this.HandleMenuClick("People")}>
+              <ListItem
+                classes={{
+                  root: this.state.ShowPage === "People" ? "ActivePage" : "",
+                }}
+                button
+                onClick={() => this.HandleMenuClick("People")}
+              >
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
@@ -160,6 +186,17 @@ export default class NavBar extends Component {
               <div>
                 <IconButton
                   onClick={(event) => {
+                    this.OpenNotiPopOver(event);
+                  }}
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                >
+                  <NotificationsNoneIcon fontSize="default" />
+                </IconButton>
+
+                <IconButton
+                  onClick={(event) => {
                     this.OpenPopOver(event);
                   }}
                   edge="start"
@@ -168,6 +205,7 @@ export default class NavBar extends Component {
                 >
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                 </IconButton>
+                {/*Avatar pop over menu for nav bars*/}
                 <Popover
                   onClose={this.ClosePopOver}
                   open={Boolean(this.state.PopOverAnchorEl)}
@@ -185,6 +223,17 @@ export default class NavBar extends Component {
                       <ListItemText primary="Log Out" />
                     </ListItem>
                   </List>
+                </Popover>
+                {/*Notifications pop over menu */}
+                <Popover
+                  classes={{
+                    paper: "NavNotiPopOver",
+                  }}
+                  onClose={this.CloseNotiPopOver}
+                  open={Boolean(this.state.PopOverNotiAnchorEl)}
+                  anchorEl={this.state.PopOverNotiAnchorEl}
+                >
+                  <div className="NotiContent">All Caught Up! </div>
                 </Popover>
               </div>
             </div>

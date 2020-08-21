@@ -15,18 +15,18 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 export default class SearchBar extends Component {
   state = {
     SearchTerm: "",
-    SearchBarAnchorEl: null
+    SearchBarAnchorEl: null,
   };
 
   HandleChange = async (event) => {
     console.log(event.currentTarget);
     await this.setState({
-      SearchTerm: event.target.value
+      SearchTerm: event.target.value,
     });
 
     if (this.state.SearchTerm !== "" && this.state.SearchBarAnchorEl === null) {
       this.setState({
-        SearchBarAnchorEl: document.getElementsByClassName("search")[0]
+        SearchBarAnchorEl: document.getElementsByClassName("search")[0],
       });
     }
   };
@@ -35,14 +35,14 @@ export default class SearchBar extends Component {
 
   CloseSearchPopOver = (event) => {
     this.setState({
-      SearchBarAnchorEl: null
+      SearchBarAnchorEl: null,
     });
   };
 
   handleClickAway = () => {
     this.setState({
       SearchTerm: "",
-      SearchBarAnchorEl: null
+      SearchBarAnchorEl: null,
     });
   };
 
@@ -58,13 +58,13 @@ export default class SearchBar extends Component {
           <div className="SearchIconContainer">
             <SearchIcon
               classes={{
-                root: "SearchIcon"
+                root: "SearchIcon",
               }}
             />
           </div>
           <InputBase
             classes={{
-              root: "SearchInputBase"
+              root: "SearchInputBase",
             }}
             value={this.state.SearchTerm}
             fullwidth={true}
@@ -72,7 +72,7 @@ export default class SearchBar extends Component {
               this.HandleChange(event);
             }}
             id="SeachField"
-            placeholder="Find your favorite posts and people...."
+            placeholder="Start typing to find your favorite posts and people...."
             inputProps={{ "aria-label": "search" }}
           />
         </div>
@@ -80,7 +80,7 @@ export default class SearchBar extends Component {
           <ClickAwayListener onClickAway={this.handleClickAway}>
             <Paper
               classes={{
-                root: "SearchBarDropDown"
+                root: "SearchBarDropDown",
               }}
             >
               <List>
