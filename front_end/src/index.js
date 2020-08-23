@@ -9,10 +9,10 @@ import createAuth0Client from "@auth0/auth0-spa-js";
 const auth0 = async () =>
   createAuth0Client({
     domain: "dev-5wttvoce.auth0.com",
-    client_id: "xJ48BWaU5z5q31hoKaBgv7Izq7UIJAXA",
+    client_id: "YHMMlUZVF7EnyuEatZKI641Jt9hT7QaN",
     //Redirect URL when authenication suceeds
     redirect_uri: `${process.env.REACT_APP_FrontEndSiteURL}`,
-    audience: "https://ReactAmsApi.com",
+    audience: "https://SocialMedia.com",
   });
 
 auth0().then((auth) => {

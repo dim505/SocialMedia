@@ -4,6 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 export default class LogInScreen extends Component {
+  //redirects user to log in page
+  Login = () => {
+    this.props.auth.loginWithRedirect();
+  };
+
   render() {
     return (
       <div>

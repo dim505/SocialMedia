@@ -18,6 +18,7 @@ class App extends Component {
 
     this.state = {
       ShowLoader: true,
+      authenticated: false,
     };
   }
 
@@ -25,7 +26,12 @@ class App extends Component {
   componentDidMount() {
     document.title = "Social Media";
     this.isUserAuthenticated();
+  }
 
+  //checks to see if user is authenticated
+  async isUserAuthenticated() {
+    const isLoggedIn = await this.props.auth.isAuthenticated();
+    this.setState({ authenticated: isLoggedIn });
     setTimeout(() => {
       this.setState({
         ShowLoader: false,
@@ -33,23 +39,14 @@ class App extends Component {
     }, 3000);
   }
 
-  //checks to see if user is authenticated
-  async isUserAuthenticated() {
-    const isLoggedIn = await this.props.auth.isAuthenticated();
-    this.setState({ authenticated: isLoggedIn });
-    setTimeout(() => this.setState({ ShowBody: true }), 3000);
-  }
-
-  //redirects user to log in page
-  Login = () => {
-    this.props.auth.loginWithRedirect();
-  };
-
   render() {
     return (
       <div className="App">
-        {1 === 2 ? (
-          <LogInScreen />
+        {this.state.authenticated ||
+        !window.location.search.includes("code=") ? (
+          <Fade collapse>
+            <LogInScreen auth={this.props.auth} />
+          </Fade>
         ) : (
           <div>
             <Fade collapse unmountOnExit when={this.state.ShowLoader}>
@@ -63,7 +60,7 @@ class App extends Component {
                 !this.state.ShowLoader ? "MainBodyStyleFade" : ""
               }`}
             >
-              <NavBar />
+              <NavBar auth={this.props.auth} />
               <Route exact path="/">
                 <MainFeed />
               </Route>

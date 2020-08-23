@@ -23,6 +23,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Popover from "@material-ui/core/Popover";
 import SearchBar from "./SearchBar";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import Tooltip from "@material-ui/core/Tooltip";
 
 export default class NavBar extends Component {
   state = {
@@ -88,6 +89,13 @@ export default class NavBar extends Component {
       OpenDialog: false,
     });
   };
+
+  //logs user out of application
+  Logout = () => {
+    this.props.auth.logout({
+      returnTo: `${process.env.REACT_APP_FrontEndSiteURL}`,
+    });
+  };
   render() {
     return (
       <div>
@@ -116,7 +124,9 @@ export default class NavBar extends Component {
                 onClick={() => this.HandleMenuClick("Home")}
               >
                 <ListItemIcon>
-                  <HomeIcon />
+                  <Tooltip title="Home">
+                    <HomeIcon />
+                  </Tooltip>
                 </ListItemIcon>
 
                 <ListItemText primary="Home" />
@@ -136,7 +146,9 @@ export default class NavBar extends Component {
                 onClick={() => this.HandleMenuClick("Profile")}
               >
                 <ListItemIcon>
-                  <AccountCircleIcon />
+                  <Tooltip title="Profile">
+                    <AccountCircleIcon />
+                  </Tooltip>
                 </ListItemIcon>
 
                 <ListItemText primary="Profile" />
@@ -158,8 +170,9 @@ export default class NavBar extends Component {
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-
-                <ListItemText primary="People" />
+                <Tooltip title="People">
+                  <ListItemText primary="People" />
+                </Tooltip>
               </ListItem>
             </NavLink>
           </List>
@@ -216,10 +229,7 @@ export default class NavBar extends Component {
                       <ListItemText primary="My Account" />
                     </ListItem>
 
-                    <ListItem
-                      button
-                      // onClick={() => this.HandleMenuClick("Profile")}
-                    >
+                    <ListItem button onClick={() => this.Logout()}>
                       <ListItemText primary="Log Out" />
                     </ListItem>
                   </List>

@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\scratch\\SocialMedia\\BackEnd\\AMSBackEnd.csproj",
-        "projectName": "AMSBackEnd",
+        "projectName": "SocialMedia",
         "projectPath": "C:\\scratch\\SocialMedia\\BackEnd\\AMSBackEnd.csproj",
         "packagesPath": "C:\\Users\\bob\\.nuget\\packages\\",
         "outputPath": "C:\\scratch\\SocialMedia\\BackEnd\\obj\\",

@@ -15,12 +15,20 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import ProfileQuickStatsEditProfile from "./ProfileQuickStatsEditProfile";
+import BackgroundBanner from "../SharedComponents/BackgroundBanner";
+import download from "../download.jpg";
 
 export default class ProfileQuickStats extends Component {
   render() {
     return (
       <div>
-        <Grid container>
+        <BackgroundBanner picture={download} PictureSize="384px" />
+        <Grid
+          container
+          classes={{
+            container: "ProfileQuickStatGrid",
+          }}
+        >
           <Grid item xs={2} />
 
           <Grid item xs={3}>

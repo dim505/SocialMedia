@@ -14,18 +14,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
- 
-
-
 
 namespace AMSBackEnd
 {
     public class Startup
     {
-
-
-
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,8 +30,6 @@ namespace AMSBackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
@@ -50,17 +41,11 @@ namespace AMSBackEnd
 
                 });
             });
-
-
-
-
-
-
             services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
 
 
-            string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            string domain = "https://dev-5wttvoce.auth0.com/";
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,33 +55,13 @@ namespace AMSBackEnd
                 //where authenication server lives
                 options.Authority = domain;
 
-                options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.Audience = "https://SocialMedia.com";
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = ClaimTypes.NameIdentifier
                 };
             });
-
-
-
-            // Add Hangfire services.
-            /*services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    UsePageLocksOnDequeue = true,
-                    DisableGlobalLocks = true
-                })); */
-
-            // Add the processing server as IHostedService
-            //services.AddHangfireServer();
 
 
 
@@ -117,21 +82,7 @@ namespace AMSBackEnd
                 app.UseDeveloperExceptionPage();
                 builder.AddUserSecrets<Startup>();
             }
-
-
-
-
-
             app.UseRouting();
-
-            // app.UseHangfireDashboard();
-
-
-
-
-
-
-
             app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthentication();
             app.UseAuthorization();
