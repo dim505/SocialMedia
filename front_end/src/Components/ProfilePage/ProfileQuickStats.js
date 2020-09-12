@@ -1,24 +1,16 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import PostParent from "../MainPage/Post/PostParent";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import Context from "../SharedComponents/context";
 import ProfileQuickStatsEditProfile from "./ProfileQuickStatsEditProfile";
 import BackgroundBanner from "../SharedComponents/BackgroundBanner";
 import download from "../download.jpg";
+import ProfileImpact from "./ProfileImpact";
+import PostParent from "../MainPage/Post/PostParent";
 
 export default class ProfileQuickStats extends Component {
+  static contextType = Context;
+
   render() {
     return (
       <div>
@@ -28,88 +20,27 @@ export default class ProfileQuickStats extends Component {
           classes={{
             container: "ProfileQuickStatGrid",
           }}
+          justify="center"
         >
-          <Grid item xs={2} />
-
-          <Grid item xs={3}>
+          <Grid item lg={4} md={4} sm={6} xs={12}>
             <ProfileQuickStatsEditProfile />
           </Grid>
 
-          <Grid item xs={3}>
-            <Paper square={false} elevation={3}>
-              <Typography
-                classes={{
-                  root: "ImpactHeader",
-                }}
-                variant="h6"
-                gutterBottom
-              >
-                Impact
-              </Typography>
-
-              <List component="nav" aria-label="main mailbox folders">
-                <ListItem button>
-                  <ListItemIcon>
-                    <FavoriteIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="0 Like" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <ShareIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="0 Share" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <MailIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="0 Publish" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <GroupAddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="0 Following" />
-                </ListItem>
-
-                <ListItem button>
-                  <ListItemIcon>
-                    <AccountCircleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="0 Follwers" />
-                </ListItem>
-              </List>
-            </Paper>
+          <Grid item lg={4} mg={4} sm={6} xs={12}>
+            <ProfileImpact />
           </Grid>
-          <Grid item xs={3}>
-            <Paper square={false} elevation={3}>
-              {" "}
-              nein nine ine{" "}
-            </Paper>
-          </Grid>
-
-          <Grid item xs={1} />
-
-          <div className="ProfileTitle"> Bobs Posts</div>
         </Grid>
-
-        <Grid container>
-          <Grid item>
-            <PostParent />
-          </Grid>
-
-          <Grid item>
-            <PostParent />
-          </Grid>
-
-          <Grid item>
-            <PostParent />
-          </Grid>
-
-          <Grid item>
-            <PostParent />
-          </Grid>
+        <div className="ProfileTitle"> Bobs Posts</div>
+        <Grid spacing={1} container>
+          {this.context.Posts.length === 0 ? (
+            <h1>No Posts..... Please add some </h1>
+          ) : (
+            this.context.Posts.map((post) => (
+              <Grid item lg={4} md={6} xs={12}>
+                <PostParent post={post} />
+              </Grid>
+            ))
+          )}
         </Grid>
       </div>
     );

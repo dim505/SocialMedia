@@ -5,7 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import SharedModal from "../../SharedComponents/SharedModal";
 import SharePost from "./PostComponents/SharePost";
 import PostComment from "./PostComponents/PostComment";
-import AddPostModal from "../AddPostModal";
+import PostModal from "../PostModal";
 import AddPostComment from "./PostComponents/AddPostComment";
 import PostMenu from "./PostComponents/PostMenu";
 import Post from "./PostComponents/Post";
@@ -26,7 +26,6 @@ export default class PostParent extends Component {
   }
 
   handleClickAway = () => {
-    console.log("nein nein nein");
     this.setState({
       anchorEl: null,
     });
@@ -80,7 +79,6 @@ export default class PostParent extends Component {
   };
 
   HandlePostMenClick = (ButtonClicked) => {
-    console.log(ButtonClicked);
     if (ButtonClicked === "DisableSharing") {
       this.setState({
         DisableSharing: !this.state.DisableSharing,
@@ -107,8 +105,8 @@ export default class PostParent extends Component {
   RenderModalComp = () => {
     if (this.state.ModalToOpen === "EditModal") {
       return (
-        <div className="AddPostModal ">
-          <AddPostModal CloseModal={this.CloseModal} />
+        <div className="PostModal ">
+          <PostModal CloseModal={this.CloseModal} />
         </div>
       );
     } else {
@@ -132,6 +130,7 @@ export default class PostParent extends Component {
           DisableSharing={this.state.DisableSharing}
           DisableAddComments={this.state.DisableAddComments}
           HandleAddCommentClick={this.HandleAddCommentClick}
+          post={this.props.post}
         />
         <Collapse in={this.state.AddComment} timeout="auto" unmountOnExit>
           <Divider />

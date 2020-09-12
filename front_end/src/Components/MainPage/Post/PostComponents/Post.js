@@ -19,7 +19,7 @@ export default class Post extends Component {
           action={
             <div>
               <IconButton
-                onClick={e => this.props.OpnPostMenu(e)}
+                onClick={(e) => this.props.OpnPostMenu(e)}
                 aria-label="settings"
               >
                 <MoreVertIcon />
@@ -27,28 +27,28 @@ export default class Post extends Component {
             </div>
           }
           classes={{
-            root: "TextAllignLeft"
+            root: "TextAllignLeft",
           }}
           title="BIB BOB"
-          subheader="September 14, 2016 | Public"
+          subheader={this.props.post.dateCreated + " | Public"}
         />
         <CardContent>
           {" "}
           <Typography
             classes={{
-              root: "TextAllignLeft"
+              root: "TextAllignLeft",
             }}
             variant="body2"
             component="p"
           >
-            Nein Nein Nien
+            {this.props.post.postContent}
           </Typography>
         </CardContent>
 
         <CardActions disableSpacing>
           <IconButton
             classes={{
-              root: "FavoriteIconButton"
+              root: "FavoriteIconButton",
             }}
             onClick={() => this.props.HandleFavoritePost()}
             aria-label="add to favorites"
@@ -56,7 +56,7 @@ export default class Post extends Component {
             <FavoriteBorderIcon
               classes={{
                 root:
-                  this.props.PostFavorited === true ? "FavoriteIconStyle" : ""
+                  this.props.PostFavorited === true ? "FavoriteIconStyle" : "",
               }}
             />
           </IconButton>

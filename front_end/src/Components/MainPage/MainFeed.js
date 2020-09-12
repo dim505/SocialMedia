@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import AddNewFeedButton from "./AddPostButton";
 import PostParent from "./Post/PostParent";
-import EditPostComment from "./Post/PostComponents/EditPostComment";
+import Context from "../SharedComponents/context";
 
 export default class MainFeed extends Component {
+  static contextType = Context;
+
   render() {
+    console.log(this.context);
     return (
       <Grid
         classes={{
@@ -13,17 +16,22 @@ export default class MainFeed extends Component {
         }}
         container={true}
         spacing={3}
+        justify="center"
       >
-        <Grid item xs={4} />
-        <Grid item xs={4}>
-          <AddNewFeedButton />
-        </Grid>
-        <Grid item xs={4} />
-
-        <Grid item xs={12}>
-          <PostParent />
-        </Grid>
-        <Grid item xs={12} />
+        <Grid container={true} spacing={3} justify="center">
+          <Grid justify="center" item>
+            <AddNewFeedButton />
+          </Grid>
+        </Grid>{" "}
+        {this.context.Posts.length === 0 ? (
+          <h1>No Posts..... Please add some </h1>
+        ) : (
+          this.context.Posts.map((post) => (
+            <Grid item lg={4} md={4} sm={6} xs={12}>
+              <PostParent post={post} />
+            </Grid>
+          ))
+        )}
       </Grid>
     );
   }

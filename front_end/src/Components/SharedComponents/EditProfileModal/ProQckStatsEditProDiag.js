@@ -73,7 +73,6 @@ export default class ProQckStatsEditProDiag extends Component {
             <Tooltip title="Click To Add Profile Photo">
               <AddAPhotoOutlinedIcon
                 onClick={() => {
-                  console.log("test");
                   this.setState({
                     ShowPhotoUpload: true,
                   });
@@ -95,7 +94,6 @@ export default class ProQckStatsEditProDiag extends Component {
             <Tooltip title="Click To Upload Banner Photo">
               <AddAPhotoOutlinedIcon
                 onClick={() => {
-                  console.log("test");
                   this.setState({
                     ShowPhotoUpload: true,
                   });

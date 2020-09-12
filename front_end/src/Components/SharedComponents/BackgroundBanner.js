@@ -2,10 +2,9 @@ import React, { Component } from "react";
 
 export default class BackgroundBanner extends Component {
   state = {
-    AddPostCommentVal: ""
+    AddPostCommentVal: "",
   };
   render() {
-    debugger;
     const Styles = {
       Background: {
         backgroundImage: `url(${this.props.picture})`,
@@ -15,8 +14,8 @@ export default class BackgroundBanner extends Component {
         backgroundRepeat: "no repeat",
         backgroundPosition: "center",
         backgroundColor: "#f7f7f7",
-        borderRadius: 25
-      }
+        borderRadius: 25,
+      },
     };
 
     return <div style={Styles.Background}> </div>;

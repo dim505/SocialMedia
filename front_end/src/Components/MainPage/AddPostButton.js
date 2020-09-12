@@ -3,7 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import SharedModal from "../SharedComponents/SharedModal";
-import AddPostModal from "./AddPostModal";
+import PostModal from "./PostModal";
 
 export default class AddPostButton extends Component {
   state = {
@@ -38,8 +38,8 @@ export default class AddPostButton extends Component {
           OpnModal={this.state.OpnModal}
           CloseModal={this.CloseModal}
         >
-          <div className="AddPostModal ">
-            <AddPostModal CloseModal={this.CloseModal} />
+          <div className="PostModal ">
+            <PostModal CloseModal={this.CloseModal} />
           </div>
         </SharedModal>
       </div>

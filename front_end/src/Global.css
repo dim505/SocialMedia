@@ -117,7 +117,7 @@ body {
   width: 100%;
 }
 
-.AddPostModal {
+.PostModal {
   position: absolute;
   top: 35%;
   left: 30%;
@@ -237,6 +237,24 @@ body {
   color: black;
   padding: 4px;
   transition: all 0.5s ease-in-out !important;
+}
+
+@media only screen and (max-width: 500px) {
+  .ChangeAvatarPic {
+    left: 45% !important;
+  }
+  .UploadBannerIcon {
+    left: 78% !important;
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .ChangeAvatarPic {
+    left: 42% !important;
+  }
+  .UploadBannerIcon {
+    left: 75% !important;
+  }
 }
 
 .ChangeAvatarPic:hover {

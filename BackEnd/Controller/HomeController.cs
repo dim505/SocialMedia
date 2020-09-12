@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using SocialMedia.model;
 using WebApplication3.Modal;
 
 namespace SocialMedia.Controller
@@ -250,7 +251,28 @@ namespace SocialMedia.Controller
 
 
 
+        // gets profile images for conversation list s
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetPosts()
+        {
 
+
+            string ConnStr = GetDbConnString();
+            string Auth0IDAuthor = GetUserAuth0ID();
+            List<GetPosts> getPosts = new List<GetPosts>();
+
+
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                getPosts = db.Query<GetPosts>("select * from SM_Posts where Auth0IDAuthor = @Auth0IDAuthor",
+                  new { Auth0IDAuthor = new DbString { Value = Auth0IDAuthor, IsFixedLength = false, IsAnsi = true } }).ToList();
+            }
+            return Ok(getPosts);
+
+
+
+        }
 
 
 

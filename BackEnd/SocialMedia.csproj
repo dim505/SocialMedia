@@ -33,9 +33,5 @@
     <PackageReference Include="Twilio" Version="5.44.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="model\" />
-  </ItemGroup>
-
 
 </Project>

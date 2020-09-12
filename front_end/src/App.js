@@ -9,9 +9,10 @@ import PeoplePage from "./Components/PeoplePage/PeoplePage";
 import Logo from "./Components/SharedComponents/SocialMediaLogo.png";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Fade from "react-reveal/Fade";
-import Slide from "@material-ui/core/Slide";
+import SnackBar from "./Components/SharedComponents/SnackBar";
+import Context from "./Components/SharedComponents/context";
+import { ApiCall } from "./Components/SharedComponents/ApiCall";
 
-//gets app data upon load
 class App extends Component {
   constructor(props) {
     super(props);
@@ -19,12 +20,16 @@ class App extends Component {
     this.state = {
       ShowLoader: true,
       authenticated: false,
+      Posts: [],
     };
   }
 
   //sets title, get data, check if visiting user is authenticated
-  componentDidMount() {
+  async componentDidMount() {
+    window.getTokenSilently = await this.props.auth.getTokenSilently();
     document.title = "Social Media";
+    this.LoadAzureStorage();
+    this.GetPosts();
     this.isUserAuthenticated();
   }
 
@@ -39,43 +44,100 @@ class App extends Component {
     }, 3000);
   }
 
+  GetPosts = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts`
+    ).then((results) => {
+      this.setState({
+        Posts: results,
+      });
+    });
+  };
+  //function opens notification alert
+  OpenNoti = (message) => {
+    this.setState({
+      OpenNoti: true,
+      Message: message,
+    });
+  };
+  //function closes  notification alert
+  CloseNoti = () => {
+    this.setState({
+      OpenNoti: false,
+    });
+  };
+
+  LoadAzureStorage = () => {
+    var blobSasUrl =
+      "https://shellstorage123.blob.core.windows.net/?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-10-01T00:21:49Z&st=2020-09-01T16:21:49Z&spr=https&sig=j71oprnbo95XLKLoIA9Cpxn53%2BbYuRdFpjGIASM6rxc%3D";
+    const {
+      BlobServiceClient,
+      StorageSharedKeyCredential,
+    } = require("@azure/storage-blob");
+
+    window.blobServiceClient = new BlobServiceClient(blobSasUrl);
+  };
+
   render() {
     return (
-      <div className="App">
-        {this.state.authenticated ||
-        !window.location.search.includes("code=") ? (
-          <Fade collapse>
-            <LogInScreen auth={this.props.auth} />
-          </Fade>
-        ) : (
-          <div>
-            <Fade collapse unmountOnExit when={this.state.ShowLoader}>
-              <div className={`Loader `}>
-                <LinearProgress />
-                <img src={Logo} />
-              </div>
+      <Context.Provider
+        value={{
+          test: "123",
+          OpenNoti: (message) => this.OpenNoti(message),
+          CloseNoti: () => this.CloseNoti(),
+          GetPosts: () => this.GetPosts(),
+          Posts: this.state.Posts,
+        }}
+      >
+        <div className="App">
+          {!this.state.authenticated ||
+          !window.location.search.includes("code=") ? (
+            <Fade collapse>
+              <LogInScreen auth={this.props.auth} />
             </Fade>
-            <div
-              className={`MainBodyStyle ${
-                !this.state.ShowLoader ? "MainBodyStyleFade" : ""
-              }`}
-            >
-              <NavBar auth={this.props.auth} />
-              <Route exact path="/">
-                <MainFeed />
-              </Route>
+          ) : (
+            <div>
+              <Fade collapse unmountOnExit when={this.state.ShowLoader}>
+                <div className={`Loader `}>
+                  <LinearProgress />
+                  <img src={Logo} />
+                </div>
+              </Fade>
+              <div
+                className={`MainBodyStyle ${
+                  !this.state.ShowLoader ? "MainBodyStyleFade" : ""
+                }`}
+              >
+                <NavBar auth={this.props.auth} />
+                <Route exact path="/">
+                  <Fade collapse>
+                    <MainFeed />
+                  </Fade>
+                </Route>
 
-              <Route path="/Profile">
-                <p>PROFILE SECTION </p>
-                <ProfileQuickStats />
-              </Route>
-              <Route path="/People">
-                <PeoplePage />
-              </Route>
+                <Route path="/Profile">
+                  <Fade collapse>
+                    <p>PROFILE SECTION </p>
+                    <ProfileQuickStats />
+                  </Fade>
+                </Route>
+                <Route path="/People">
+                  <Fade collapse>
+                    <PeoplePage />
+                  </Fade>
+                </Route>
+
+                <SnackBar
+                  OpenNoti={this.state.OpenNoti}
+                  CloseNoti={this.CloseNoti}
+                  message={this.state.Message}
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </Context.Provider>
     );
   }
 }
