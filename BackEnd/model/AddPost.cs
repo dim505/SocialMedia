@@ -1,5 +1,5 @@
 ﻿namespace WebApplication3.Modal
-{
+{	//used in addpost endpoint 
     public class AddPost
     {
         public string PostGuid { get; set; }

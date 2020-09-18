@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
+
+//component contains menu related post options 
 export default class PostMenu extends Component {
   render() {
     return (

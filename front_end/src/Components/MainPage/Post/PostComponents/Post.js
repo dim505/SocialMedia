@@ -10,6 +10,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MessageIcon from "@material-ui/icons/Message";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
+//component contains the majority of the post includeing profile pic, post content and icons/FavoriteBorder
 export default class Post extends Component {
   render() {
     return (
@@ -56,13 +57,13 @@ export default class Post extends Component {
             <FavoriteBorderIcon
               classes={{
                 root:
-                  this.props.PostFavorited === true ? "FavoriteIconStyle" : "",
+                  this.props.state.PostFavorited === true
+                    ? "FavoriteIconStyle"
+                    : "",
               }}
             />
           </IconButton>
-          <div className="NumFavorite">
-            {this.props.PostFavorited === true ? this.props.NumberOfFav : ""}
-          </div>
+          <div className="NumFavorite">{this.props.post.postLikeCount}</div>
           <div className="PostIconStyle">
             <IconButton
               onClick={() => this.props.HandleAddCommentClick()}
@@ -70,7 +71,7 @@ export default class Post extends Component {
             >
               <MessageIcon />
             </IconButton>
-            {this.props.DisableSharing === true ? null : (
+            {this.props.state.DisableSharing === true ? null : (
               <IconButton onClick={this.props.OpnModal} aria-label="share">
                 <ShareIcon />
               </IconButton>

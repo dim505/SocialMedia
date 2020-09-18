@@ -2,14 +2,40 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grow from "@material-ui/core/Grow";
+import { ApiCall } from "../../../SharedComponents/ApiCall";
 
+//component shows the edit comment
 export default class EditPostComment extends Component {
   state = {
-    Post: "edit post "
+    PostComment: "edit post ",
   };
 
-  handleChange = newState => {
+  handleChange = (newState) => {
     this.setState(newState);
+  };
+
+
+  componentDidMount = () => {
+    this.setState({
+      Post: this.props.comment.commentContent
+    });
+  };
+  
+  //submits comment values
+  Submit = () => {
+    var MyData = {};
+    MyData.AddComment = {
+      CommentGuid: this.props.comment.CommentGuid,
+    };
+
+    ApiCall(
+      "Post",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/EditComment`,
+      MyData
+    ).then(() => {
+      this.props.HandleAddCommentClick();
+      this.context.OpenNoti("Comment was Added");
+    });
   };
 
   render() {
@@ -23,13 +49,13 @@ export default class EditPostComment extends Component {
             placeholder=""
             helperText=""
             fullWidth
-            onChange={event => {
-              this.handleChange({ Post: event.target.value });
+            onChange={(event) => {
+              this.handleChange({ PostComment: event.target.value });
             }}
-            value={this.state.Post}
+            value={this.state.PostComment}
             margin="normal"
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
           />
           <div className="EditPostCommentButton">
@@ -40,8 +66,8 @@ export default class EditPostComment extends Component {
               Cancel
             </Button>
             <Button
-              onClick={() => this.props.CloseEditComment("Update Secuessful")}
-              disabled={Boolean(!this.state.Post.trim())}
+              onClick={() => this.Submit()}
+              disabled={Boolean(!this.state.PostComment.trim())}
               color="primary"
             >
               Update

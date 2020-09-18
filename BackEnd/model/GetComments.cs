@@ -4,14 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace SocialMedia.model
-{	//used in GetPosts endpoint.  returns the posts for a user.
-    public class GetPosts
+{
+    public class GetComments
     {
-        public string Auth0IDAuthor { get; set; }
-        public string PostGuid { get; set; }
-        public string DateCreated { get; set; }
-        public string PostContent { get; set; }
 
-        public string PostLikeCount { get; set; }
+        public string PostGuid { get; set; }
+        public string Auth0IDCommentAuthor { get; set; }
+        public string DateCreated { get; set; }
+        public string CommentContent { get; set; }
+        public string CommentGuid { get; set; }
+
+
     }
 }

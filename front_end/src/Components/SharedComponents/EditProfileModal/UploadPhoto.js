@@ -14,6 +14,8 @@ import { DropzoneArea } from "material-ui-dropzone";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
 import Fade from "@material-ui/core/Fade";
 
+
+//this component displays the upload file area when uploading a profile picture or banner picture
 export default class UploadPhoto extends Component {
   render() {
     return (

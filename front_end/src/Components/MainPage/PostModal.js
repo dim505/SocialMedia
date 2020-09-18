@@ -15,30 +15,61 @@ import moment from "moment";
 import { uuidv4 } from "../SharedComponents/SharedFunctions";
 import Context from "../SharedComponents/context";
 
+
+//component loads the first add post or edit post modal
 export default class PostModal extends Component {
   static contextType = Context;
   state = { Post: "" };
 
-  SubmitPost = () => {
-    var MyData = {};
-    var PostGuid = uuidv4();
-    MyData.AddPost = {
-      PostGuid: PostGuid,
-      PostContent: this.state.Post,
-      DateCreated: moment().format("LL"),
-    };
-
-    ApiCall(
-      "Post",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/AddPost`,
-      MyData
-    ).then(() => {
-      this.props.CloseModal();
-      debugger;
-      this.context.OpenNoti("Post was Added");
-    });
+  componentDidMount = () => {
+    if (this.props.ModalType === "Edit") {
+      this.setState({
+        Post: this.props.post.postContent,
+      });
+    }
   };
 
+	//submits the post information to the appropriate end point 
+  SubmitPost = () => {
+    if (this.props.ModalType === "Edit") {
+      var MyData = {};
+      var PostGuid = uuidv4();
+      MyData.UpdatePostData = {
+        PostGuid: this.props.post.postGuid,
+        PostContent: this.state.Post,
+        DateCreated: this.props.post.dateCreated,
+      };
+
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/UpdatePost`,
+        MyData
+      ).then(() => {
+        this.props.CloseModal();
+        this.context.GetPosts();
+        this.context.OpenNoti("Post was Updated");
+      });
+    } else {
+      var MyData = {};
+      MyData.AddPost = {
+        PostGuid: uuidv4(),
+        PostContent: this.state.Post,
+        DateCreated: moment().format("LL"),
+      };
+
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/AddPost`,
+        MyData
+      ).then(() => {
+        this.props.CloseModal();
+        this.context.GetPosts();
+        this.context.OpenNoti("Post was Added");
+      });
+    }
+  };
+
+	//keeps track of user input as they type text in
   HandleUpdate = (NewState) => {
     this.setState(NewState);
   };
@@ -56,6 +87,7 @@ export default class PostModal extends Component {
           />
           <CardContent>
             <TextField
+              value={this.state.Post}
               onChange={(event) =>
                 this.HandleUpdate({ Post: event.target.value })
               }

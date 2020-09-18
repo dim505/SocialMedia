@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-//${process.env.REACT_APP_BackEndUrl}/api/Payment/GetPaymentHistory/${this.state.results[0].email}
+//refactored api calls to a seperate module
 export const ApiCall = async (Method, url, PostData) => {
   const BearerToken = window.getTokenSilently;
   var result;
@@ -23,6 +23,16 @@ export const ApiCall = async (Method, url, PostData) => {
       }).then((results) => {
         result = results.data;
       });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  } else if (Method === "Delete") {
+    try {
+      await Axios.delete(`${url}`, {
+        headers: { Authorization: `bearer ${BearerToken}` },
+      }).then((results) => (result = results.data));
+
       return result;
     } catch (error) {
       console.log(error);

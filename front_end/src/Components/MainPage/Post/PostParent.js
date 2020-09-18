@@ -9,29 +9,34 @@ import PostModal from "../PostModal";
 import AddPostComment from "./PostComponents/AddPostComment";
 import PostMenu from "./PostComponents/PostMenu";
 import Post from "./PostComponents/Post";
-import SnackBar from "../../SharedComponents/SnackBar";
+import Context from "../../SharedComponents/context";
+import { ApiCall } from "../../SharedComponents/ApiCall";
 
+//this houses the all components related to the post component
 export default class PostParent extends Component {
+  static contextType = Context;
   constructor(props) {
     super(props);
     this.state = {
       AddComment: false,
-      OpnModal: false,
       anchorEl: false,
       DisableSharing: false,
       DisableAddComments: false,
       PostFavorited: false,
       NumberOfFav: 10,
+      Comments: [],
     };
   }
 
+  componentDidMount = () => {};
+  //hides menu if user clicks away
   handleClickAway = () => {
     this.setState({
       anchorEl: null,
     });
   };
 
-  //function opens payment portal modal
+  //function opens modal
   OpnModal = (ModalToOpen) => {
     this.setState({
       OpnModal: true,
@@ -39,45 +44,66 @@ export default class PostParent extends Component {
     });
   };
 
+  //closes any modal related to this component
   CloseModal = () => {
     this.setState({
       OpnModal: false,
     });
   };
 
+  //open menu containing options related to the post
   OpnPostMenu = (event) => {
-    debugger;
     this.setState({
       anchorEl: event.currentTarget,
     });
   };
-
+  //closes menu containing options related to the post
   ClosePostMenu = () => {
     this.setState({
       anchorEl: null,
     });
   };
 
-  //function open alert notification
-  OpenNoti = (message) => {
-    this.setState({
-      OpenNoti: true,
-      Message: message,
-    });
-  };
-  //function closes alert notification
-  CloseNoti = () => {
-    this.setState({
-      OpenNoti: false,
+  GetComments = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetComments/${this.props.post.postGuid}`
+    ).then((results) => {
+      this.setState({
+        Comments: results,
+      });
     });
   };
 
+  //tracks that the user liked a post or not
   HandleFavoritePost = () => {
-    this.setState({
-      PostFavorited: !this.state.PostFavorited,
-    });
+    if (this.state.PostFavorited === false) {
+      var MyData = {};
+      MyData.AddLikedComment = {
+        PostGuid: this.props.post.postGuid,
+        PostContent: this.state.Post,
+      };
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/LikeComment`,
+        MyData
+      ).then(() => {
+        this.context.GetPosts();
+      });
+    } else {
+      ApiCall(
+        "Delete",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/DeleteLikedPost/${this.props.post.postGuid}`
+      ).then((results) => {
+        this.context.GetPosts();
+        this.setState({
+          PostFavorited: !this.state.PostFavorited,
+        });
+      });
+    }
   };
 
+  //this function handles various clicks the related to the post menu
   HandlePostMenClick = (ButtonClicked) => {
     if (ButtonClicked === "DisableSharing") {
       this.setState({
@@ -90,23 +116,36 @@ export default class PostParent extends Component {
     } else if (ButtonClicked === "Edit") {
       this.OpnModal("EditModal");
     } else if (ButtonClicked === "Delete") {
-      this.OpenNoti("Post Deleted");
+      ApiCall(
+        "Delete",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/DeletePost/${this.props.post.postGuid}`
+      ).then((results) => {
+        this.context.OpenNoti("Post Deleted");
+        this.context.GetPosts();
+      });
     }
 
     this.ClosePostMenu();
   };
 
+  //this displays the comments the post
   HandleAddCommentClick = () => {
+    this.GetComments();
     this.setState({
       AddComment: !this.state.AddComment,
     });
   };
 
+  //this function renders the appropriate modal
   RenderModalComp = () => {
     if (this.state.ModalToOpen === "EditModal") {
       return (
         <div className="PostModal ">
-          <PostModal CloseModal={this.CloseModal} />
+          <PostModal
+            post={this.props.post}
+            ModalType="Edit"
+            CloseModal={this.CloseModal}
+          />
         </div>
       );
     } else {
@@ -117,32 +156,58 @@ export default class PostParent extends Component {
       );
     }
   };
+
+  RenderLikedPosts = () => {
+    /*
+    let products = this.state.IntialProducts;
+    //returns all products that match the search phrase
+    products = products.filter((product) => {
+      return (
+        product.name
+          .toLowerCase()
+          .search(SearchTextBoxVal.toString().toLowerCase()) !== -1
+      );
+    });
+    //sets state of products to be displayed
+    this.setState({ products: products });
+    */
+    console.log(this.context.Likes);
+    var likes = this.context.Likes;
+    likes = likes.filter((like) => {
+      return like.toLowerCase;
+    });
+  };
+
   render() {
+    this.RenderLikedPosts();
     return (
       <Card>
         <Post
-          PostFavorited={this.state.PostFavorited}
-          NumberOfFav={this.state.NumberOfFav}
-          AddComment={this.state.AddComment}
+          state={this.state}
           OpnPostMenu={this.OpnPostMenu}
           HandleFavoritePost={this.HandleFavoritePost}
           OpnModal={this.OpnModal}
-          DisableSharing={this.state.DisableSharing}
-          DisableAddComments={this.state.DisableAddComments}
           HandleAddCommentClick={this.HandleAddCommentClick}
           post={this.props.post}
         />
         <Collapse in={this.state.AddComment} timeout="auto" unmountOnExit>
           <Divider />
-
-          <PostComment OpenNoti={this.OpenNoti} />
-
+          {this.state.Comments.map((comment) => (
+            <PostComment
+              GetComments={this.GetComments}
+              comment={comment}
+              OpenNoti={this.OpenNoti}
+            />
+          ))}
           <Divider />
 
           {this.state.DisableAddComments === true ? (
             <div> </div>
           ) : (
-            <AddPostComment />
+            <AddPostComment
+              HandleAddCommentClick={this.HandleAddCommentClick}
+              post={this.props.post}
+            />
           )}
         </Collapse>
 
@@ -154,17 +219,12 @@ export default class PostParent extends Component {
         </SharedModal>
 
         <PostMenu
+          post={this.props.post}
           anchorEl={this.state.anchorEl}
           DisableSharing={this.state.DisableSharing}
           HandlePostMenClick={this.HandlePostMenClick}
           DisableAddComments={this.state.DisableAddComments}
           ClosePostMenu={this.ClosePostMenu}
-        />
-
-        <SnackBar
-          OpenNoti={this.state.OpenNoti}
-          CloseNoti={this.CloseNoti}
-          message={this.state.Message}
         />
       </Card>
     );

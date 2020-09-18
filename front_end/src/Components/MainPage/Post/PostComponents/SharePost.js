@@ -19,6 +19,8 @@ import {
         <OKShareCount url={window.shareUrl} />
         <TumblrShareCount url={window.shareUrl} />
         <VKShareCount url={window.shareUrl} />*/
+		
+//this component shows the share icons when the share button is clicked 
 export default class SharePost extends Component {
   render() {
     window.shareUrl = "google.com";

@@ -6,15 +6,19 @@ import { Link } from "react-router-dom";
 import FindPeopleParent from "./FindPeople/FindPeopleParent";
 import FollowingPeopleParent from "./FollowingPeople/FollowingPeopleParent";
 import Followers from "./Followers/Followers";
+
+//component contains all the components for the People page 
 export default class PeoplePage extends Component {
   state = { value: 1 };
 
+	//keeps track of which tab is being selected 
   handleChange = (event, newValue) => {
     this.setState({
       value: newValue,
     });
   };
 
+	//depending on the tab selected. It will render a different component 
   RenderSubPage = () => {
     if (this.state.value === 0) {
       return <FindPeopleParent />;

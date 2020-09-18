@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import ProfileCardFollow from "../../SharedComponents/ProfileCardFollow";
 
+
+//contains component related the find people tab in the people page
 export default class FindPeopleParent extends Component {
   render() {
     return (

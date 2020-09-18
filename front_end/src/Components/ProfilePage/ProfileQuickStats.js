@@ -8,6 +8,7 @@ import download from "../download.jpg";
 import ProfileImpact from "./ProfileImpact";
 import PostParent from "../MainPage/Post/PostParent";
 
+//this component is the parent that houses the people page 
 export default class ProfileQuickStats extends Component {
   static contextType = Context;
 

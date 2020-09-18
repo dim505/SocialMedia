@@ -14,6 +14,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
+
+//this component shows come quick stats regarding the users profile
 export default class ProfileImpact extends Component {
   render() {
     return (

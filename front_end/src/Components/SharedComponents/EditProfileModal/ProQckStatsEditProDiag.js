@@ -18,6 +18,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import BackgroundBanner from "../BackgroundBanner";
 import download from "../../download.jpg";
 
+//this component shows the user information and a way to upload photos/banners 
 export default class ProQckStatsEditProDiag extends Component {
   state = {
     ShowPhotoUpload: false,
@@ -25,6 +26,7 @@ export default class ProQckStatsEditProDiag extends Component {
     Message: "",
   };
 
+//closes the photo dropzone
   ClosePhotoUpload = () => {
     this.setState({
       ShowPhotoUpload: false,
@@ -47,6 +49,7 @@ export default class ProQckStatsEditProDiag extends Component {
     });
   };
 
+//this closes out the account user infomation modal
   HandleUpdateClick = () => {
     //this.props.OpenNoti2("Profile Updated");
     this.props.CloseDialog();

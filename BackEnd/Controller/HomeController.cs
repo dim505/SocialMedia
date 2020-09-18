@@ -35,7 +35,7 @@ namespace SocialMedia.Controller
         }
 
 
-
+        //function used to get auth0ID for signed in user 
         public string GetUserAuth0ID()
         {
 
@@ -56,7 +56,7 @@ namespace SocialMedia.Controller
         }
 
 
-
+        //function used to get DB string for User 
         public string GetDbConnString()
         {
 
@@ -67,7 +67,7 @@ namespace SocialMedia.Controller
 
 
         /*!!!!!!!!!!!!!!!!!!!!API CALLS FOR HOME PAGE!!!!!!!!!!!!!!*/
-
+        //this endpoint adds a post to the database 
         [HttpPost]
         [Route("[action]")]
         public IActionResult AddPost([FromBody] JObject data)
@@ -98,7 +98,7 @@ namespace SocialMedia.Controller
 
 
 
-
+        //this end point deletes a post from the database 
         [HttpDelete]
         [Route("[action]/{PostGuid}")]
         public IActionResult DeletePost(string PostGuid)
@@ -117,70 +117,138 @@ namespace SocialMedia.Controller
             return Ok();
         }
 
-
+        //this endpoint updates a post from the database
         [HttpPost]
-        [Route("[action]")]
-        public IActionResult UpdatePost([FromBody] JObject data)
+        [Route("[action]/{UpdatePostAction}")]
+        public IActionResult UpdatePost([FromBody] JObject data, string UpdatePostAction)
         {
+
+            /*
             string ConnStr = GetDbConnString();
             UpdatePost updatePost = data["UpdatePostData"].ToObject<UpdatePost>();
+
+            string Sql = "";
+            var Variables = new
+            {
+            };
+            if (UpdatePostAction == "UpdatePost")
+            {
+
+                Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
+
+
+                Variables = new
+                {
+                    NewPostContent = "",
+                    PostGuid = ""
+
+                };
+
+            }
+            else if (UpdatePostAction == "DisableComments")
+            {
+                Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
+                Variables = new
+                {
+
+
+
+                };
+            }
+            else if (UpdatePostAction == "DisableSharing")
+            {
+
+
+                Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
+
+            }
+
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
-                int result = db.Execute(Sql, new
-                {
-                    NewPostContent = updatePost.PostContent,
-                    PostGuid = updatePost.PostGuid
 
-                });
-            }
+                int result = db.Execute(Sql, Variables
+                );
+            }*/
             return Ok();
         }
 
 
+        // this endpoint gets all posts related to the user 
+        [HttpGet]
+        [Route("[action]/{PostGuid}")]
+        public IActionResult GetComments(string PostGuid)
+        {
+            string ConnStr = GetDbConnString();
+            List<GetComments> getComments = new List<GetComments>();
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                getComments = db.Query<GetComments>("select * from SM_Posts_Comments where PostGuid = @PostGuid",
+                  new { PostGuid = new DbString { Value = PostGuid, IsFixedLength = false, IsAnsi = true } }).ToList();
+            }
+            return Ok(getComments);
+        }
 
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetLikes()
+        {
+            string Auth0IDWhoLiked = GetUserAuth0ID();
+            string ConnStr = GetDbConnString();
+            List<WhoLikedPost> whoLikedPost = new List<WhoLikedPost>();
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                whoLikedPost = db.Query<WhoLikedPost>("select * from SM_LikeCommentTable where Auth0IDWhoLiked = @Auth0IDWhoLiked",
+                  new { Auth0IDWhoLiked = new DbString { Value = Auth0IDWhoLiked, IsFixedLength = false, IsAnsi = true } }).ToList();
+            }
+            return Ok(whoLikedPost);
+        }
+
+
+        //this endpoint adds a comment to the database 
         [HttpPost]
         [Route("[action]")]
         public IActionResult AddComment([FromBody] JObject data)
         {
+
             string ConnStr = GetDbConnString();
             string Auth0CommentAuthor = GetUserAuth0ID();
             AddComment addComment = data["AddComment"].ToObject<AddComment>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string Sql = "insert into SM_Posts_Comments values (@PostGuid, @Auth0IDCommentAuthor, @DateCreated, @CommentContent)";
+                string Sql = "insert into SM_Posts_Comments values (@PostGuid, @Auth0IDCommentAuthor, @DateCreated, @CommentContent,@CommentGuid)";
 
                 db.Execute(Sql, new
                 {
                     PostGuid = addComment.PostGuid,
-                    Auth0CommentAuthor = Auth0CommentAuthor,
+                    Auth0IDCommentAuthor = Auth0CommentAuthor,
                     DateCreated = addComment.DateCreated,
-                    CommentContent = addComment.CommentContent
+                    CommentContent = addComment.CommentContent,
+                    CommentGuid = addComment.CommentGuid
 
                 });
             }
             return Ok();
         }
 
-
+        //this endpoint edits a comment in the database 
         [HttpPost]
         [Route("[action]")]
         public IActionResult EditComment([FromBody] JObject data)
         {
             string ConnStr = GetDbConnString();
             string Auth0CommentAuthor = GetUserAuth0ID();
-            AddComment addComment = data["EditComment"].ToObject<AddComment>();
+            EditComment EditComment = data["EditComment"].ToObject<EditComment>();
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string Sql = "insert into SM_Posts_Comments values (@PostGuid, @Auth0IDCommentAuthor, @DateCreated, @CommentContent)";
+                string Sql = "Update SM_Posts_Comments " +
+                                    "set  CommentContent = @CommentContent" +
+                                    "   where CommentGuid = @CommentGuid)";
 
                 db.Execute(Sql, new
                 {
-                    PostGuid = addComment.PostGuid,
-                    Auth0CommentAuthor = Auth0CommentAuthor,
-                    DateCreated = addComment.DateCreated,
-                    CommentContent = addComment.CommentContent
+
+                    CommentContent = EditComment.CommentContent
 
                 });
             }
@@ -188,6 +256,7 @@ namespace SocialMedia.Controller
 
         }
 
+        //this endpoint deletes a comment in the database 
         [HttpDelete]
         [Route("[action]/{CommentGuid}")]
         public IActionResult DeleteComment(string CommentGuid)
@@ -206,12 +275,14 @@ namespace SocialMedia.Controller
             return Ok();
         }
 
+
+        //this endpoint adds a like to a post 
         [HttpPost]
         [Route("[action]")]
         public IActionResult LikeComment([FromBody] JObject data)
         {
             string ConnStr = GetDbConnString();
-            string Auth0CommentAuthor = GetUserAuth0ID();
+            string Auth0IDWhoLiked = GetUserAuth0ID();
             AddLikedComment addLikedComment = data["AddLikedComment"].ToObject<AddLikedComment>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
@@ -219,7 +290,7 @@ namespace SocialMedia.Controller
                 db.Execute(Sql, new
                 {
 
-                    Auth0IDWhoLiked = addLikedComment.Auth0IDWhoLiked,
+                    Auth0IDWhoLiked = Auth0IDWhoLiked,
                     PostGuid = addLikedComment.PostGuid
 
                 });
@@ -227,7 +298,7 @@ namespace SocialMedia.Controller
             return Ok();
         }
 
-
+        //this endpoint deletes the like on a post 
         [HttpDelete]
         [Route("[action]/{PostGuid}")]
         public IActionResult DeleteLikedPost(string PostGuid)
@@ -251,7 +322,7 @@ namespace SocialMedia.Controller
 
 
 
-        // gets profile images for conversation list s
+        // this endpoint gets all posts related to the user 
         [HttpGet]
         [Route("[action]")]
         public IActionResult GetPosts()
@@ -265,7 +336,7 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getPosts = db.Query<GetPosts>("select * from SM_Posts where Auth0IDAuthor = @Auth0IDAuthor",
+                getPosts = db.Query<GetPosts>("select Auth0IDAuthor, PostGuid, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a where Auth0IDAuthor = Auth0IDAuthor group by Auth0IDAuthor, PostGuid, DateCreated, PostContent",
                   new { Auth0IDAuthor = new DbString { Value = Auth0IDAuthor, IsFixedLength = false, IsAnsi = true } }).ToList();
             }
             return Ok(getPosts);
@@ -273,23 +344,6 @@ namespace SocialMedia.Controller
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

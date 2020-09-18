@@ -25,6 +25,7 @@ import SearchBar from "./SearchBar";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Tooltip from "@material-ui/core/Tooltip";
 
+//component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
 export default class NavBar extends Component {
   state = {
     OpenDrawer: false,
@@ -36,42 +37,47 @@ export default class NavBar extends Component {
     SearchTerm: "",
   };
 
+  //this function open nav drawer to see page names
   OpenDrawer = () => {
     this.setState({
       OpenDrawer: !this.state.OpenDrawer,
     });
   };
-
+  //this function closes nav drawer to see page names
   CloseDrawer = () => {
     this.setState({
       OpenDrawer: !this.state.OpenDrawer,
     });
   };
 
+  //handles the clicks from the nav drawer. Shows what page the user clicked
   HandleMenuClick = (ShowPage) => {
     this.setState({
       ShowPage: ShowPage,
     });
   };
 
+  //handles button click on profile picture to display the the menu pop over
   OpenPopOver = (event) => {
     this.setState({
       PopOverAnchorEl: event.currentTarget,
     });
   };
 
+  //closes the menu pop over for the menu that hangs over  the profile picture
   ClosePopOver = (event) => {
     this.setState({
       PopOverAnchorEl: null,
     });
   };
 
+  //opens the Notifications pop over menu
   OpenNotiPopOver = (event) => {
     this.setState({
       PopOverNotiAnchorEl: event.currentTarget,
     });
   };
-
+  //closes the Notifications pop over menu
   CloseNotiPopOver = (event) => {
     this.setState({
       PopOverNotiAnchorEl: null,

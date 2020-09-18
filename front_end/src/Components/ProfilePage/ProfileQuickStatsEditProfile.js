@@ -7,6 +7,8 @@ import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckS
 import BackgroundBanner from "../SharedComponents/BackgroundBanner";
 import SnackBar from "../SharedComponents/SnackBar";
 
+
+//this shows the edit account into card when going to the people page 
 export default class ProfileQuickStatsEditProfile extends Component {
   state = {
     OpenDialog: false,
@@ -14,12 +16,14 @@ export default class ProfileQuickStatsEditProfile extends Component {
     Message: "",
   };
 
+  //opens dialog to edit the user profile information
   OpenDialog = () => {
     this.setState({
       OpenDialog: true,
     });
   };
 
+	//closes dialog to edit the user profile information
   CloseDialog = () => {
     this.setState({
       OpenDialog: false,

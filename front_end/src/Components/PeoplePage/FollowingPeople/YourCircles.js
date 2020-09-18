@@ -7,7 +7,7 @@ import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import ProfilePic from "../../download.jpg";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
-
+//shows a list of the people you are following 
 export default class YourCircles extends Component {
   state = {
     OpenList: false,

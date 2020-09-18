@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import SharedModal from "../SharedComponents/SharedModal";
 import PostModal from "./PostModal";
 
+//button used to open modal to add a new post
 export default class AddPostButton extends Component {
   state = {
     OpnModal: false,

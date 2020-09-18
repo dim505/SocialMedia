@@ -12,7 +12,10 @@ import Fade from "react-reveal/Fade";
 import SnackBar from "./Components/SharedComponents/SnackBar";
 import Context from "./Components/SharedComponents/context";
 import { ApiCall } from "./Components/SharedComponents/ApiCall";
+import Typography from "@material-ui/core/Typography";
+import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
 
+//parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +33,7 @@ class App extends Component {
     document.title = "Social Media";
     this.LoadAzureStorage();
     this.GetPosts();
+    this.GetLikedPosts();
     this.isUserAuthenticated();
   }
 
@@ -44,6 +48,7 @@ class App extends Component {
     }, 3000);
   }
 
+  //gets all the posts related to the main page
   GetPosts = () => {
     ApiCall(
       "Get",
@@ -51,6 +56,17 @@ class App extends Component {
     ).then((results) => {
       this.setState({
         Posts: results,
+      });
+    });
+  };
+
+  GetLikedPosts = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetLikes`
+    ).then((results) => {
+      this.setState({
+        Likes: results,
       });
     });
   };
@@ -68,6 +84,7 @@ class App extends Component {
     });
   };
 
+  //loads the azure services needed for photo upload
   LoadAzureStorage = () => {
     var blobSasUrl =
       "https://shellstorage123.blob.core.windows.net/?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-10-01T00:21:49Z&st=2020-09-01T16:21:49Z&spr=https&sig=j71oprnbo95XLKLoIA9Cpxn53%2BbYuRdFpjGIASM6rxc%3D";
@@ -88,6 +105,7 @@ class App extends Component {
           CloseNoti: () => this.CloseNoti(),
           GetPosts: () => this.GetPosts(),
           Posts: this.state.Posts,
+          Likes: this.state.Likes,
         }}
       >
         <div className="App">
@@ -134,6 +152,16 @@ class App extends Component {
                   message={this.state.Message}
                 />
               </div>
+
+              <div className="TurnToLandScape">
+                {" "}
+                <Typography variant="h2" gutterBottom>
+                  Please turn your device to landscape to view this application
+                </Typography>
+                <ScrollUpButton />
+              </div>
+
+              <ScrollUpButton />
             </div>
           )}
         </div>

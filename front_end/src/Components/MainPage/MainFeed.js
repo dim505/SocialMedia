@@ -4,6 +4,8 @@ import AddNewFeedButton from "./AddPostButton";
 import PostParent from "./Post/PostParent";
 import Context from "../SharedComponents/context";
 
+
+//displays all the component on the main page / home page 
 export default class MainFeed extends Component {
   static contextType = Context;
 

@@ -5,21 +5,11 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckStatsEditProDiag";
 
+
+//this card shows the person who you are following info card 
 export default class ProfileCardFollow extends Component {
   state = {
     IsFollow: false,
-  };
-
-  OpenDialog = () => {
-    this.setState({
-      OpenDialog: true,
-    });
-  };
-
-  CloseDialog = () => {
-    this.setState({
-      OpenDialog: false,
-    });
   };
 
   render() {

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import ProfileCardFollow from "../../SharedComponents/ProfileCardFollow";
 import Grid from "@material-ui/core/Grid";
 
+
+//compoent shows the people you are following 
 export default class Followers extends Component {
   render() {
     return (
