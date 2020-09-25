@@ -17,41 +17,96 @@ import SnackBar from "../SnackBar";
 import Tooltip from "@material-ui/core/Tooltip";
 import BackgroundBanner from "../BackgroundBanner";
 import download from "../../download.jpg";
+import { ApiCall } from "../ApiCall";
+import { Formik } from "formik";
+import { EditProfileInfoForm } from "./EditProfileInfoForm";
+import * as Yup from "yup";
+import Context from "../context";
+const validationSchema = Yup.object({
+  FullName: Yup.string("Please Enter Your Name").required("Name is Required"),
+});
 
-//this component shows the user information and a way to upload photos/banners 
+//this component shows the user information and a way to upload photos/banners
 export default class ProQckStatsEditProDiag extends Component {
+  static contextType = Context;
   state = {
+    FileTypeBeingUploaded: "",
     ShowPhotoUpload: false,
-    OpenNoti: false,
     Message: "",
+    ProfileUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
+    BannerUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
   };
 
-//closes the photo dropzone
+  //closes the photo dropzone
   ClosePhotoUpload = () => {
     this.setState({
       ShowPhotoUpload: false,
     });
 
-    this.OpenNoti("Profile Photo Uploaded");
+    this.context.OpenNoti("Profile Photo Uploaded");
   };
 
-  //function opens notification alert
-  OpenNoti = (message) => {
-    this.setState({
-      OpenNoti: true,
-      Message: message,
-    });
+  ClosePhotoUpload = (Filename) => {
+    var MyData = {};
+
+    if (this.state.FileTypeBeingUploaded === "BannerPhoto") {
+      MyData.AccountInfo = {
+        BannerPhotoUrl: Filename,
+      };
+
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfilePhoto`,
+        MyData
+      ).then(() => {
+        this.setState({
+          ShowPhotoUpload: false,
+          ProfileUrl:
+            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+            Filename,
+        });
+        this.context.OpenNoti("Banner Photo Uploaded");
+      });
+    } else if (this.state.FileTypeBeingUploaded === "ProfilePhoto") {
+      MyData.AccountInfo = {
+        ProfilePhotoUrl: Filename,
+      };
+
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateBannerPhoto`,
+        MyData
+      ).then(() => {
+        this.setState({
+          ShowPhotoUpload: false,
+          BannerUrl:
+            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+            Filename,
+        });
+      });
+    }
+
+    //""
+    this.context.OpenNoti("Profile Photo Uploaded");
   };
-  //function closes  notification alert
-  CloseNoti = () => {
-    this.setState({
-      OpenNoti: false,
+
+  submitValues = (values) => {
+    console.log(values);
+    var MyData = {};
+    ApiCall(
+      "Post",
+      `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfileInfo`,
+      MyData
+    ).then(() => {
+      this.props.CloseDialog();
+      this.context.OpenNoti("Profile Information Updated");
     });
   };
 
-//this closes out the account user infomation modal
+  //this closes out the account user infomation modal
   HandleUpdateClick = () => {
-    //this.props.OpenNoti2("Profile Updated");
     this.props.CloseDialog();
   };
 
@@ -64,14 +119,17 @@ export default class ProQckStatsEditProDiag extends Component {
         aria-describedby="alert-dialog-description"
       >
         <DialogContent>
-          <BackgroundBanner picture={download} PictureSize="200px" />
+          <BackgroundBanner
+            picture={this.state.BannerUrl}
+            PictureSize="200px"
+          />
           <div className="Avatar_Center">
             <Avatar
               classes={{
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
-              src={ProfilePic}
+              src={this.state.ProfileUrl}
             />
             <Tooltip title="Click To Add Profile Photo">
               <AddAPhotoOutlinedIcon
@@ -107,44 +165,31 @@ export default class ProQckStatsEditProDiag extends Component {
               />
             </Tooltip>
           </div>
-          <Paper
-            classes={{
-              root: "EditProfileModalForm",
+
+          <Formik
+            enableReinitialize={true}
+            initialValues={{
+              FullName: "123",
+              CompanyName: "",
+              Twitter: "",
+              FacebookPage: "",
+              WebAddress: "",
             }}
-          >
-            <Typography variant="h5" gutterBottom>
-              Personal Information
-            </Typography>
-            <TextField fullWidth id="standard-basic" label="Full Name" />
-            <TextField fullWidth id="standard-basic" label="Tagline" />
-            <TextField fullWidth id="standard-basic" label="Company Name" />
-            <TextField fullWidth id="standard-basic" label="Twitter" />
-            <TextField fullWidth id="standard-basic" label="Facebook Page" />
-            <TextField fullWidth id="standard-basic" label="Web Address" />
-          </Paper>
+            validationSchema={validationSchema}
+            onSubmit={this.submitValues}
+            render={(props) => (
+              <EditProfileInfoForm
+                CloseDialog={this.props.CloseDialog}
+                {...props}
+              />
+            )}
+          />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.CloseDialog}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.HandleUpdateClick}
-            color="primary"
-            autoFocus
-          >
-            Update
-          </Button>
-        </DialogActions>
 
         <UploadPhoto
+          FileTypeBeingUploaded={this.state.FileTypeBeingUploaded}
           ClosePhotoUpload={this.ClosePhotoUpload}
           ShowPhotoUpload={this.state.ShowPhotoUpload}
-        />
-
-        <SnackBar
-          OpenNoti={this.state.OpenNoti}
-          CloseNoti={this.CloseNoti}
-          message={this.state.Message}
         />
       </Dialog>
     );

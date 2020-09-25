@@ -1,0 +1,83 @@
+.Avatar_Center {
+  margin-top: -30px;
+}
+
+.AvatarStyle {
+  border: solid 2px;
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 36px !important;
+  margin: auto;
+}
+
+
+.UploadBannerIcon {
+  background-color: white;
+  left: 85%;
+  border-radius: 50%;
+  display: inline-block;
+  top: -350px;
+  z-index: 3000;
+  position: relative;
+  box-shadow: 0px 0px 2px 5px black;
+  color: black;
+  padding: 4px;
+  transition: all 0.5s ease-in-out !important;
+}
+
+.UploadBannerIcon:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+}
+
+
+
+.ChangeAvatarPic {
+  background-color: white;
+  left: 47%;
+  border-radius: 50%;
+  display: inline-block;
+  top: -65px;
+  z-index: 3000;
+  position: relative;
+  box-shadow: 0px 0px 2px 5px black;
+  color: black;
+  padding: 4px;
+  transition: all 0.5s ease-in-out !important;
+}
+
+@media only screen and (max-width: 500px) {
+  .ChangeAvatarPic {
+    left: 45% !important;
+  }
+  .UploadBannerIcon {
+    left: 78% !important;
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .ChangeAvatarPic {
+    left: 42% !important;
+  }
+  .UploadBannerIcon {
+    left: 75% !important;
+  }
+}
+
+.ChangeAvatarPic:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+}
+
+
+
+.EditProfileModalForm {
+  margin-left: 22px;
+  margin-right: 22px;
+  padding: 25px;
+}
+
+.EditProfileModalName {
+  text-align: center;
+}
+

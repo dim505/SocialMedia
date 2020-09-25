@@ -23,17 +23,13 @@ namespace SocialMedia.Controller
     public class HomeController : ControllerBase
     {
 
-
-
         private readonly IConfiguration _config;
 
         public HomeController(IConfiguration config)
         {
             _config = config;
 
-
         }
-
 
         //function used to get auth0ID for signed in user 
         public string GetUserAuth0ID()
@@ -50,11 +46,9 @@ namespace SocialMedia.Controller
             {
                 return LoginUserIdentifier = "";
 
-
             }
 
         }
-
 
         //function used to get DB string for User 
         public string GetDbConnString()
@@ -62,9 +56,7 @@ namespace SocialMedia.Controller
 
             return _config["ConnectionStrings:DefaultConnection"];
 
-
         }
-
 
         /*!!!!!!!!!!!!!!!!!!!!API CALLS FOR HOME PAGE!!!!!!!!!!!!!!*/
         //this endpoint adds a post to the database 
@@ -78,25 +70,24 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string SqlStr = @"insert into SM_Posts values  (@Auth0IDAuthor, @PostGuid, @DateCreated, @PostContent)";
+                string SqlStr = @"insert into SM_Posts values  (@Auth0IDAuthor, @PostGuid, @DateCreated, @PostContent, @DisableSharing, @DisableComments)";
                 int result = db.Execute(SqlStr, new
                 {
 
                     Auth0IDAuthor = LoginUserIdentifier,
                     PostGuid = addPost.PostGuid,
                     DateCreated = addPost.DateCreated,
-                    PostContent = addPost.PostContent
+                    PostContent = addPost.PostContent,
+                    DisableSharing = "",
+                    DisableComments = ""
 
                 }
 
-                    );
+                );
             }
 
             return Ok();
         }
-
-
-
 
         //this end point deletes a post from the database 
         [HttpDelete]
@@ -123,55 +114,68 @@ namespace SocialMedia.Controller
         public IActionResult UpdatePost([FromBody] JObject data, string UpdatePostAction)
         {
 
-            /*
             string ConnStr = GetDbConnString();
             UpdatePost updatePost = data["UpdatePostData"].ToObject<UpdatePost>();
 
             string Sql = "";
             var Variables = new
             {
+                NewPostContent = "",
+                PostGuid = "",
+                DisableSharing = "",
+                DisableComments = ""
+
             };
             if (UpdatePostAction == "UpdatePost")
             {
 
                 Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
 
-
                 Variables = new
                 {
-                    NewPostContent = "",
-                    PostGuid = ""
+                    NewPostContent = updatePost.PostContent,
+                    PostGuid = updatePost.PostGuid,
+                    DisableSharing = "",
+                    DisableComments = ""
 
                 };
 
-            }
-            else if (UpdatePostAction == "DisableComments")
-            {
-                Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
-                Variables = new
-                {
-
-
-
-                };
             }
             else if (UpdatePostAction == "DisableSharing")
             {
+                Sql = @"Update SM_posts	set DisableSharing = @DisableSharing where PostGuid = @PostGuid";
+                Variables = new
+                {
+                    NewPostContent = "",
+                    PostGuid = updatePost.PostGuid,
+                    DisableSharing = updatePost.DisableSharing,
+                    DisableComments = ""
 
+                };
+            }
+            else if (UpdatePostAction == "DisableComments")
+            {
 
-                Sql = @"Update SM_Posts set PostContent = @NewPostContent where PostGuid = @PostGuid";
+                Sql = @"Update SM_posts	set DisableComments = @DisableComments where PostGuid = @PostGuid";
+                Variables = new
+                {
+
+                    NewPostContent = "",
+                    PostGuid = updatePost.PostGuid,
+                    DisableSharing = "",
+                    DisableComments = updatePost.DisableComments
+
+                };
 
             }
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
 
-                int result = db.Execute(Sql, Variables
-                );
-            }*/
+                int result = db.Execute(Sql, Variables);
+            }
             return Ok();
         }
-
 
         // this endpoint gets all posts related to the user 
         [HttpGet]
@@ -182,8 +186,15 @@ namespace SocialMedia.Controller
             List<GetComments> getComments = new List<GetComments>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getComments = db.Query<GetComments>("select * from SM_Posts_Comments where PostGuid = @PostGuid",
-                  new { PostGuid = new DbString { Value = PostGuid, IsFixedLength = false, IsAnsi = true } }).ToList();
+                getComments = db.Query<GetComments>("select * from SM_Posts_Comments where PostGuid = @PostGuid", new
+                {
+                    PostGuid = new DbString
+                    {
+                        Value = PostGuid,
+                        IsFixedLength = false,
+                        IsAnsi = true
+                    }
+                }).ToList();
             }
             return Ok(getComments);
         }
@@ -197,12 +208,18 @@ namespace SocialMedia.Controller
             List<WhoLikedPost> whoLikedPost = new List<WhoLikedPost>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                whoLikedPost = db.Query<WhoLikedPost>("select * from SM_LikeCommentTable where Auth0IDWhoLiked = @Auth0IDWhoLiked",
-                  new { Auth0IDWhoLiked = new DbString { Value = Auth0IDWhoLiked, IsFixedLength = false, IsAnsi = true } }).ToList();
+                whoLikedPost = db.Query<WhoLikedPost>("select * from SM_LikeCommentTable where Auth0IDWhoLiked = @Auth0IDWhoLiked", new
+                {
+                    Auth0IDWhoLiked = new DbString
+                    {
+                        Value = Auth0IDWhoLiked,
+                        IsFixedLength = false,
+                        IsAnsi = true
+                    }
+                }).ToList();
             }
             return Ok(whoLikedPost);
         }
-
 
         //this endpoint adds a comment to the database 
         [HttpPost]
@@ -241,9 +258,7 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string Sql = "Update SM_Posts_Comments " +
-                                    "set  CommentContent = @CommentContent" +
-                                    "   where CommentGuid = @CommentGuid)";
+                string Sql = "Update SM_Posts_Comments " + "set  CommentContent = @CommentContent" + "   where CommentGuid = @CommentGuid)";
 
                 db.Execute(Sql, new
                 {
@@ -274,7 +289,6 @@ namespace SocialMedia.Controller
 
             return Ok();
         }
-
 
         //this endpoint adds a like to a post 
         [HttpPost]
@@ -319,53 +333,40 @@ namespace SocialMedia.Controller
 
         }
 
-
-
-
         // this endpoint gets all posts related to the user 
         [HttpGet]
         [Route("[action]")]
         public IActionResult GetPosts()
         {
 
-
             string ConnStr = GetDbConnString();
             string Auth0IDAuthor = GetUserAuth0ID();
             List<GetPosts> getPosts = new List<GetPosts>();
 
-
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getPosts = db.Query<GetPosts>("select Auth0IDAuthor, PostGuid, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a where Auth0IDAuthor = Auth0IDAuthor group by Auth0IDAuthor, PostGuid, DateCreated, PostContent",
-                  new { Auth0IDAuthor = new DbString { Value = Auth0IDAuthor, IsFixedLength = false, IsAnsi = true } }).ToList();
+                getPosts = db.Query<GetPosts>("select Auth0IDAuthor, PostGuid, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, post.DisableSharing, post.DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a where Auth0IDAuthor = Auth0IDAuthor group by Auth0IDAuthor, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments ", new
+                {
+                    Auth0IDAuthor = new DbString
+                    {
+                        Value = Auth0IDAuthor,
+                        IsFixedLength = false,
+                        IsAnsi = true
+                    }
+                }).ToList();
             }
             return Ok(getPosts);
 
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // GET: api/Home
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] {
+        "value1",
+        "value2"
+      };
         }
 
         // GET: api/Home/5
@@ -377,20 +378,14 @@ namespace SocialMedia.Controller
 
         // POST: api/Home
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public void Post([FromBody] string value) { }
 
         // PUT: api/Home/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        public void Put(int id, [FromBody] string value) { }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        public void Delete(int id) { }
     }
 }

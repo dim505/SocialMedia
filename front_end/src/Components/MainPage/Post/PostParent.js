@@ -11,24 +11,55 @@ import PostMenu from "./PostComponents/PostMenu";
 import Post from "./PostComponents/Post";
 import Context from "../../SharedComponents/context";
 import { ApiCall } from "../../SharedComponents/ApiCall";
-
+import "./Post.css";
 //this houses the all components related to the post component
 export default class PostParent extends Component {
   static contextType = Context;
   constructor(props) {
     super(props);
     this.state = {
-      AddComment: false,
+      ShowComment: false,
       anchorEl: false,
-      DisableSharing: false,
-      DisableAddComments: false,
+      DisableSharing: 123,
+      DisableAddComments: 123,
       PostFavorited: false,
       NumberOfFav: 10,
       Comments: [],
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = async () => {
+    /* if (this.context.Likes.length > 0 && this.state.PostFavorited !== true) {
+      this.RenderLikedPosts();
+    }*/
+
+    if (
+      this.state.DisableSharing === 123 ||
+      this.state.DisableAddComments === 123
+    ) {
+      this.setState({
+        DisableSharing: this.props.post.disableSharing,
+        DisableAddComments: this.props.post.disableComments,
+      });
+    }
+  };
+
+  componentDidUpdate(prevProps) {
+    /* if (this.context.Likes.length > 0 && this.state.PostFavorited !== true) {
+      this.RenderLikedPosts();
+    }*/
+
+    if (
+      this.state.DisableSharing === 123 ||
+      this.state.DisableAddComments === 123
+    ) {
+      this.setState({
+        DisableSharing: this.props.post.disableSharing,
+        DisableAddComments: this.props.post.disableComments,
+      });
+    }
+  }
+
   //hides menu if user clicks away
   handleClickAway = () => {
     this.setState({
@@ -76,8 +107,8 @@ export default class PostParent extends Component {
   };
 
   //tracks that the user liked a post or not
-  HandleFavoritePost = () => {
-    if (this.state.PostFavorited === false) {
+  HandleFavoritePost = async () => {
+    if (this.props.post.didUserLikePost !== "yes") {
       var MyData = {};
       MyData.AddLikedComment = {
         PostGuid: this.props.post.postGuid,
@@ -88,17 +119,26 @@ export default class PostParent extends Component {
         `${process.env.REACT_APP_BackEndUrl}/api/home/LikeComment`,
         MyData
       ).then(() => {
-        this.context.GetPosts();
+        setTimeout(async () => {
+          await this.context.GetLikedPosts();
+          await this.context.GetPosts();
+          await this.setState({
+            PostFavorited: true,
+          });
+        }, 500);
       });
     } else {
       ApiCall(
         "Delete",
         `${process.env.REACT_APP_BackEndUrl}/api/home/DeleteLikedPost/${this.props.post.postGuid}`
       ).then((results) => {
-        this.context.GetPosts();
-        this.setState({
-          PostFavorited: !this.state.PostFavorited,
-        });
+        setTimeout(async () => {
+          await this.context.GetLikedPosts();
+          await this.context.GetPosts();
+          await this.setState({
+            PostFavorited: false,
+          });
+        }, 500);
       });
     }
   };
@@ -106,12 +146,34 @@ export default class PostParent extends Component {
   //this function handles various clicks the related to the post menu
   HandlePostMenClick = (ButtonClicked) => {
     if (ButtonClicked === "DisableSharing") {
-      this.setState({
+      var MyData = {};
+      MyData.UpdatePostData = {
+        PostGuid: this.props.post.postGuid,
         DisableSharing: !this.state.DisableSharing,
+      };
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/UpdatePost/DisableSharing`,
+        MyData
+      ).then(() => {
+        this.setState({
+          DisableSharing: !this.state.DisableSharing,
+        });
       });
     } else if (ButtonClicked === "DisableComments") {
-      this.setState({
-        DisableAddComments: !this.state.DisableAddComments,
+      var MyData = {};
+      MyData.UpdatePostData = {
+        PostGuid: this.props.post.postGuid,
+        DisableComments: !this.state.DisableAddComments,
+      };
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/home/UpdatePost/DisableComments`,
+        MyData
+      ).then(() => {
+        this.setState({
+          DisableAddComments: !this.state.DisableAddComments,
+        });
       });
     } else if (ButtonClicked === "Edit") {
       this.OpnModal("EditModal");
@@ -132,7 +194,7 @@ export default class PostParent extends Component {
   HandleAddCommentClick = () => {
     this.GetComments();
     this.setState({
-      AddComment: !this.state.AddComment,
+      ShowComment: !this.state.ShowComment,
     });
   };
 
@@ -158,28 +220,20 @@ export default class PostParent extends Component {
   };
 
   RenderLikedPosts = () => {
-    /*
-    let products = this.state.IntialProducts;
-    //returns all products that match the search phrase
-    products = products.filter((product) => {
-      return (
-        product.name
-          .toLowerCase()
-          .search(SearchTextBoxVal.toString().toLowerCase()) !== -1
-      );
-    });
-    //sets state of products to be displayed
-    this.setState({ products: products });
-    */
-    console.log(this.context.Likes);
     var likes = this.context.Likes;
-    likes = likes.filter((like) => {
-      return like.toLowerCase;
+    var MatchFound = likes.map((like) => {
+      if (like.postGuid.search(this.props.post.postGuid) !== -1) {
+        //this.setState({
+        //  PostFavorited: true,
+        // });
+        return true;
+      }
     });
+
+    console.log(likes);
   };
 
   render() {
-    this.RenderLikedPosts();
     return (
       <Card>
         <Post
@@ -190,15 +244,20 @@ export default class PostParent extends Component {
           HandleAddCommentClick={this.HandleAddCommentClick}
           post={this.props.post}
         />
-        <Collapse in={this.state.AddComment} timeout="auto" unmountOnExit>
+        <Collapse in={this.state.ShowComment} timeout="auto" unmountOnExit>
           <Divider />
-          {this.state.Comments.map((comment) => (
-            <PostComment
-              GetComments={this.GetComments}
-              comment={comment}
-              OpenNoti={this.OpenNoti}
-            />
-          ))}
+
+          {this.state.Comments.length > 0 ? (
+            this.state.Comments.map((comment) => (
+              <PostComment
+                GetComments={this.GetComments}
+                comment={comment}
+                OpenNoti={this.OpenNoti}
+              />
+            ))
+          ) : (
+            <h3>Sorry No Comments found</h3>
+          )}
           <Divider />
 
           {this.state.DisableAddComments === true ? (

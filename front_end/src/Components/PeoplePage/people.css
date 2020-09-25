@@ -1,0 +1,18 @@
+
+.ProfileTitle {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 16px;
+  text-align: left;
+  margin: 32px 32px 0;
+  font-weight: bold;
+  margin-left: 50px;
+  margin-right: 30px;
+}
+
+
+.ImpactHeader {
+  background-color: #339cff;
+  padding-left: 5px;
+  text-align: left;
+  color: white;
+}

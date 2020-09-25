@@ -47,7 +47,6 @@ export default class PostComment extends Component {
 
   //handles comment menu button click
   HandlePostMenClick = (ButtonClicked) => {
-    console.log(ButtonClicked);
     if (ButtonClicked === "Edit") {
       this.setState({
         ShowEdit: true,

@@ -1,0 +1,51 @@
+.ShareIconModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.AddPostInput {
+  width: 100%;
+}
+
+
+.PostCommentTitle {
+  font-size: 10px !important;
+}
+
+.PostCommentSubheader {
+  color: black !important;
+  font-size: 12px !important;
+}
+
+.PostCommentActionButton {
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  padding-top: 0 !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  padding-bottom: 0 !important;
+}
+
+.FavoriteIconStyle {
+  fill: red !important;
+}
+
+.FavoriteIconButton {
+  padding-right: 3px !important;
+}
+
+
+.NumFavorite {
+  color: #777;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.EditPostCommentButton {
+  display: flex;
+  flex-direction: row-reverse;
+}
+

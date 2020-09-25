@@ -24,7 +24,7 @@ import Popover from "@material-ui/core/Popover";
 import SearchBar from "./SearchBar";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import "./Navbar.css";
 //component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
 export default class NavBar extends Component {
   state = {

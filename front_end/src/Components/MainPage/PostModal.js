@@ -15,7 +15,6 @@ import moment from "moment";
 import { uuidv4 } from "../SharedComponents/SharedFunctions";
 import Context from "../SharedComponents/context";
 
-
 //component loads the first add post or edit post modal
 export default class PostModal extends Component {
   static contextType = Context;
@@ -29,7 +28,7 @@ export default class PostModal extends Component {
     }
   };
 
-	//submits the post information to the appropriate end point 
+  //submits the post information to the appropriate end point
   SubmitPost = () => {
     if (this.props.ModalType === "Edit") {
       var MyData = {};
@@ -42,7 +41,7 @@ export default class PostModal extends Component {
 
       ApiCall(
         "Post",
-        `${process.env.REACT_APP_BackEndUrl}/api/home/UpdatePost`,
+        `${process.env.REACT_APP_BackEndUrl}/api/home/UpdatePost/UpdatePost`,
         MyData
       ).then(() => {
         this.props.CloseModal();
@@ -69,7 +68,7 @@ export default class PostModal extends Component {
     }
   };
 
-	//keeps track of user input as they type text in
+  //keeps track of user input as they type text in
   HandleUpdate = (NewState) => {
     this.setState(NewState);
   };

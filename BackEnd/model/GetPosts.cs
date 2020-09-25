@@ -13,5 +13,11 @@ namespace SocialMedia.model
         public string PostContent { get; set; }
 
         public string PostLikeCount { get; set; }
+
+        public bool DisableSharing { get; set; }
+
+        public bool DisableComments { get; set; }
+
+        public string DidUserLikePost { get; set; }
     }
 }

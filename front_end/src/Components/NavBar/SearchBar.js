@@ -12,16 +12,15 @@ import Paper from "@material-ui/core/Paper";
 import PeopleIcon from "@material-ui/icons/People";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
-//this contains  the search bar in the nav bar 
+//this contains  the search bar in the nav bar
 export default class SearchBar extends Component {
   state = {
     SearchTerm: "",
     SearchBarAnchorEl: null,
   };
 
-//keeps track of whats being typed in the search bar 
+  //keeps track of whats being typed in the search bar
   HandleChange = async (event) => {
-    console.log(event.currentTarget);
     await this.setState({
       SearchTerm: event.target.value,
     });
@@ -33,16 +32,15 @@ export default class SearchBar extends Component {
     }
   };
 
- 
   OpenSearchPopOver = (event) => {};
-//closes the suggestions popover
+  //closes the suggestions popover
   CloseSearchPopOver = (event) => {
     this.setState({
       SearchBarAnchorEl: null,
     });
   };
 
-//this the suggestions pop over when a user clicks away 
+  //this the suggestions pop over when a user clicks away
   handleClickAway = () => {
     this.setState({
       SearchTerm: "",

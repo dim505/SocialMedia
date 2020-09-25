@@ -14,7 +14,7 @@ import Context from "./Components/SharedComponents/context";
 import { ApiCall } from "./Components/SharedComponents/ApiCall";
 import Typography from "@material-ui/core/Typography";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
-
+import "./Components/SharedComponents/ShareComponents.css";
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class App extends Component {
       ShowLoader: true,
       authenticated: false,
       Posts: [],
+      Likes: [],
     };
   }
 
@@ -104,13 +105,13 @@ class App extends Component {
           OpenNoti: (message) => this.OpenNoti(message),
           CloseNoti: () => this.CloseNoti(),
           GetPosts: () => this.GetPosts(),
+          GetLikedPosts: () => this.GetLikedPosts,
           Posts: this.state.Posts,
           Likes: this.state.Likes,
         }}
       >
         <div className="App">
-          {!this.state.authenticated ||
-          !window.location.search.includes("code=") ? (
+          {!this.state.authenticated ? (
             <Fade collapse>
               <LogInScreen auth={this.props.auth} />
             </Fade>
