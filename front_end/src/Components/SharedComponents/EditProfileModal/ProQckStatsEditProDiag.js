@@ -44,11 +44,9 @@ export default class ProQckStatsEditProDiag extends Component {
     this.setState({
       ShowPhotoUpload: false,
     });
-
-    this.context.OpenNoti("Profile Photo Uploaded");
   };
 
-  ClosePhotoUpload = (Filename) => {
+  UploadPhoto = (Filename) => {
     var MyData = {};
 
     if (this.state.FileTypeBeingUploaded === "BannerPhoto") {
@@ -86,6 +84,8 @@ export default class ProQckStatsEditProDiag extends Component {
             Filename,
         });
       });
+
+      this.context.OpenNoti("Profile Photo Uploaded");
     }
 
     //""
@@ -95,12 +95,14 @@ export default class ProQckStatsEditProDiag extends Component {
   submitValues = (values) => {
     console.log(values);
     var MyData = {};
+    MyData.AccountInfo = values;
     ApiCall(
       "Post",
       `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfileInfo`,
       MyData
     ).then(() => {
       this.props.CloseDialog();
+      this.context.GetAccountInfo();
       this.context.OpenNoti("Profile Information Updated");
     });
   };
@@ -111,6 +113,7 @@ export default class ProQckStatsEditProDiag extends Component {
   };
 
   render() {
+    console.log(this.context.AccountInfo);
     return (
       <Dialog
         open={this.props.OpenDialog}
@@ -169,11 +172,12 @@ export default class ProQckStatsEditProDiag extends Component {
           <Formik
             enableReinitialize={true}
             initialValues={{
-              FullName: "123",
-              CompanyName: "",
-              Twitter: "",
-              FacebookPage: "",
-              WebAddress: "",
+              FullName: this.context.AccountInfo[0].fullName,
+              CompanyName: this.context.AccountInfo[0].companyName,
+              Twitter: this.context.AccountInfo[0].twitter,
+              Facebook: this.context.AccountInfo[0].facebook,
+              WebAddress: this.context.AccountInfo[0].webAddress,
+              Tagline: this.context.AccountInfo[0].tagline,
             }}
             validationSchema={validationSchema}
             onSubmit={this.submitValues}

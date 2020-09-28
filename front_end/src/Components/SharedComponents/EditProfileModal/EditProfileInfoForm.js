@@ -16,7 +16,7 @@ export const EditProfileInfoForm = (props) => {
     setFieldTouched,
     setFieldValue,
     OpenNoti,
-    SetMessage
+    SetMessage,
   } = props;
 
   //updates state and tracks what fields were touched
@@ -30,7 +30,7 @@ export const EditProfileInfoForm = (props) => {
     <form onSubmit={handleSubmit}>
       <Paper
         classes={{
-          root: "EditProfileModalForm"
+          root: "EditProfileModalForm",
         }}
       >
         <Typography variant="h5" gutterBottom>
@@ -70,10 +70,10 @@ export const EditProfileInfoForm = (props) => {
         />
         <TextField
           fullWidth
-          id="FacebookPage"
-          label="Facebook Page"
-          value={values.FacebookPage}
-          onChange={change.bind(null, "FacebookPage")}
+          id="Facebook"
+          label="Facebook"
+          value={values.Facebook}
+          onChange={change.bind(null, "Facebook")}
         />
         <TextField
           fullWidth

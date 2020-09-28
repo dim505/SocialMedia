@@ -159,6 +159,7 @@ export default class PostParent extends Component {
         this.setState({
           DisableSharing: !this.state.DisableSharing,
         });
+        this.context.GetPosts();
       });
     } else if (ButtonClicked === "DisableComments") {
       var MyData = {};
@@ -174,6 +175,7 @@ export default class PostParent extends Component {
         this.setState({
           DisableAddComments: !this.state.DisableAddComments,
         });
+        this.context.GetPosts();
       });
     } else if (ButtonClicked === "Edit") {
       this.OpnModal("EditModal");

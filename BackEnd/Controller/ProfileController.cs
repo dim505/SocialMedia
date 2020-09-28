@@ -70,7 +70,7 @@ namespace SocialMedia.Controller
             AccountInfo accountInfo = data["AccountInfo"].ToObject<AccountInfo>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string Sql = @"select count(*) from SM_Account_Info where Auth0ID = @LoggedInUser";
+                string Sql = @"select count(*) as count from SM_Account_Info where Auth0ID = @LoggedInUser";
                 List<Count> accountInfoCounts = new List<Count>();
                 accountInfoCounts = db.Query<Count>(Sql, new
                 {
@@ -109,21 +109,19 @@ namespace SocialMedia.Controller
                         Twitter = accountInfo.Twitter,
                         Facebook = accountInfo.Facebook,
                         WebAddress = accountInfo.WebAddress,
-                        Auth0ID = accountInfo.Auth0ID,
+                        Auth0ID = LoggedInUser,
                         BannerPhotoUrl = "",
                         ProfilePhotoUrl = ""
                     });
 
                 }
-                else if (accountInfoCounts[0].count == 1)
-                { }
-
-
-
-                else if (UpdateAccountInfoAction == "UpdateProfileInfo")
+                else if (accountInfoCounts[0].count > 0)
                 {
 
-                    Sql = @" Update SM_Account_Info	
+                    if (UpdateAccountInfoAction == "UpdateProfileInfo")
+                    {
+
+                        Sql = @" Update SM_Account_Info	
                                 set FullName = @FullName,
                                 Tagline = @Tagline,
                                 CompanyName = @CompanyName,
@@ -132,66 +130,77 @@ namespace SocialMedia.Controller
                                 WebAddress = @WebAddress
                                 where  Auth0ID = @Auth0ID ";
 
-                    Variables = new
+                        Variables = new
+                        {
+                            FullName = accountInfo.FullName,
+                            Tagline = accountInfo.Tagline,
+                            CompanyName = accountInfo.CompanyName,
+                            Twitter = accountInfo.Twitter,
+                            Facebook = accountInfo.Facebook,
+                            WebAddress = accountInfo.WebAddress,
+                            Auth0ID = LoggedInUser,
+                            ProfilePhotoUrl = "",
+                            BannerPhotoUrl = ""
+
+                        };
+
+                    }
+
+                    else if (UpdateAccountInfoAction == "UpdateBannerPhoto")
                     {
-                        FullName = accountInfo.FullName,
-                        Tagline = accountInfo.Tagline,
-                        CompanyName = accountInfo.CompanyName,
-                        Twitter = accountInfo.Twitter,
-                        Facebook = accountInfo.Facebook,
-                        WebAddress = accountInfo.WebAddress,
-                        Auth0ID = accountInfo.Auth0ID,
-                        ProfilePhotoUrl = "",
-                        BannerPhotoUrl = ""
 
-                    };
-
-                }
-
-                else if (UpdateAccountInfoAction == "UpdateBannerPhoto")
-                {
-
-                    Sql = @" Update SM_Account_Info	
+                        Sql = @" Update SM_Account_Info	
 								set BannerPhotoUrl = @BannerPhotoUrl,
                                 where  Auth0ID = @Auth0ID ";
-                    Variables = new
+                        Variables = new
+                        {
+                            FullName = "",
+                            Tagline = "",
+                            CompanyName = "",
+                            Twitter = "",
+                            Facebook = "",
+                            WebAddress = "",
+                            Auth0ID = LoggedInUser,
+
+                            ProfilePhotoUrl = "",
+                            BannerPhotoUrl = accountInfo.BannerPhotoUrl
+
+                        };
+
+                    }
+
+                    else if (UpdateAccountInfoAction == "UpdatePhoto")
                     {
-                        FullName = "",
-                        Tagline = "",
-                        CompanyName = "",
-                        Twitter = "",
-                        Facebook = "",
-                        WebAddress = "",
-                        Auth0ID = accountInfo.Auth0ID,
 
-                        ProfilePhotoUrl = "",
-                        BannerPhotoUrl = accountInfo.BannerPhotoUrl
-
-                    };
-
-                }
-
-
-
-                else if (UpdateAccountInfoAction == "UpdatePhoto")
-                {
-
-                    Sql = @" Update SM_Account_Info	
+                        Sql = @" Update SM_Account_Info	
                                 set ProfilePhotoUrl = @ProfilePhotoUrl,
                                 where  Auth0ID = @Auth0ID ";
-                    Variables = new
-                    {
-                        FullName = "",
-                        Tagline = "",
-                        CompanyName = "",
-                        Twitter = "",
-                        Facebook = "",
-                        WebAddress = "",
-                        Auth0ID = accountInfo.Auth0ID,
-                        ProfilePhotoUrl = accountInfo.BannerPhotoUrl,
-                        BannerPhotoUrl = ""
+                        Variables = new
+                        {
+                            FullName = "",
+                            Tagline = "",
+                            CompanyName = "",
+                            Twitter = "",
+                            Facebook = "",
+                            WebAddress = "",
+                            Auth0ID = LoggedInUser,
+                            ProfilePhotoUrl = accountInfo.BannerPhotoUrl,
+                            BannerPhotoUrl = ""
 
-                    };
+                        };
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
 
                 }
 
@@ -200,6 +209,37 @@ namespace SocialMedia.Controller
             }
             return Ok();
         }
+
+
+
+        // this endpoint gets all posts related to the user 
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetAccountInfo()
+        {
+
+            string ConnStr = GetDbConnString();
+            string Auth0IDAuthor = GetUserAuth0ID();
+            List<AccountInfo> accountInfo = new List<AccountInfo>();
+
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                accountInfo = db.Query<AccountInfo>("select * from SM_Account_Info where Auth0ID = @Auth0ID", new
+                {
+                    Auth0ID = new DbString
+                    {
+                        Value = Auth0IDAuthor,
+                        IsFixedLength = false,
+                        IsAnsi = true
+                    }
+                }).ToList();
+            }
+            return Ok(accountInfo);
+
+        }
+
+
+
 
     }
 

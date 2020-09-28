@@ -18,7 +18,7 @@ namespace SocialMedia.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //s [Authorize]
 
     public class HomeController : ControllerBase
     {
@@ -358,6 +358,9 @@ namespace SocialMedia.Controller
             return Ok(getPosts);
 
         }
+
+
+
 
         // GET: api/Home
         [HttpGet]

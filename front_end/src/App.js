@@ -25,6 +25,16 @@ class App extends Component {
       authenticated: false,
       Posts: [],
       Likes: [],
+      AccountInfo: [
+        {
+          fullName: "",
+          companyName: "",
+          twitter: "",
+          facebook: "",
+          webAddress: "",
+          Tagline: "",
+        },
+      ],
     };
   }
 
@@ -35,6 +45,7 @@ class App extends Component {
     this.LoadAzureStorage();
     this.GetPosts();
     this.GetLikedPosts();
+    this.GetAccountInfo();
     this.isUserAuthenticated();
   }
 
@@ -69,6 +80,19 @@ class App extends Component {
       this.setState({
         Likes: results,
       });
+    });
+  };
+
+  GetAccountInfo = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/Profile/GetAccountInfo`
+    ).then((results) => {
+      if (results.length > 0) {
+        this.setState({
+          AccountInfo: results,
+        });
+      }
     });
   };
   //function opens notification alert
@@ -106,8 +130,10 @@ class App extends Component {
           CloseNoti: () => this.CloseNoti(),
           GetPosts: () => this.GetPosts(),
           GetLikedPosts: () => this.GetLikedPosts,
+          GetAccountInfo: () => this.GetAccountInfo(),
           Posts: this.state.Posts,
           Likes: this.state.Likes,
+          AccountInfo: this.state.AccountInfo,
         }}
       >
         <div className="App">
