@@ -8,6 +8,7 @@ namespace SocialMedia.model
     public class GetPosts
     {
         public string Auth0IDAuthor { get; set; }
+		public string FullName { get; set; }
         public string PostGuid { get; set; }
         public string DateCreated { get; set; }
         public string PostContent { get; set; }
@@ -21,3 +22,4 @@ namespace SocialMedia.model
         public string DidUserLikePost { get; set; }
     }
 }
+

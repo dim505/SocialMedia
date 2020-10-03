@@ -25,6 +25,8 @@ import SearchBar from "./SearchBar";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Tooltip from "@material-ui/core/Tooltip";
 import "./Navbar.css";
+import NotificationActivity from "./NotificationActivity";
+
 //component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
 export default class NavBar extends Component {
   state = {
@@ -35,6 +37,19 @@ export default class NavBar extends Component {
     OpenDialog: false,
     OpenSearchBarDropdown: false,
     SearchTerm: "",
+    messages: [
+      {
+        message:
+          "this is a test 123321 this is a test 123321 this is a test 123321",
+      },
+      {
+        message: "2",
+      },
+
+      {
+        message: "3",
+      },
+    ],
   };
 
   //this function open nav drawer to see page names
@@ -249,7 +264,12 @@ export default class NavBar extends Component {
                   open={Boolean(this.state.PopOverNotiAnchorEl)}
                   anchorEl={this.state.PopOverNotiAnchorEl}
                 >
-                  <div className="NotiContent">All Caught Up! </div>
+                  {/* <div className="NotiContentNoActivity">All Caught Up! </div>*/}
+                  <div className="NotiContentActivity">
+                    {this.state.messages.map((message) => (
+                      <NotificationActivity message={message} />
+                    ))}
+                  </div>
                 </Popover>
               </div>
             </div>

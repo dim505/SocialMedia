@@ -7,9 +7,11 @@ import FindPeopleParent from "./FindPeople/FindPeopleParent";
 import FollowingPeopleParent from "./FollowingPeople/FollowingPeopleParent";
 import Followers from "./Followers/Followers";
 import "./people.css";
+import { ApiCall } from "../SharedComponents/ApiCall";
+
 //component contains all the components for the People page
 export default class PeoplePage extends Component {
-  state = { value: 1 };
+  state = { value: 1, FindPeople: [], Followers: [] };
 
   //keeps track of which tab is being selected
   handleChange = (event, newValue) => {
@@ -18,15 +20,39 @@ export default class PeoplePage extends Component {
     });
   };
 
+  GetData = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/People/FindPeople`
+    ).then((results) => {
+      if (results.length > 0) {
+        this.setState({
+          FindPeople: results,
+        });
+      }
+    });
+
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/People/GetFollowers`
+    ).then((results) => {
+      if (results.length > 0) {
+        this.setState({
+          Followers: results,
+        });
+      }
+    });
+  };
+
   //depending on the tab selected. It will render a different component
   RenderSubPage = () => {
     if (this.state.value === 0) {
-      return <FindPeopleParent />;
+      return <FindPeopleParent FindPeople={this.state.FindPeople} />;
     }
     if (this.state.value === 1) {
       return <FollowingPeopleParent />;
     } else {
-      return <Followers />;
+      return <Followers Followers={this.state.Followers} />;
     }
   };
 

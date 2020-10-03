@@ -22,6 +22,7 @@ import { Formik } from "formik";
 import { EditProfileInfoForm } from "./EditProfileInfoForm";
 import * as Yup from "yup";
 import Context from "../context";
+
 const validationSchema = Yup.object({
   FullName: Yup.string("Please Enter Your Name").required("Name is Required"),
 });
@@ -39,61 +40,7 @@ export default class ProQckStatsEditProDiag extends Component {
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
   };
 
-  //closes the photo dropzone
-  ClosePhotoUpload = () => {
-    this.setState({
-      ShowPhotoUpload: false,
-    });
-  };
-
-  UploadPhoto = (Filename) => {
-    var MyData = {};
-
-    if (this.state.FileTypeBeingUploaded === "BannerPhoto") {
-      MyData.AccountInfo = {
-        BannerPhotoUrl: Filename,
-      };
-
-      ApiCall(
-        "Post",
-        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfilePhoto`,
-        MyData
-      ).then(() => {
-        this.setState({
-          ShowPhotoUpload: false,
-          ProfileUrl:
-            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-            Filename,
-        });
-        this.context.OpenNoti("Banner Photo Uploaded");
-      });
-    } else if (this.state.FileTypeBeingUploaded === "ProfilePhoto") {
-      MyData.AccountInfo = {
-        ProfilePhotoUrl: Filename,
-      };
-
-      ApiCall(
-        "Post",
-        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateBannerPhoto`,
-        MyData
-      ).then(() => {
-        this.setState({
-          ShowPhotoUpload: false,
-          BannerUrl:
-            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-            Filename,
-        });
-      });
-
-      this.context.OpenNoti("Profile Photo Uploaded");
-    }
-
-    //""
-    this.context.OpenNoti("Profile Photo Uploaded");
-  };
-
   submitValues = (values) => {
-    console.log(values);
     var MyData = {};
     MyData.AccountInfo = values;
     ApiCall(
@@ -112,8 +59,14 @@ export default class ProQckStatsEditProDiag extends Component {
     this.props.CloseDialog();
   };
 
+  //closes the photo dropzone
+  ClosePhotoUpload = () => {
+    this.setState({
+      ShowPhotoUpload: false,
+    });
+  };
+
   render() {
-    console.log(this.context.AccountInfo);
     return (
       <Dialog
         open={this.props.OpenDialog}
@@ -139,6 +92,7 @@ export default class ProQckStatsEditProDiag extends Component {
                 onClick={() => {
                   this.setState({
                     ShowPhotoUpload: true,
+                    FileTypeBeingUploaded: "ProfilePhoto",
                   });
                 }}
                 classes={{
@@ -153,13 +107,14 @@ export default class ProQckStatsEditProDiag extends Component {
               variant="h3"
               gutterBottom
             >
-              BOB
+              {this.context.AccountInfo[0].fullName}
             </Typography>
             <Tooltip title="Click To Upload Banner Photo">
               <AddAPhotoOutlinedIcon
                 onClick={() => {
                   this.setState({
                     ShowPhotoUpload: true,
+                    FileTypeBeingUploaded: "BannerPhoto",
                   });
                 }}
                 classes={{

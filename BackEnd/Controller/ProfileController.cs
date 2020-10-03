@@ -241,6 +241,35 @@ namespace SocialMedia.Controller
 
 
 
+        // this endpoint gets all posts related to the user 
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetProfileStats()
+        {
+
+            string ConnStr = GetDbConnString();
+            string Auth0IDAuthor = GetUserAuth0ID();
+            List<GetProfileStats> getProfileStats = new List<GetProfileStats>();
+
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                getProfileStats = db.Query<GetProfileStats>("select (select count(*)  from SM_LikeCommentTable where Auth0IDWhoLiked = @Auth0ID) as Likes, (select count(*)  from SM_Follow_Following_Table where FollowingAuth0ID = @Auth0ID) as NumOfFollwing, (select count(*) from SM_Follow_Following_Table where FollowerAuth0ID = @Auth0ID) as NumOfFollowers", new
+                {
+                    Auth0IDAuthor = new DbString
+                    {
+                        Value = Auth0IDAuthor,
+                        IsFixedLength = false,
+                        IsAnsi = true
+                    }
+                }).ToList();
+            }
+            return Ok(getProfileStats);
+
+        }
+
+
+
+
     }
 
 }

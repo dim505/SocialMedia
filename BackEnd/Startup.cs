@@ -32,14 +32,11 @@ namespace AMSBackEnd
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod();
-
-                });
+                options.AddPolicy("AllowAllOrigins",
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+               .AllowAnyHeader()
+               );
             });
             services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
@@ -83,7 +80,8 @@ namespace AMSBackEnd
                 builder.AddUserSecrets<Startup>();
             }
             app.UseRouting();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors("AllowAllOrigins");
+
             app.UseAuthentication();
             app.UseAuthorization();
 

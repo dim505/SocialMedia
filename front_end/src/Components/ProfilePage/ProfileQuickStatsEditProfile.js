@@ -6,10 +6,12 @@ import Typography from "@material-ui/core/Typography";
 import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckStatsEditProDiag";
 import BackgroundBanner from "../SharedComponents/BackgroundBanner";
 import SnackBar from "../SharedComponents/SnackBar";
+import Context from "../SharedComponents/context";
 
-
-//this shows the edit account into card when going to the people page 
+//this shows the edit account into card when going to the people page
 export default class ProfileQuickStatsEditProfile extends Component {
+  static contextType = Context;
+
   state = {
     OpenDialog: false,
     OpenNoti: false,
@@ -23,7 +25,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
     });
   };
 
-	//closes dialog to edit the user profile information
+  //closes dialog to edit the user profile information
   CloseDialog = () => {
     this.setState({
       OpenDialog: false,
@@ -70,7 +72,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
             variant="h5"
             gutterBottom
           >
-            Bob
+            {this.context.AccountInfo[0].fullName}
           </Typography>
 
           <Button

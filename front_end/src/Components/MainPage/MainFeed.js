@@ -23,10 +23,10 @@ export default class MainFeed extends Component {
             <AddNewFeedButton />
           </Grid>
         </Grid>{" "}
-        {this.context.Posts.length === 0 ? (
+        {this.context.MainPagePosts.length === 0 ? (
           <h1>No Posts..... Please add some </h1>
         ) : (
-          this.context.Posts.map((post) => (
+          this.context.MainPagePosts.map((post) => (
             <Grid item lg={4} md={4} sm={6} xs={12}>
               <PostParent post={post} />
             </Grid>

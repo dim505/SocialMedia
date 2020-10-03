@@ -121,7 +121,8 @@ export default class PostParent extends Component {
       ).then(() => {
         setTimeout(async () => {
           await this.context.GetLikedPosts();
-          await this.context.GetPosts();
+          await this.context.GetMainPagePosts();
+          await this.context.GetProfilePagePosts();
           await this.setState({
             PostFavorited: true,
           });
@@ -134,7 +135,8 @@ export default class PostParent extends Component {
       ).then((results) => {
         setTimeout(async () => {
           await this.context.GetLikedPosts();
-          await this.context.GetPosts();
+          await this.context.GetMainPagePosts();
+          await this.context.GetProfilePagePosts();
           await this.setState({
             PostFavorited: false,
           });
@@ -159,7 +161,8 @@ export default class PostParent extends Component {
         this.setState({
           DisableSharing: !this.state.DisableSharing,
         });
-        this.context.GetPosts();
+        this.context.GetMainPagePosts();
+        this.context.GetProfilePagePosts();
       });
     } else if (ButtonClicked === "DisableComments") {
       var MyData = {};
@@ -175,7 +178,8 @@ export default class PostParent extends Component {
         this.setState({
           DisableAddComments: !this.state.DisableAddComments,
         });
-        this.context.GetPosts();
+        this.context.GetMainPagePosts();
+        this.context.GetProfilePagePosts();
       });
     } else if (ButtonClicked === "Edit") {
       this.OpnModal("EditModal");
@@ -185,7 +189,8 @@ export default class PostParent extends Component {
         `${process.env.REACT_APP_BackEndUrl}/api/home/DeletePost/${this.props.post.postGuid}`
       ).then((results) => {
         this.context.OpenNoti("Post Deleted");
-        this.context.GetPosts();
+        this.context.GetMainPagePosts();
+        this.context.GetProfilePagePosts();
       });
     }
 
@@ -231,8 +236,6 @@ export default class PostParent extends Component {
         return true;
       }
     });
-
-    console.log(likes);
   };
 
   render() {

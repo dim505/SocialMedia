@@ -75,6 +75,23 @@ namespace SocialMedia.Controller
 
                 return Ok(findPeoples);
             }
+			
+			[HttpGet]
+            [Route("[action]")]
+            public IActionResult GetFollowers()
+            {
+                string ConnStr = GetDbConnString();
+                string LoggedInUser = GetUserAuth0ID();
+                List<Followers> followers = new List<Followers>();
+                using (IDbConnection db = new SqlConnection(ConnStr))
+                {
+                    string SqlStr = @"select SM_Account_Info.FullName, SM_Follow_Following_Table.* from SM_Follow_Following_Table left join SM_Account_Info on SM_Follow_Following_Table.FollowerAuth0ID = SM_Account_Info.Auth0ID";
+                    followers = db.Query<Followers>(SqlStr).ToList();
+                };
+
+                return Ok(followers);
+            }
+			
 
 
             [HttpPost]
@@ -98,6 +115,29 @@ namespace SocialMedia.Controller
                 }
                 return Ok();
             }
+			
+			[HttpPost]
+            [Route("[action]")]
+            public IActionResult UpdateNotification([FromBody] JObject data)
+            {
+                string ConnStr = GetDbConnString();
+                string LoggedInUser = GetUserAuth0ID();
+				RemoveNoti removeNoti = data["RemoveNoti"].ToObject<RemoveNoti>();
+                using (IDbConnection db = new SqlConnection(ConnStr))
+                {
+                    string SqlStr = @"update SM_Follow_Following_Table set UserNotified = 'Y' where FollowerAuth0ID = @FollowerAuth0ID and FollowingAuth0ID = @FollowingAuth0ID";
+                    int result = db.Execute(SqlStr, new
+                    {
+                        FollowerAuth0ID = removeNoti.FollowerAuth0ID,
+                        FollowingAuth0ID = removeNoti.FollowingAuth0ID,
+ 
+                    }
+
+                        );
+                }
+                return Ok();
+            }
+			
 
 
             [HttpDelete]

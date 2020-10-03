@@ -15,6 +15,8 @@ import { ApiCall } from "./Components/SharedComponents/ApiCall";
 import Typography from "@material-ui/core/Typography";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
 import "./Components/SharedComponents/ShareComponents.css";
+import NameReq from "./Components/NameReq";
+
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
   constructor(props) {
@@ -23,7 +25,8 @@ class App extends Component {
     this.state = {
       ShowLoader: true,
       authenticated: false,
-      Posts: [],
+      MainPagePosts: [],
+      ProfilePagePosts: [],
       Likes: [],
       AccountInfo: [
         {
@@ -43,7 +46,8 @@ class App extends Component {
     window.getTokenSilently = await this.props.auth.getTokenSilently();
     document.title = "Social Media";
     this.LoadAzureStorage();
-    this.GetPosts();
+    this.GetMainPagePosts();
+    this.GetProfilePagePosts();
     this.GetLikedPosts();
     this.GetAccountInfo();
     this.isUserAuthenticated();
@@ -61,13 +65,25 @@ class App extends Component {
   }
 
   //gets all the posts related to the main page
-  GetPosts = () => {
+  GetMainPagePosts = () => {
     ApiCall(
       "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts`
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/MainPagePosts`
     ).then((results) => {
       this.setState({
-        Posts: results,
+        MainPagePosts: results,
+      });
+    });
+  };
+
+  //gets all the posts related to the main page
+  GetProfilePagePosts = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/ProfilePosts`
+    ).then((results) => {
+      this.setState({
+        ProfilePagePosts: results,
       });
     });
   };
@@ -128,10 +144,12 @@ class App extends Component {
           test: "123",
           OpenNoti: (message) => this.OpenNoti(message),
           CloseNoti: () => this.CloseNoti(),
-          GetPosts: () => this.GetPosts(),
+          GetMainPagePosts: () => this.GetMainPagePosts(),
+          GetProfilePagePosts: () => this.GetProfilePagePosts(),
           GetLikedPosts: () => this.GetLikedPosts,
           GetAccountInfo: () => this.GetAccountInfo(),
-          Posts: this.state.Posts,
+          MainPagePosts: this.state.MainPagePosts,
+          ProfilePagePosts: this.state.ProfilePagePosts,
           Likes: this.state.Likes,
           AccountInfo: this.state.AccountInfo,
         }}
@@ -172,6 +190,8 @@ class App extends Component {
                     <PeoplePage />
                   </Fade>
                 </Route>
+
+                <NameReq AccountInfo={this.state.AccountInfo} />
 
                 <SnackBar
                   OpenNoti={this.state.OpenNoti}

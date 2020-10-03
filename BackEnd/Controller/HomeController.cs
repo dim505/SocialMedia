@@ -58,6 +58,8 @@ namespace SocialMedia.Controller
 
         }
 
+
+
         /*!!!!!!!!!!!!!!!!!!!!API CALLS FOR HOME PAGE!!!!!!!!!!!!!!*/
         //this endpoint adds a post to the database 
         [HttpPost]
@@ -186,7 +188,7 @@ namespace SocialMedia.Controller
             List<GetComments> getComments = new List<GetComments>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getComments = db.Query<GetComments>("select * from SM_Posts_Comments where PostGuid = @PostGuid", new
+                getComments = db.Query<GetComments>("select SM_Account_Info.FullName,PostGuid,Auth0IDCommentAuthor,DateCreated,CommentContent,CommentGuid from SM_Posts_Comments inner join SM_Account_Info on SM_Posts_Comments.Auth0IDCommentAuthor = SM_Account_Info.Auth0ID where PostGuid = @PostGuid", new
                 {
                     PostGuid = new DbString
                     {
@@ -333,10 +335,11 @@ namespace SocialMedia.Controller
 
         }
 
+
         // this endpoint gets all posts related to the user 
         [HttpGet]
-        [Route("[action]")]
-        public IActionResult GetPosts()
+        [Route("[action]/{TypeOfPost}")]
+        public IActionResult GetPosts(string TypeOfPost)
         {
 
             string ConnStr = GetDbConnString();
@@ -345,7 +348,17 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getPosts = db.Query<GetPosts>("select Auth0IDAuthor, PostGuid, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, post.DisableSharing, post.DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a where Auth0IDAuthor = Auth0IDAuthor group by Auth0IDAuthor, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments ", new
+                var SQL = "";
+                if (TypeOfPost == "MainPagePosts")
+                {
+                    SQL = "select Auth0IDAuthor, PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from   ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked,  case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end  as DisableSharing,  case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post   left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a  inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID  LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID  where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments";
+                }
+
+                else if (TypeOfPost == "ProfilePosts")
+                {
+                    SQL = "select Auth0IDAuthor, PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end  as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments ";
+                }
+                getPosts = db.Query<GetPosts>(SQL, new
                 {
                     Auth0IDAuthor = new DbString
                     {
@@ -358,6 +371,13 @@ namespace SocialMedia.Controller
             return Ok(getPosts);
 
         }
+
+
+
+
+
+
+
 
 
 

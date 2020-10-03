@@ -4,12 +4,46 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckStatsEditProDiag";
+import { ApiCall } from "../SharedComponents/ApiCall";
 
-
-//this card shows the person who you are following info card 
+//this card shows the person who you are following info card
 export default class ProfileCardFollow extends Component {
   state = {
     IsFollow: false,
+  };
+
+  HandleFollowUnfollow = () => {
+    if (this.state.IsFollow === true) {
+      this.setState({
+        IsFollow: !this.state.IsFollow,
+      });
+      /*
+      ApiCall(
+        "Get",
+        `${process.env.REACT_APP_BackEndUrl}/api/People/FollowPerson/{props.Auth0ID}`
+      ).then((results) => {
+        if (results.length > 0) {
+          this.setState({
+            IsFollow: !this.state.IsFollow,
+          });
+        }
+      });*/
+    } else if (this.state.IsFollow === false) {
+      this.setState({
+        IsFollow: !this.state.IsFollow,
+      });
+      /*
+      ApiCall(
+        "Get",
+        `${process.env.REACT_APP_BackEndUrl}/api/People/DeleteFollowPerson/{props.Auth0ID}`
+      ).then((results) => {
+        if (results.length > 0) {
+          this.setState({
+            IsFollow: !this.state.IsFollow,
+          });
+        }
+      });*/
+    }
   };
 
   render() {
@@ -38,14 +72,12 @@ export default class ProfileCardFollow extends Component {
             variant="h5"
             gutterBottom
           >
-            Bob
+            this.props.person
           </Typography>
 
           <Button
             onClick={() => {
-              this.setState({
-                IsFollow: !this.state.IsFollow,
-              });
+              this.HandleFollowUnfollow();
             }}
             color="primary"
           >

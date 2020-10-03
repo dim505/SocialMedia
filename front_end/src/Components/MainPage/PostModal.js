@@ -45,7 +45,8 @@ export default class PostModal extends Component {
         MyData
       ).then(() => {
         this.props.CloseModal();
-        this.context.GetPosts();
+        this.context.GetMainPagePosts();
+        this.context.GetProfilePagePosts();
         this.context.OpenNoti("Post was Updated");
       });
     } else {
@@ -62,7 +63,8 @@ export default class PostModal extends Component {
         MyData
       ).then(() => {
         this.props.CloseModal();
-        this.context.GetPosts();
+        this.context.GetMainPagePosts();
+        this.context.GetProfilePagePosts();
         this.context.OpenNoti("Post was Added");
       });
     }

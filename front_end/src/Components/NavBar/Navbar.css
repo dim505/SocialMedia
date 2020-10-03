@@ -76,7 +76,8 @@
   margin-top: 42px;
 }
 
-.NotiContent {
+
+.NotiContentNoActivity {
   background-color: #efefef;
   max-width: 360px;
   min-height: 376px;
@@ -85,6 +86,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.NotiContentActivity {
+  background-color: #efefef;
+  max-width: 360px;
+  min-height: 376px;
+  width: 360px;
+  color: #888888;
 }
 
 .SearchBarDropDown {

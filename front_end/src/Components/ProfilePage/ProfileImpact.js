@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
 
 import Typography from "@material-ui/core/Typography";
-
+import { ApiCall } from "../SharedComponents/ApiCall";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -14,15 +14,32 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
-
 //this component shows come quick stats regarding the users profile
 export default class ProfileImpact extends Component {
+  state = {
+    ProfileStat: [],
+  };
+
+  DidComponentMount = () => {
+    this.GetData();
+  };
+
+  GetData = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts`
+    ).then((results) => {
+      this.setState({
+        ProfileStat: results,
+      });
+    });
+  };
   render() {
     return (
       <Paper square={false} elevation={3}>
         <Typography
           classes={{
-            root: "ImpactHeader"
+            root: "ImpactHeader",
           }}
           variant="h6"
           gutterBottom
@@ -35,7 +52,7 @@ export default class ProfileImpact extends Component {
             <ListItemIcon>
               <FavoriteIcon />
             </ListItemIcon>
-            <ListItemText primary="0 Like" />
+            <ListItemText primary={this.state.ProfileStat.numberOfLikedComments + "  Likes"} />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
@@ -53,14 +70,14 @@ export default class ProfileImpact extends Component {
             <ListItemIcon>
               <GroupAddIcon />
             </ListItemIcon>
-            <ListItemText primary="0 Following" />
+            <ListItemText primary={this.state.ProfileStat.NumOfFollwing + "  Following"}  />
           </ListItem>
 
           <ListItem button>
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="0 Follwers" />
+            <ListItemText primary={this.state.ProfileStat.NumOfFollowers + "  Following"} />
           </ListItem>
         </List>
       </Paper>

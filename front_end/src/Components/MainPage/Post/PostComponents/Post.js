@@ -30,7 +30,7 @@ export default class Post extends Component {
           classes={{
             root: "TextAllignLeft",
           }}
-          title="BIB BOB"
+          title={this.props.post.fullName}
           subheader={this.props.post.dateCreated + " | Public"}
         />
         <CardContent>

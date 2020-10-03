@@ -84,7 +84,13 @@ export default class PostComment extends Component {
             title: "PostCommentTitle",
             subheader: "PostCommentSubheader",
           }}
-          title={this.state.ShowEdit === false ? "BIB BOB | 6 days ago" : ""}
+          title={
+            this.state.ShowEdit === false
+              ? this.props.comment.fullName +
+                " | " +
+                this.props.comment.dateCreated
+              : ""
+          }
           subheader={
             this.state.ShowEdit === false ? (
               this.props.comment.commentContent

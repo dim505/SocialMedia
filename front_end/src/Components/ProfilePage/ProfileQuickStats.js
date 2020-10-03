@@ -8,7 +8,7 @@ import download from "../download.jpg";
 import ProfileImpact from "./ProfileImpact";
 import PostParent from "../MainPage/Post/PostParent";
 
-//this component is the parent that houses the people page 
+//this component is the parent that houses the people page
 export default class ProfileQuickStats extends Component {
   static contextType = Context;
 
@@ -33,10 +33,10 @@ export default class ProfileQuickStats extends Component {
         </Grid>
         <div className="ProfileTitle"> Bobs Posts</div>
         <Grid spacing={1} container>
-          {this.context.Posts.length === 0 ? (
+          {this.context.ProfilePagePosts.length === 0 ? (
             <h1>No Posts..... Please add some </h1>
           ) : (
-            this.context.Posts.map((post) => (
+            this.context.ProfilePagePosts.map((post) => (
               <Grid item lg={4} md={6} xs={12}>
                 <PostParent post={post} />
               </Grid>
