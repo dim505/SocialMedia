@@ -11,7 +11,11 @@ import { ApiCall } from "../SharedComponents/ApiCall";
 
 //component contains all the components for the People page
 export default class PeoplePage extends Component {
-  state = { value: 1, FindPeople: [], Followers: [] };
+  state = { value: 1, FindPeople: [], Followers: [], Following: [] };
+
+  componentDidMount() {
+    this.GetData();
+  }
 
   //keeps track of which tab is being selected
   handleChange = (event, newValue) => {
@@ -25,34 +29,51 @@ export default class PeoplePage extends Component {
       "Get",
       `${process.env.REACT_APP_BackEndUrl}/api/People/FindPeople`
     ).then((results) => {
-      if (results.length > 0) {
-        this.setState({
-          FindPeople: results,
-        });
-      }
+      this.setState({
+        FindPeople: results,
+      });
     });
 
     ApiCall(
       "Get",
       `${process.env.REACT_APP_BackEndUrl}/api/People/GetFollowers`
     ).then((results) => {
-      if (results.length > 0) {
-        this.setState({
-          Followers: results,
-        });
-      }
+      this.setState({
+        Followers: results,
+      });
+    });
+
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/People/GetFollowing`
+    ).then((results) => {
+      this.setState({
+        Following: results,
+      });
     });
   };
 
   //depending on the tab selected. It will render a different component
   RenderSubPage = () => {
     if (this.state.value === 0) {
-      return <FindPeopleParent FindPeople={this.state.FindPeople} />;
+      return (
+        <FindPeopleParent
+          GetData={() => this.GetData()}
+          FindPeople={this.state.FindPeople}
+        />
+      );
     }
     if (this.state.value === 1) {
-      return <FollowingPeopleParent />;
+      return (
+        <FollowingPeopleParent
+          GetData={() => this.GetData()}
+          Following={this.state.Following}
+        />
+      );
     } else {
-      return <Followers Followers={this.state.Followers} />;
+      return <Followers 
+      GetData={() => this.GetData()}
+      Followers={this.state.Followers} />;
     }
   };
 

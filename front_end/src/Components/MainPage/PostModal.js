@@ -80,11 +80,15 @@ export default class PostModal extends Component {
       <div>
         <Card>
           <CardHeader
-            avatar={<Avatar>R</Avatar>}
+            avatar={
+              <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>
+                R
+              </Avatar>
+            }
             classes={{
               root: "TextAllignLeft",
             }}
-            title="BIB BOB | Public"
+            title={this.context.AccountInfo[0].fullName + " | Public"}
           />
           <CardContent>
             <TextField

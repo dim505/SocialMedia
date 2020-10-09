@@ -149,9 +149,7 @@ namespace SocialMedia.Controller
                     else if (UpdateAccountInfoAction == "UpdateBannerPhoto")
                     {
 
-                        Sql = @" Update SM_Account_Info	
-								set BannerPhotoUrl = @BannerPhotoUrl,
-                                where  Auth0ID = @Auth0ID ";
+                        Sql = @" Update SM_Account_Info 	set BannerPhotoUrl = @BannerPhotoUrl where  Auth0ID = @Auth0ID ";
                         Variables = new
                         {
                             FullName = "",
@@ -169,12 +167,10 @@ namespace SocialMedia.Controller
 
                     }
 
-                    else if (UpdateAccountInfoAction == "UpdatePhoto")
+                    else if (UpdateAccountInfoAction == "UpdateProfilePhoto")
                     {
 
-                        Sql = @" Update SM_Account_Info	
-                                set ProfilePhotoUrl = @ProfilePhotoUrl,
-                                where  Auth0ID = @Auth0ID ";
+                        Sql = @" Update SM_Account_Info set ProfilePhotoUrl = @ProfilePhotoUrl where  Auth0ID = @Auth0ID ";
                         Variables = new
                         {
                             FullName = "",
@@ -184,7 +180,7 @@ namespace SocialMedia.Controller
                             Facebook = "",
                             WebAddress = "",
                             Auth0ID = LoggedInUser,
-                            ProfilePhotoUrl = accountInfo.BannerPhotoUrl,
+                            ProfilePhotoUrl = accountInfo.ProfilePhotoUrl,
                             BannerPhotoUrl = ""
 
                         };
@@ -224,7 +220,7 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                accountInfo = db.Query<AccountInfo>("select * from SM_Account_Info where Auth0ID = @Auth0ID", new
+                accountInfo = db.Query<AccountInfo>("select FullName,Tagline,CompanyName,Twitter,Facebook,WebAddress,Auth0ID, case when BannerPhotoUrl <> '' then  BannerPhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Banner' + Auth0ID end as BannerPhotoUrl, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl from SM_Account_Info  where Auth0ID = @Auth0ID", new
                 {
                     Auth0ID = new DbString
                     {
@@ -255,7 +251,7 @@ namespace SocialMedia.Controller
             {
                 getProfileStats = db.Query<GetProfileStats>("select (select count(*)  from SM_LikeCommentTable where Auth0IDWhoLiked = @Auth0ID) as Likes, (select count(*)  from SM_Follow_Following_Table where FollowingAuth0ID = @Auth0ID) as NumOfFollwing, (select count(*) from SM_Follow_Following_Table where FollowerAuth0ID = @Auth0ID) as NumOfFollowers", new
                 {
-                    Auth0IDAuthor = new DbString
+                    Auth0ID = new DbString
                     {
                         Value = Auth0IDAuthor,
                         IsFixedLength = false,

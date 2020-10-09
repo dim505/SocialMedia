@@ -12,23 +12,30 @@ export default class NameReq extends Component {
   };
 
   componentDidMount = () => {
-    if (this.props.AccountInfo.length < 0) {
-      this.OpenDialog();
-      this.context.OpenNoti(
-        "Please Enter Your Name and Click UPDATE INFO Before Proceeding",
-        "top"
-      );
-    }
+    this.ShouldOpenProfileEdit();
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.AccountInfo.length < 0) {
+  ShouldOpenProfileEdit = () => {
+    if (
+      this.props.AccountInfo[0].fullName === "" &&
+      this.state.OpenDialog !== true &&
+      this.context.ShowLoader === false
+    ) {
       this.OpenDialog();
       this.context.OpenNoti(
         "Please Enter Your Name and Click UPDATE INFO Before Proceeding",
         "top"
       );
+    } else if (
+      this.props.AccountInfo[0].fullName !== "" &&
+      this.state.OpenDialog === true
+    ) {
+      this.CloseDialog();
+      this.context.CloseNoti();
     }
+  };
+  componentDidUpdate(prevProps) {
+    this.ShouldOpenProfileEdit();
   }
 
   OpenDialog = () => {

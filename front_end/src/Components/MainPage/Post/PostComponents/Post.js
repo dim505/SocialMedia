@@ -9,14 +9,18 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MessageIcon from "@material-ui/icons/Message";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import Context from "../../../SharedComponents/context";
 
 //component contains the majority of the post includeing profile pic, post content and icons/FavoriteBorder
 export default class Post extends Component {
+  static contextType = Context;
   render() {
     return (
       <div>
         <CardHeader
-          avatar={<Avatar>R</Avatar>}
+          avatar={
+            <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>R</Avatar>
+          }
           action={
             <div>
               <IconButton

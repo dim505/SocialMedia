@@ -15,7 +15,10 @@ export default class ProfileQuickStats extends Component {
   render() {
     return (
       <div>
-        <BackgroundBanner picture={download} PictureSize="384px" />
+        <BackgroundBanner
+          picture={this.context.AccountInfo[0].bannerPhotoUrl}
+          PictureSize="384px"
+        />
         <Grid
           container
           classes={{
@@ -31,7 +34,7 @@ export default class ProfileQuickStats extends Component {
             <ProfileImpact />
           </Grid>
         </Grid>
-        <div className="ProfileTitle"> Bobs Posts</div>
+        <div className="ProfileTitle"> Your Posts</div>
         <Grid spacing={1} container>
           {this.context.ProfilePagePosts.length === 0 ? (
             <h1>No Posts..... Please add some </h1>

@@ -4,9 +4,11 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import SharedModal from "../SharedComponents/SharedModal";
 import PostModal from "./PostModal";
-
+import Context from "../SharedComponents/context";
 //button used to open modal to add a new post
 export default class AddPostButton extends Component {
+  static contextType = Context;
+
   state = {
     OpnModal: false,
   };
@@ -29,7 +31,7 @@ export default class AddPostButton extends Component {
       <div>
         <Paper elevation={3}>
           <Button onClick={() => this.OpnModal()} fullWidth={true}>
-            <Avatar />
+            <Avatar src={this.context.AccountInfo[0].profilePhotoUrl} />
 
             <p id="PostStatus"> Whats New With You? </p>
           </Button>

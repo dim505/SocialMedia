@@ -62,7 +62,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
+              src={this.context.AccountInfo[0].profilePhotoUrl}
             />
           </div>
           <Typography

@@ -26,9 +26,11 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Tooltip from "@material-ui/core/Tooltip";
 import "./Navbar.css";
 import NotificationActivity from "./NotificationActivity";
-
+import Context from "../SharedComponents/context";
 //component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
 export default class NavBar extends Component {
+  static contextType = Context;
+
   state = {
     OpenDrawer: false,
     ShowPage: "Home",
@@ -237,7 +239,10 @@ export default class NavBar extends Component {
                   color="inherit"
                   aria-label="menu"
                 >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={this.context.AccountInfo[0].profilePhotoUrl}
+                  />
                 </IconButton>
                 {/*Avatar pop over menu for nav bars*/}
                 <Popover

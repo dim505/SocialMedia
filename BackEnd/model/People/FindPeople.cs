@@ -4,6 +4,7 @@
     {
         public string FullName { get; set; }
         public string Auth0ID { get; set; }
+        public string ProfilePhotoUrl { get; set; }
 
     }
 }

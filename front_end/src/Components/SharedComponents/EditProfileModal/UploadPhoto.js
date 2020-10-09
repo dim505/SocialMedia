@@ -19,46 +19,70 @@ export default class UploadPhoto extends Component {
     });
   };
 
-  UploadPhoto = (Filename) => {
+  UploadPhoto = async () => {
     var MyData = {};
-
+    var Filename = "";
     if (this.props.FileTypeBeingUploaded === "BannerPhoto") {
+      var ext = this.state.files[0].name.split(".").pop();
+
+      Filename = "Banner_" + this.context.AccountInfo[0].auth0ID + "." + ext;
       MyData.AccountInfo = {
-        BannerPhotoUrl: Filename,
+        BannerPhotoUrl:
+          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+          Filename,
       };
 
-      ApiCall(
-        "Post",
-        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfilePhoto`,
-        MyData
-      ).then(() => {
-        this.setState({
-          ShowPhotoUpload: false,
-          ProfileUrl:
-            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-            Filename,
-        });
-        this.context.OpenNoti("Banner Photo Uploaded");
-      });
-    } else if (this.props.FileTypeBeingUploaded === "ProfilePhoto") {
-      MyData.AccountInfo = {
-        ProfilePhotoUrl: Filename,
-      };
+      window.containerClient = window.blobServiceClient.getContainerClient(
+        "socialmedia"
+      );
 
+      const blockBlobClient = window.containerClient.getBlockBlobClient(
+        Filename
+      );
+      const uploadBlobResponse = await blockBlobClient.uploadBrowserData(
+        this.state.files[0]
+      );
+      window.Filename = Filename;
       ApiCall(
         "Post",
         `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateBannerPhoto`,
         MyData
-      ).then(() => {
-        this.setState({
-          ShowPhotoUpload: false,
-          BannerUrl:
-            "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-            Filename,
-        });
+      ).then((Filename) => {
+        this.context.GetAccountInfo();
+        this.props.ClosePhotoUpload(window.Filename);
+        this.context.OpenNoti("Banner Photo Uploaded");
       });
+    } else if (this.props.FileTypeBeingUploaded === "ProfilePhoto") {
+      MyData = {};
+      var ext = this.state.files[0].name.split(".").pop();
 
-      this.context.OpenNoti("Profile Photo Uploaded");
+      Filename = "Profile_" + this.context.AccountInfo[0].auth0ID + "." + ext;
+      MyData.AccountInfo = {
+        ProfilePhotoUrl:
+          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+          Filename,
+      };
+
+      window.containerClient = window.blobServiceClient.getContainerClient(
+        "socialmedia"
+      );
+      debugger;
+      const blockBlobClient = window.containerClient.getBlockBlobClient(
+        Filename
+      );
+      const uploadBlobResponse = await blockBlobClient.uploadBrowserData(
+        this.state.files[0]
+      );
+      window.Filename = Filename;
+      ApiCall(
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfilePhoto`,
+        MyData
+      ).then((Filename) => {
+        this.context.GetAccountInfo();
+        this.props.ClosePhotoUpload(window.Filename);
+        this.context.OpenNoti("Profile Photo Uploaded");
+      });
     }
   };
 

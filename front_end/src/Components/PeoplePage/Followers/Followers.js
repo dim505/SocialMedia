@@ -9,11 +9,15 @@ export default class Followers extends Component {
       <div>
         <div className="ProfileTitle"> Followers </div>
         <Grid container={true}>
-          {this.props.Followers.map((Person) => (
-            <Grid item lg={4} md={6} xs={12} xs={3}>
-              <ProfileCardFollow Person={Person} />
-            </Grid>
-          ))}
+          {this.props.Followers.length > 0 ? (
+            this.props.Followers.map((Person) => (
+              <Grid item lg={4} md={6} xs={12} xs={3}>
+                <ProfileCardFollow Person={Person} />
+              </Grid>
+            ))
+          ) : (
+            <h3>No Followers found</h3>
+          )}
         </Grid>
       </div>
     );

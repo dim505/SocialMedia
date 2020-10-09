@@ -48,7 +48,11 @@ export default class ProQckStatsEditProDiag extends Component {
       `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfileInfo`,
       MyData
     ).then(() => {
-      this.props.CloseDialog();
+      if (this.props.CloseDialog() === undefined) {
+        this.props.CloseDialog2();
+      } else {
+        this.props.CloseDialog();
+      }
       this.context.GetAccountInfo();
       this.context.OpenNoti("Profile Information Updated");
     });
@@ -60,10 +64,22 @@ export default class ProQckStatsEditProDiag extends Component {
   };
 
   //closes the photo dropzone
-  ClosePhotoUpload = () => {
-    this.setState({
-      ShowPhotoUpload: false,
-    });
+  ClosePhotoUpload = (Filename) => {
+    if (Filename.includes("Banner")) {
+      this.setState({
+        ShowPhotoUpload: false,
+        BannerUrl:
+          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+          Filename,
+      });
+    } else if (Filename.includes("Profile")) {
+      this.setState({
+        ShowPhotoUpload: false,
+        ProfileUrl:
+          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+          Filename,
+      });
+    }
   };
 
   render() {
@@ -76,7 +92,7 @@ export default class ProQckStatsEditProDiag extends Component {
       >
         <DialogContent>
           <BackgroundBanner
-            picture={this.state.BannerUrl}
+            picture={this.context.AccountInfo[0].bannerPhotoUrl}
             PictureSize="200px"
           />
           <div className="Avatar_Center">
@@ -85,7 +101,7 @@ export default class ProQckStatsEditProDiag extends Component {
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
-              src={this.state.ProfileUrl}
+              src={this.context.AccountInfo[0].profilePhotoUrl}
             />
             <Tooltip title="Click To Add Profile Photo">
               <AddAPhotoOutlinedIcon

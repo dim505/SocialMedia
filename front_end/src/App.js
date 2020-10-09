@@ -128,7 +128,7 @@ class App extends Component {
   //loads the azure services needed for photo upload
   LoadAzureStorage = () => {
     var blobSasUrl =
-      "https://shellstorage123.blob.core.windows.net/?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-10-01T00:21:49Z&st=2020-09-01T16:21:49Z&spr=https&sig=j71oprnbo95XLKLoIA9Cpxn53%2BbYuRdFpjGIASM6rxc%3D";
+      "https://shellstorage123.blob.core.windows.net/?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-08-30T18:55:43Z&st=2020-10-04T10:55:43Z&spr=https&sig=8FOqoHQU7swZB5qlRGdqSYNAJel2WeoT%2FpW743Jqx%2FE%3D";
     const {
       BlobServiceClient,
       StorageSharedKeyCredential,
@@ -152,6 +152,7 @@ class App extends Component {
           ProfilePagePosts: this.state.ProfilePagePosts,
           Likes: this.state.Likes,
           AccountInfo: this.state.AccountInfo,
+          ShowLoader: this.state.ShowLoaders,
         }}
       >
         <div className="App">

@@ -188,7 +188,7 @@ namespace SocialMedia.Controller
             List<GetComments> getComments = new List<GetComments>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                getComments = db.Query<GetComments>("select SM_Account_Info.FullName,PostGuid,Auth0IDCommentAuthor,DateCreated,CommentContent,CommentGuid from SM_Posts_Comments inner join SM_Account_Info on SM_Posts_Comments.Auth0IDCommentAuthor = SM_Account_Info.Auth0ID where PostGuid = @PostGuid", new
+                getComments = db.Query<GetComments>("select SM_Account_Info.FullName,PostGuid,Auth0IDCommentAuthor,DateCreated,CommentContent,CommentGuid from SM_Posts_Comments inner join SM_Account_Info on SM_Posts_Comments.Auth0IDCommentAuthor = SM_Account_Info.Auth0ID where PostGuid = @PostGuid order by DateCreated desc", new
                 {
                     PostGuid = new DbString
                     {

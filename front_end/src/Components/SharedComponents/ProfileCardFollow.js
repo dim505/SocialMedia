@@ -12,37 +12,35 @@ export default class ProfileCardFollow extends Component {
     IsFollow: false,
   };
 
+  componentDidMount() {
+    if (this.props.IsFollow === true) {
+      this.setState({
+        IsFollow: true,
+      });
+    }
+  }
+
   HandleFollowUnfollow = () => {
-    if (this.state.IsFollow === true) {
-      this.setState({
-        IsFollow: !this.state.IsFollow,
-      });
-      /*
+    if (this.state.IsFollow === false) {
       ApiCall(
-        "Get",
-        `${process.env.REACT_APP_BackEndUrl}/api/People/FollowPerson/{props.Auth0ID}`
+        "Post",
+        `${process.env.REACT_APP_BackEndUrl}/api/People/FollowPerson/${this.props.Person.auth0ID}`
       ).then((results) => {
-        if (results.length > 0) {
-          this.setState({
-            IsFollow: !this.state.IsFollow,
-          });
-        }
-      });*/
-    } else if (this.state.IsFollow === false) {
-      this.setState({
-        IsFollow: !this.state.IsFollow,
+        this.setState({
+          IsFollow: true,
+        });
+        this.props.GetData();
       });
-      /*
+    } else if (this.state.IsFollow === true) {
       ApiCall(
-        "Get",
-        `${process.env.REACT_APP_BackEndUrl}/api/People/DeleteFollowPerson/{props.Auth0ID}`
+        "Delete",
+        `${process.env.REACT_APP_BackEndUrl}/api/People/DeleteFollowPerson/${this.props.Person.followingAuth0ID}`
       ).then((results) => {
-        if (results.length > 0) {
-          this.setState({
-            IsFollow: !this.state.IsFollow,
-          });
-        }
-      });*/
+        this.setState({
+          IsFollow: false,
+        });
+        this.props.GetData();
+      });
     }
   };
 
@@ -62,7 +60,7 @@ export default class ProfileCardFollow extends Component {
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
+              src={this.props.Person.profilePhotoUrl}
             />
           </div>
           <Typography
@@ -72,7 +70,7 @@ export default class ProfileCardFollow extends Component {
             variant="h5"
             gutterBottom
           >
-            this.props.person
+            {this.props.Person.fullName}
           </Typography>
 
           <Button
@@ -81,7 +79,7 @@ export default class ProfileCardFollow extends Component {
             }}
             color="primary"
           >
-            {this.state.IsFollow === true ? "Follow" : "Following"}
+            {this.state.IsFollow === true ? "Following" : "Follow"}
           </Button>
         </Paper>
       </div>

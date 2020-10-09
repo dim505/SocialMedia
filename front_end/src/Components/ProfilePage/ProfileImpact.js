@@ -17,17 +17,24 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 //this component shows come quick stats regarding the users profile
 export default class ProfileImpact extends Component {
   state = {
-    ProfileStat: [],
+    ProfileStat: [
+      {
+        likes: "0",
+        numOfFollowers: "0",
+        numOfFollwing: "0",
+      },
+    ],
   };
 
-  DidComponentMount = () => {
+  componentDidMount = () => {
+    console.log("ProfileImpact");
     this.GetData();
   };
 
   GetData = () => {
     ApiCall(
       "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts`
+      `${process.env.REACT_APP_BackEndUrl}/api/profile/GetProfileStats`
     ).then((results) => {
       this.setState({
         ProfileStat: results,
@@ -52,7 +59,9 @@ export default class ProfileImpact extends Component {
             <ListItemIcon>
               <FavoriteIcon />
             </ListItemIcon>
-            <ListItemText primary={this.state.ProfileStat.numberOfLikedComments + "  Likes"} />
+            <ListItemText
+              primary={this.state.ProfileStat[0].likes + "  Likes"}
+            />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
@@ -70,14 +79,18 @@ export default class ProfileImpact extends Component {
             <ListItemIcon>
               <GroupAddIcon />
             </ListItemIcon>
-            <ListItemText primary={this.state.ProfileStat.NumOfFollwing + "  Following"}  />
+            <ListItemText
+              primary={this.state.ProfileStat[0].numOfFollwing + "  Following"}
+            />
           </ListItem>
 
           <ListItem button>
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary={this.state.ProfileStat.NumOfFollowers + "  Following"} />
+            <ListItemText
+              primary={this.state.ProfileStat[0].numOfFollowers + "  Followers"}
+            />
           </ListItem>
         </List>
       </Paper>
