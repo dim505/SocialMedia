@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { ApiCall } from "../ApiCall";
 import Context from "../context";
@@ -11,6 +12,12 @@ import { DropzoneArea } from "material-ui-dropzone";
 
 //this component displays the upload file area when uploading a profile picture or banner picture
 export default class UploadPhoto extends Component {
+
+
+  state = {
+   files: [],
+    ShowLoader: false
+  }
   static contextType = Context;
 
   HandleFileDrag = (files) => {
@@ -22,6 +29,10 @@ export default class UploadPhoto extends Component {
   UploadPhoto = async () => {
     var MyData = {};
     var Filename = "";
+    this.setState({
+      ShowLoader: true
+    })
+  
     if (this.props.FileTypeBeingUploaded === "BannerPhoto") {
       var ext = this.state.files[0].name.split(".").pop();
 
@@ -94,6 +105,7 @@ export default class UploadPhoto extends Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+      {this.state.ShowLoader ? <LinearProgress /> : null}  
         <DialogContent>
           <DropzoneArea
             acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
@@ -104,6 +116,7 @@ export default class UploadPhoto extends Component {
         <DialogActions>
           <Button onClick={() => this.props.ClosePhotoUpload()}> Cancel</Button>
           <Button
+           disabled={this.state.files.length == 0}
             variant="contained"
             color="primary"
             onClick={() => this.UploadPhoto()}

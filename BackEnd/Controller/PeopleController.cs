@@ -65,7 +65,7 @@ namespace SocialMedia.Controller
             List<FindPeople> findPeoples = new List<FindPeople>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string SqlStr = @"select top 100 FullName, Auth0ID, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl from SM_Account_Info left JOIN SM_Follow_Following_Table on SM_Account_Info.Auth0ID =  SM_Follow_Following_Table.FollowingAuth0ID where Auth0ID <> @LoggedInUser and FullName <> '' and FollowerAuth0ID is null ORDER BY NEWID()";
+                string SqlStr = @"select top 100 FullName, Auth0ID, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl from SM_Account_Info left JOIN SM_Follow_Following_Table on SM_Account_Info.Auth0ID =  SM_Follow_Following_Table.FollowingAuth0ID where Auth0ID <> @LoggedInUser and FullName <> '' and (FollowerAuth0ID is null OR FollowerAuth0ID <> @LoggedInUser ) ORDER BY NEWID()";
                 findPeoples = db.Query<FindPeople>(SqlStr, new { LoggedInUser = new DbString { Value = LoggedInUser, IsFixedLength = false, IsAnsi = true } }).ToList();
             };
 
@@ -215,7 +215,7 @@ namespace SocialMedia.Controller
             List<Followers> followers = new List<Followers>();
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string SqlStr = @"select SM_Account_Info.FullName, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl, SM_Follow_Following_Table.* from SM_Follow_Following_Table left join SM_Account_Info on SM_Follow_Following_Table.FollowerAuth0ID = SM_Account_Info.Auth0ID where FollowingAuth0ID = @LoggedInUser";
+                string SqlStr = @"select  SM_Account_Info.FullName, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl, SM_Follow_Following_Table.* from SM_Follow_Following_Table left join SM_Account_Info on SM_Follow_Following_Table.FollowerAuth0ID = SM_Account_Info.Auth0ID where FollowingAuth0ID = @LoggedInUser";
                 followers = db.Query<Followers>(SqlStr, new { LoggedInUser = new DbString { Value = LoggedInUser, IsFixedLength = false, IsAnsi = true } }).ToList();
             };
 

@@ -80,7 +80,7 @@ export default class ProfileImpact extends Component {
               <GroupAddIcon />
             </ListItemIcon>
             <ListItemText
-              primary={this.state.ProfileStat[0].numOfFollwing + "  Following"}
+              primary={this.state.ProfileStat[0].numOfFollwing + "  Followers"}
             />
           </ListItem>
 
@@ -89,7 +89,7 @@ export default class ProfileImpact extends Component {
               <AccountCircleIcon />
             </ListItemIcon>
             <ListItemText
-              primary={this.state.ProfileStat[0].numOfFollowers + "  Followers"}
+              primary={this.state.ProfileStat[0].numOfFollowers + "  Following"}
             />
           </ListItem>
         </List>
