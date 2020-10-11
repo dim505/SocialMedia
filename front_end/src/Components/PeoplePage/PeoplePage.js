@@ -9,6 +9,7 @@ import Followers from "./Followers/Followers";
 import "./people.css";
 import { ApiCall } from "../SharedComponents/ApiCall";
 
+
 //component contains all the components for the People page
 export default class PeoplePage extends Component {
   state = { value: 1, FindPeople: [], Followers: [], Following: [] };
@@ -93,8 +94,9 @@ export default class PeoplePage extends Component {
             <Tab label="Followers" />
           </Tabs>
         </Paper>
-
+        
         {this.RenderSubPage()}
+        
       </div>
     );
   }

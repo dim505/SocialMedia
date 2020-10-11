@@ -41,7 +41,7 @@
 }
 
 .SearchInputBase {
-  width: calc(100% - 30px);
+  width: calc(100% - 50px);
 }
 
 .search {
@@ -64,7 +64,7 @@
 
 
 .SearchBarDropDown {
-  width: calc(100% - 212px);
+  width: calc(100% - 247px);
   transform: translate(20px, -54px);
   position: absolute !important;
 }

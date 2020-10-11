@@ -65,7 +65,14 @@ export default class ProQckStatsEditProDiag extends Component {
 
   //closes the photo dropzone
   ClosePhotoUpload = (Filename) => {
-    if (Filename.includes("Banner")) {
+
+    if (Filename == undefined) {
+      this.setState({
+        ShowPhotoUpload: false
+      });
+
+    }
+    else if (Filename.includes("Banner")) {
       this.setState({
         ShowPhotoUpload: false,
         BannerUrl:

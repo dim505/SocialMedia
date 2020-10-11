@@ -8,7 +8,7 @@
         public string FollowingAuth0ID { get; set; }
         public string DateFollowed { get; set; }
         public string UserNotified { get; set; }
-
+        public string IsFollow { get; set; }
 
     }
 }
