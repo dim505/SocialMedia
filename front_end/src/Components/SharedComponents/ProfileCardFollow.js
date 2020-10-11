@@ -72,16 +72,15 @@ export default class ProfileCardFollow extends Component {
           >
             {this.props.Person.fullName}
           </Typography>
-          {this.props.Disable  ?   <div></div>         
-           : <Button
-           onClick={() => {
-             this.HandleFollowUnfollow();
-           }}
-           color="primary"
-         >
-           {this.state.IsFollow === true ? "Following" : "Follow"}
-         </Button>   }
 
+          <Button
+            onClick={() => {
+              this.HandleFollowUnfollow();
+            }}
+            color="primary"
+          >
+            {this.state.IsFollow === true ? "Following" : "Follow"}
+          </Button>
         </Paper>
       </div>
     );

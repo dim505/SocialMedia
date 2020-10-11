@@ -44,7 +44,7 @@ class App extends Component {
   //sets title, get data, check if visiting user is authenticated
   async componentDidMount() {
     window.getTokenSilently = await this.props.auth.getTokenSilently();
-    document.title = "Fusion Connect";
+    document.title = "Social Media";
     this.LoadAzureStorage();
     this.GetMainPagePosts();
     this.GetProfilePagePosts();
@@ -182,7 +182,7 @@ class App extends Component {
 
                 <Route path="/Profile">
                   <Fade collapse>
-                     
+                    <p>PROFILE SECTION </p>
                     <ProfileQuickStats />
                   </Fade>
                 </Route>

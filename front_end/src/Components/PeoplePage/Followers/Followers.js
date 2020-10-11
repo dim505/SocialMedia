@@ -12,9 +12,7 @@ export default class Followers extends Component {
           {this.props.Followers.length > 0 ? (
             this.props.Followers.map((Person) => (
               <Grid item lg={4} md={6} xs={12} xs={3}>
-                <ProfileCardFollow 
-                Disable={true}
-                Person={Person} />
+                <ProfileCardFollow Person={Person} />
               </Grid>
             ))
           ) : (

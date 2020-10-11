@@ -16,7 +16,7 @@ export default class LogInScreen extends Component {
       <div>
         <AccountCircleIcon style={{ fontSize: 48 }} />
         <Typography variant="h5" gutterBottom>
-          Welcome To Fusion Connect
+          Welcome To My Social Media App
         </Typography>
 
         <Button variant="outlined" onClick={this.Login}>
