@@ -8,7 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Fade from "react-reveal/Fade";
-//import { ApiCall } from "./ApiCall";
+import { ApiCall } from "../SharedComponents/ApiCall";
 
 export default class NotificationActivity extends Component {
   state = {
@@ -19,24 +19,16 @@ export default class NotificationActivity extends Component {
       ShowNoti: false,
     });
 
-    /*
-    var MyData = {};
-    MyData.UpdatePostData = {
-      PostGuid: this.props.post.postGuid,
-      DisableSharing: !this.state.DisableSharing,
-    };
-
+    
     ApiCall(
-      "Post",
-      `${process.env.REACT_APP_BackEndUrl}/api/people/UpdateNotification`,
-      MyData
+      "Delete",
+      `${process.env.REACT_APP_BackEndUrl}/api/Home/DeleteNotification/${this.props.message.FollowerAuth0ID}/${this.props.message.FollowingAuth0ID}`
+      
     ).then(() => {
-      this.setState({
-        ShowNoti: false
-      });
+		console.log("deleted")
     });
 
-    */
+    
   };
 
   render() {

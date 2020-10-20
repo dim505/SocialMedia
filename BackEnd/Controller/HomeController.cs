@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AMSBackEnd.Model;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -58,7 +59,26 @@ namespace SocialMedia.Controller
 
         }
 
+        public object DbExecute(string SqlStr, object SqlParameters)
+        {
+            string LoginUserIdentifier = GetUserAuth0ID();
+            string ConnStr = GetDbConnString();
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                int result = db.Execute(SqlStr, SqlParameters);
+                return Ok(result);
+            }
+        }
 
+        public IActionResult DbQuery(string SqlStr, object SqlParameters)
+        {
+            string ConnStr = GetDbConnString();
+            using (IDbConnection db = new SqlConnection(ConnStr))
+            {
+                System.Collections.Generic.List<dynamic> data = db.Query(SqlStr, SqlParameters).AsList();
+                return Ok(data);
+            }
+        }
 
         /*!!!!!!!!!!!!!!!!!!!!API CALLS FOR HOME PAGE!!!!!!!!!!!!!!*/
         //this endpoint adds a post to the database 
@@ -72,7 +92,9 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                string SqlStr = @"insert into SM_Posts values  (@Auth0IDAuthor, @PostGuid, @DateCreated, @PostContent, @DisableSharing, @DisableComments)";
+                string SqlStr = @"insert into SM_Posts values  (@Auth0IDAuthor, @PostGuid, @DateCreated, @PostContent, @DisableSharing, @DisableComments)
+                                  insert into SM_Posts_File_Urls values  (@PostGuid, @FileUrl, @FileType)  
+";
                 int result = db.Execute(SqlStr, new
                 {
 
@@ -80,6 +102,8 @@ namespace SocialMedia.Controller
                     PostGuid = addPost.PostGuid,
                     DateCreated = addPost.DateCreated,
                     PostContent = addPost.PostContent,
+                    FileUrl = addPost.FileUrl,
+                    FileType = addPost.FileType,
                     DisableSharing = "",
                     DisableComments = ""
 
@@ -96,17 +120,11 @@ namespace SocialMedia.Controller
         [Route("[action]/{PostGuid}")]
         public IActionResult DeletePost(string PostGuid)
         {
-            string ConnStr = GetDbConnString();
-            using (IDbConnection db = new SqlConnection(ConnStr))
-            {
-                string Sql = @"delete from SM_Posts where PostGuid= @PostGuid";
-                db.Execute(Sql, new
-                {
-                    PostGuid = PostGuid
-                });
+            string SqlStr = @"delete from SM_Posts where PostGuid= @PostGuid delete from SM_LikeCommentTable where PostGuid= @PostGuid";
+            GlobalVariables.Parameter1 = PostGuid;
 
-            }
-
+            var SqlParameters = new { PostGuid = new DbString { Value = GlobalVariables.Parameter1, IsFixedLength = false, IsAnsi = true } };
+            dynamic results = DbExecute(SqlStr, SqlParameters);
             return Ok();
         }
 
@@ -335,7 +353,6 @@ namespace SocialMedia.Controller
 
         }
 
-
         // this endpoint gets all posts related to the user 
         [HttpGet]
         [Route("[action]/{TypeOfPost}")]
@@ -351,7 +368,7 @@ namespace SocialMedia.Controller
                 var SQL = "";
                 if (TypeOfPost == "MainPagePosts")
                 {
-                    SQL = "select Auth0IDAuthor, PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from   ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked,  case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end  as DisableSharing,  case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post   left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a  inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID  LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID  where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments";
+                    SQL = "select Auth0IDAuthor, a.PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID left join SM_Posts_File_Urls ON a.PostGuid = SM_Posts_File_Urls.PostGuid where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, a.PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments,FileUrl,FileType";
                 }
 
                 else if (TypeOfPost == "ProfilePosts")
@@ -372,43 +389,85 @@ namespace SocialMedia.Controller
 
         }
 
-
-
-
-
-
-
-
-
-
-
-        // GET: api/Home
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("[action]")]
+        public IActionResult GetNotifications()
         {
-            return new string[] {
-        "value1",
-        "value2"
-      };
+            string SqlStr = "select FollowerAuth0ID, FollowingAuth0ID, FullName  + ' is now following you!' as Message from sm_follow_following_table inner join SM_Account_Info ON  SM_Account_Info.Auth0ID = sm_follow_following_table.FollowingAuth0ID where  FollowingAuth0ID = @LoggedInUser  and  UserNotified = 'N'";
+            GlobalVariables.Parameter1 = GetUserAuth0ID();
+            var SqlParameters = new
+            {
+                LoggedInUser = new DbString
+                {
+                    Value = GlobalVariables.Parameter1,
+                    IsFixedLength = false,
+                    IsAnsi = true
+                }
+            };
+            dynamic results = DbQuery(SqlStr, SqlParameters);
+            return results;
         }
 
-        // GET: api/Home/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpDelete]
+        [Route("[action]/{FollowerAuth0ID}/{FollowingAuth0ID}")]
+        public IActionResult DeleteNotification(string FollowerAuth0ID, string FollowingAuth0ID)
         {
-            return "value";
+            string SqlStr = "Update sm_follow_following_table set UserNotified = 'Y' where FollowerAuth0ID = @FollowerAuth0ID and FollowingAuth0ID = @FollowingAuth0ID";
+            GlobalVariables.Parameter1 = FollowerAuth0ID;
+            GlobalVariables.Parameter2 = FollowingAuth0ID;
+            var SqlParameters = new
+            {
+                FollowerAuth0ID = new DbString
+                {
+                    Value = GlobalVariables.Parameter1,
+                    IsFixedLength = false,
+                    IsAnsi = true
+                },
+                FollowingAuth0ID = new DbString
+                {
+                    Value = GlobalVariables.Parameter2,
+                    IsFixedLength = false,
+                    IsAnsi = true
+                }
+            };
+            dynamic results = DbExecute(SqlStr, SqlParameters);
+            return results;
         }
 
-        // POST: api/Home
-        [HttpPost]
-        public void Post([FromBody] string value) { }
+        [HttpGet]
+        [Route("[action]/{SearchItem}/{SearchTerm}")]
+        public IActionResult Search(string SearchItem, string SearchTerm)
+        {
+            string SqlStr = "";
+            if (SearchItem == "Posts")
+            {
+                SqlStr = @"select SM_Account_Info.FullName as fullName, Auth0IDAuthor AS auth0IDAuthor,	DateCreated AS dateCreated,	PostContent AS postContent,	DisableSharing AS disableSharing,	DisableComments AS disableComments,	SM_Posts.PostGuid AS postGuid,	FileUrl AS fileUrl,	FileType AS fileType,	FollowerAuth0ID AS followerAuth0ID,	FollowingAuth0ID AS followingAuth0ID,	DateFollowed AS dateFollowed,	UserNotified AS userNotified from SM_Posts left join SM_Account_Info on SM_Posts.Auth0IDAuthor = SM_Account_Info.Auth0ID left join SM_Posts_File_Urls ON SM_Posts.PostGuid = SM_Posts_File_Urls.PostGuid left join SM_Follow_Following_Table on	SM_Posts.Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID where PostContent like @SearchTerm and (SM_Posts.Auth0IDAuthor = @LoggedInUser) ";
+            }
+            else if (SearchItem == "Users")
+            {
+                SqlStr = @"select  top 30  FullName as fullName, Auth0ID as auth0ID, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as profilePhotoUrl from SM_Account_Info left JOIN SM_Follow_Following_Table on SM_Account_Info.Auth0ID <>  SM_Follow_Following_Table.FollowingAuth0ID where Auth0ID <> @LoggedInUser and FullName <> '' and FollowerAuth0ID <> @LoggedInUser and FullName like @SearchTerm ORDER BY NEWID()";
+            }
+            GlobalVariables.Parameter1 = "%" + SearchTerm + "%";
+            GlobalVariables.Parameter2 = GetUserAuth0ID();
+            var SqlParameters = new
+            {
+                SearchTerm = new DbString
+                {
+                    Value = GlobalVariables.Parameter1,
+                    IsFixedLength = false,
+                    IsAnsi = true
+                },
+                LoggedInUser = new DbString
+                {
+                    Value = GlobalVariables.Parameter2,
+                    IsFixedLength = false,
+                    IsAnsi = true
+                }
 
-        // PUT: api/Home/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value) { }
+            };
+            dynamic results = DbQuery(SqlStr, SqlParameters);
+            return (results);
+        }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id) { }
     }
 }

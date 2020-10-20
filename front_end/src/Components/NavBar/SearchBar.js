@@ -11,9 +11,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import PeopleIcon from "@material-ui/icons/People";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import {
+ 
+  withRouter 
+ 
+} from "react-router-dom";
+import SearchResults from "./SearchResults"
 
 //this contains  the search bar in the nav bar
-export default class SearchBar extends Component {
+class SearchBar extends Component {
   state = {
     SearchTerm: "",
     SearchBarAnchorEl: null,
@@ -47,6 +53,20 @@ export default class SearchBar extends Component {
       SearchBarAnchorEl: null,
     });
   };
+
+  
+	SearchSubmit = (SearchItem) => {
+		window.SearchTerm = this.state.SearchTerm
+	if (SearchItem === 'Users') {
+		window.SearchTabValue = 1
+		
+	} else if (SearchItem === 'Posts') {
+		window.SearchTabValue = 0
+	}
+    const { history } = this.props;
+    history.push('/SearchResults') 
+	}
+
 
   render() {
     return (
@@ -86,7 +106,9 @@ export default class SearchBar extends Component {
               }}
             >
               <List>
-                <ListItem button>
+                <ListItem button
+				onClick={() => this.SearchSubmit("Posts")}
+				>
                   <ListItemIcon>
                     <SearchIcon />
                   </ListItemIcon>
@@ -99,7 +121,7 @@ export default class SearchBar extends Component {
 
                 <ListItem
                   button
-                  // onClick={() => this.HandleMenuClick("Profile")}
+                   onClick={() => this.SearchSubmit("Users")}
                 >
                   <ListItemIcon>
                     <PeopleIcon />
@@ -120,5 +142,8 @@ export default class SearchBar extends Component {
       </div>
     );
   }
-  s;
+  ;
 }
+
+export default withRouter(SearchBar);
+

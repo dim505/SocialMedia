@@ -8,7 +8,7 @@ namespace SocialMedia.model
     public class GetPosts
     {
         public string Auth0IDAuthor { get; set; }
-		public string FullName { get; set; }
+        public string FullName { get; set; }
         public string PostGuid { get; set; }
         public string DateCreated { get; set; }
         public string PostContent { get; set; }
@@ -20,6 +20,10 @@ namespace SocialMedia.model
         public bool DisableComments { get; set; }
 
         public string DidUserLikePost { get; set; }
+
+        public string FileUrl { get; set; }
+
+        public string FileType { get; set; }
     }
 }
 

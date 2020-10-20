@@ -11,7 +11,7 @@ export default class FindPeopleParent extends Component {
         <Grid container={true}>
           {this.props.FindPeople.length > 0 ? (
             this.props.FindPeople.map((Person) => (
-              <Grid item lg={4} md={6} xs={12} xs={3}>
+              <Grid item lg={4} md={6} xs={12}>
                 <ProfileCardFollow
                   GetData={() => this.props.GetData()}
                   Person={Person}

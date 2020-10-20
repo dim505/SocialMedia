@@ -9,6 +9,7 @@ export default class BackgroundBanner extends Component {
   render() {
     const Styles = {
       Background: {
+        border: "2px solid",
         backgroundImage: `url(${this.props.picture})`,
         height: `${this.props.PictureSize}`,
         width: "100%",

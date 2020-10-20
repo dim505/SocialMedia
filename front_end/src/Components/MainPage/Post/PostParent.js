@@ -29,9 +29,7 @@ export default class PostParent extends Component {
   }
 
   componentDidMount = async () => {
-    /* if (this.context.Likes.length > 0 && this.state.PostFavorited !== true) {
-      this.RenderLikedPosts();
-    }*/
+ 
 
     if (
       this.state.DisableSharing === 123 ||
@@ -45,9 +43,7 @@ export default class PostParent extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    /* if (this.context.Likes.length > 0 && this.state.PostFavorited !== true) {
-      this.RenderLikedPosts();
-    }*/
+ 
 
     if (
       this.state.DisableSharing === 123 ||

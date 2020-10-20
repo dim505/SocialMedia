@@ -48,12 +48,14 @@ export default class ProQckStatsEditProDiag extends Component {
       `${process.env.REACT_APP_BackEndUrl}/api/Profile/Add_Update_Account_Info/UpdateProfileInfo`,
       MyData
     ).then(() => {
-      if (this.props.CloseDialog() === undefined) {
-        this.props.CloseDialog2();
-      } else {
+      if (this.props.CloseDialog !== undefined) {
         this.props.CloseDialog();
+      } else {
+        this.props.CloseDialog2();
       }
       this.context.GetAccountInfo();
+      this.context.GetMainPagePosts();
+      this.context.GetProfilePagePosts();
       this.context.OpenNoti("Profile Information Updated");
     });
   };

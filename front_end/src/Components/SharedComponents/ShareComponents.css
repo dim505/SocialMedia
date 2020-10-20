@@ -3,12 +3,19 @@
 }
 
 .AvatarStyle {
-  border: solid 2px;
-  width: 100px !important;
-  height: 100px !important;
-  font-size: 36px !important;
-  margin: auto;
+    transition: border 1s;
+    border: 2px solid;
+    width: 100px!important;
+    height: 100px!important;
+    font-size: 36px!important;
+    margin: auto;
 }
+
+.AvatarStyle:hover {
+    border: 3px solid lightgreen;
+    cursor: pointer;
+}
+
 
 
 .UploadBannerIcon {

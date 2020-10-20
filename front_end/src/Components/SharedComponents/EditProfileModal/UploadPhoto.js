@@ -77,7 +77,7 @@ export default class UploadPhoto extends Component {
       window.containerClient = window.blobServiceClient.getContainerClient(
         "socialmedia"
       );
-      debugger;
+      
       const blockBlobClient = window.containerClient.getBlockBlobClient(
         Filename
       );
@@ -95,7 +95,13 @@ export default class UploadPhoto extends Component {
         this.context.OpenNoti("Profile Photo Uploaded");
       });
     }
+
+    this.setState({
+      ShowLoader: false
+    })
+
   };
+
 
   render() {
     return (

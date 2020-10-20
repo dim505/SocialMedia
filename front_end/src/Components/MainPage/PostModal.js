@@ -14,11 +14,22 @@ import { ApiCall } from "../SharedComponents/ApiCall";
 import moment from "moment";
 import { uuidv4 } from "../SharedComponents/SharedFunctions";
 import Context from "../SharedComponents/context";
+import IconButton from "@material-ui/core/IconButton";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import ImageIcon from "@material-ui/icons/Image";
+import Fade from "react-reveal/Fade";
+import { DropzoneArea } from "material-ui-dropzone";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 //component loads the first add post or edit post modal
 export default class PostModal extends Component {
   static contextType = Context;
-  state = { Post: "" };
+  state = {     Post: "",
+  UploadFile: false,
+  FileUploaded: null,
+  ShowLoader: false,
+  FileType: ""
+};
 
   componentDidMount = () => {
     if (this.props.ModalType === "Edit") {
@@ -30,6 +41,10 @@ export default class PostModal extends Component {
 
   //submits the post information to the appropriate end point
   SubmitPost = () => {
+    this.setState({
+      ShowLoader: true
+    });
+
     if (this.props.ModalType === "Edit") {
       var MyData = {};
       var PostGuid = uuidv4();
@@ -38,6 +53,7 @@ export default class PostModal extends Component {
         PostContent: this.state.Post,
         DateCreated: this.props.post.dateCreated,
       };
+      
 
       ApiCall(
         "Post",
@@ -51,11 +67,37 @@ export default class PostModal extends Component {
       });
     } else {
       var MyData = {};
+      var PostGuid  = uuidv4()
+      var FileUrl = ""
+      
+      if (this.state.FileUploaded !== null) {
+        var ext = this.state.FileUploaded[0].name.split(".").pop();
+         var Filename =  PostGuid + uuidv4()  + "." + ext;
+         window.containerClient = window.blobServiceClient.getContainerClient(
+          "socialmedia"
+        );
+         
+        const blockBlobClient = window.containerClient.getBlockBlobClient(
+          Filename
+        );
+        const uploadBlobResponse = blockBlobClient.uploadBrowserData(
+          this.state.FileUploaded[0]
+        );
+        FileUrl = "https://shellstorage123.blob.core.windows.net/socialmedia/" + Filename;
+        } else {
+          FileUrl = ""
+      }
+      
       MyData.AddPost = {
-        PostGuid: uuidv4(),
+        PostGuid: PostGuid,
         PostContent: this.state.Post,
         DateCreated: moment().format("LL"),
+        FileUrl: FileUrl,
+        FileType: this.state.FileType
       };
+
+
+
 
       ApiCall(
         "Post",
@@ -70,6 +112,25 @@ export default class PostModal extends Component {
     }
   };
 
+ 
+
+  UploadFile = (FileType) => {
+    this.setState({
+      UploadFile: !this.state.UploadFile,
+      FileType: FileType
+    });
+  };
+
+  HandleFiles = (files) => {
+    
+    if (files.length !== 0) {
+      this.setState({
+        FileUploaded: files
+      });
+    }
+  };
+
+
   //keeps track of user input as they type text in
   HandleUpdate = (NewState) => {
     this.setState(NewState);
@@ -79,6 +140,15 @@ export default class PostModal extends Component {
     return (
       <div>
         <Card>
+        {this.state.ShowLoader ? (
+          <LinearProgress
+            classes={{
+              root: "UploadLoader"
+            }}
+          />
+        ) : (
+          ""
+        )}
           <CardHeader
             avatar={
               <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>
@@ -101,6 +171,35 @@ export default class PostModal extends Component {
             />
           </CardContent>
 
+
+          <CardContent>
+          <IconButton
+          disabled={this.props.ModalType === "Edit" ? true : false}
+            onClick={() => {
+              this.UploadFile("Image");
+            }}
+          >
+            <ImageIcon />
+          </IconButton>
+          <IconButton
+          disabled={this.props.ModalType === "Edit" ? true : false}
+            onClick={() => {
+              this.UploadFile("Video");
+            }}
+          >
+            <VideocamIcon />
+          </IconButton>
+
+          <Fade opposite collapse when={this.state.UploadFile}>
+            <DropzoneArea
+              onChange={(event) => this.HandleFiles(event)}
+              filesLimit={1}
+              maxFileSize={100000000}
+            />
+          </Fade>
+        </CardContent>
+
+
           <CardActions disableSpacing>
             <div className="PostIconStyle">
               <Button onClick={this.props.CloseModal}>CANCEL</Button>
@@ -109,7 +208,7 @@ export default class PostModal extends Component {
                 onClick={this.SubmitPost}
                 disabled={this.state.Post.trim() !== "" ? "" : true}
               >
-                POST
+                {this.props.ModalType === "Edit" ? "UPDATE POST" : "POST"} 
               </Button>
             </div>
           </CardActions>

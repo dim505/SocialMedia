@@ -5,6 +5,8 @@
         public string PostGuid { get; set; }
         public string DateCreated { get; set; }
         public string PostContent { get; set; }
+        public string FileUrl { get; set; }
+        public string FileType { get; set; }
 
 
     }

@@ -10,10 +10,23 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MessageIcon from "@material-ui/icons/Message";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Context from "../../../SharedComponents/context";
-
+import PostImage from "./PostImage"
+import PostVideo from "./PostVideo"
 //component contains the majority of the post includeing profile pic, post content and icons/FavoriteBorder
 export default class Post extends Component {
   static contextType = Context;
+
+  RenderPost = () => {
+      if (this.props.post.fileType ==='Image') {
+          return <PostImage post={this.props.post} />
+      } else if (this.props.post.fileType ==='Video') {
+          return <PostVideo post={this.props.post} />
+      } else {
+        return this.props.post.postContent
+      }
+
+
+  }
   render() {
     return (
       <div>
@@ -46,7 +59,7 @@ export default class Post extends Component {
             variant="body2"
             component="p"
           >
-            {this.props.post.postContent}
+            {this.RenderPost()}
           </Typography>
         </CardContent>
 

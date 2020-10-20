@@ -99,12 +99,13 @@ body {
   margin-top: -35px;
 }
 
-/*
 .SearchResFont {
+  width: 100%;
+  text-align: center;
   margin-top: 50px !important;
   color: rgba(152, 150, 150, 0.87);
 }
-*/
+
 a {
   color: inherit;
   text-decoration: none; /* no underline */
@@ -117,4 +118,18 @@ a {
 
 .LoaderFade {
   opacity: 0;
+}
+
+@media screen and (max-width: 650px) {
+  [class*="PostModal"] {
+    height: 90%;
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  [class*="MainBodyStyle"] {
+    margin-right: 10px;
+    margin-left: 75px;
+  }
 }

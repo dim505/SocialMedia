@@ -16,6 +16,8 @@ import Typography from "@material-ui/core/Typography";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
 import "./Components/SharedComponents/ShareComponents.css";
 import NameReq from "./Components/NameReq";
+import SearchResults from "./Components/NavBar/SearchResults"
+import { withRouter } from "react-router-dom";
 
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
@@ -125,6 +127,11 @@ class App extends Component {
     });
   };
 
+  RedirectToPage = (PageToPush) => {
+    const {history} = this.props
+	  history.push(PageToPush)
+  }
+
   //loads the azure services needed for photo upload
   LoadAzureStorage = () => {
     var blobSasUrl =
@@ -148,11 +155,12 @@ class App extends Component {
           GetProfilePagePosts: () => this.GetProfilePagePosts(),
           GetLikedPosts: () => this.GetLikedPosts,
           GetAccountInfo: () => this.GetAccountInfo(),
+          RedirectToPage: (PageToPush) => this.RedirectToPage(PageToPush),
           MainPagePosts: this.state.MainPagePosts,
           ProfilePagePosts: this.state.ProfilePagePosts,
           Likes: this.state.Likes,
           AccountInfo: this.state.AccountInfo,
-          ShowLoader: this.state.ShowLoaders,
+          ShowLoader: this.state.ShowLoader,
         }}
       >
         <div className="App">
@@ -191,6 +199,12 @@ class App extends Component {
                     <PeoplePage />
                   </Fade>
                 </Route>
+				
+				<Route path="/SearchResults">
+                  <Fade collapse>
+                    <SearchResults />
+                  </Fade>
+                </Route>
 
                 <NameReq AccountInfo={this.state.AccountInfo} />
 
@@ -218,4 +232,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

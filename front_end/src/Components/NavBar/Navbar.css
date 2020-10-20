@@ -1,5 +1,3 @@
-
-
 /* NAV BAR STYLE  */
 .appBarShift {
   width: calc(100% - 240px) !important ;
@@ -62,7 +60,6 @@
   display: inline;
 }
 
-
 .SearchBarDropDown {
   width: calc(100% - 247px);
   transform: translate(20px, -54px);
@@ -76,7 +73,6 @@
   margin-top: 42px;
 }
 
-
 .NotiContentNoActivity {
   background-color: #efefef;
   max-width: 360px;
@@ -86,6 +82,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 650px) {
+  [class*="NotiContentActivity"] {
+    width: 230px !important;
+  }
+
+  [class*="NotiContentNoActivity"] {
+    width: 230px !important;
+  }
 }
 
 .NotiContentActivity {
@@ -101,12 +107,9 @@
   top: 100px !important;
 }
 
-
 .NavIconsRight:hover {
   cursor: pointer;
 }
-
-
 
 .NavIconsRight {
   position: absolute;
@@ -114,9 +117,10 @@
   margin-right: 10px;
 }
 
-
-
-
 .ActivePage {
   background: #dedede !important;
+}
+
+.HelpIcon {
+  margin-bottom: -12px;
 }

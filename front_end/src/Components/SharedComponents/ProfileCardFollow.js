@@ -5,9 +5,11 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckStatsEditProDiag";
 import { ApiCall } from "../SharedComponents/ApiCall";
-
+import Tooltip from "@material-ui/core/Tooltip";
+import Context from "./context";
 //this card shows the person who you are following info card
 export default class ProfileCardFollow extends Component {
+  static contextType = Context;
   state = {
     IsFollow: false,
   };
@@ -44,6 +46,12 @@ export default class ProfileCardFollow extends Component {
     }
   };
 
+  
+  Redirect = () => {
+    Window.ViewUserProfile = this.props.Person.Auth0ID
+	   this.context.RedirectToPage("/Profile")	  
+  }
+
   render() {
     return (
       <div>
@@ -55,13 +63,16 @@ export default class ProfileCardFollow extends Component {
           elevation={3}
         >
           <div className="AvatarCenter">
+          <Tooltip title="Click to View Profile">
             <Avatar
+			onClick={() => this.Redirect()}
               classes={{
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
               src={this.props.Person.profilePhotoUrl}
             />
+            </Tooltip>
           </div>
           <Typography
             classes={{

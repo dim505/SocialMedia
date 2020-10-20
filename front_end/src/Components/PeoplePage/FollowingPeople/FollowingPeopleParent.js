@@ -13,7 +13,7 @@ export default class FindPeopleParent extends Component {
         <Grid container={true}>
           {this.props.Following.length > 0 ? (
             this.props.Following.map((Person) => (
-              <Grid item lg={4} md={6} xs={12} xs={3}>
+              <Grid item lg={4} md={6} xs={12}>
                 <ProfileCardFollow
                   GetData={() => this.props.GetData()}
                   IsFollow={true}
