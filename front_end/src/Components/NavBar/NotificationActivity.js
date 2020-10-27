@@ -25,6 +25,7 @@ export default class NotificationActivity extends Component {
       `${process.env.REACT_APP_BackEndUrl}/api/Home/DeleteNotification/${this.props.message.FollowerAuth0ID}/${this.props.message.FollowingAuth0ID}`
       
     ).then(() => {
+		this.props.GetNotifications()
 		console.log("deleted")
     });
 
@@ -41,7 +42,7 @@ export default class NotificationActivity extends Component {
                 <Avatar />
               </ListItemIcon>
 
-              <ListItemText primary={this.props.message.message} />
+              <ListItemText primary={this.props.message.Message} />
               <IconButton onClick={() => this.RemoveNoti()}>
                 <HighlightOffIcon />
               </IconButton>

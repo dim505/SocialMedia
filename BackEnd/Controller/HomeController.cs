@@ -355,12 +355,22 @@ namespace SocialMedia.Controller
 
         // this endpoint gets all posts related to the user 
         [HttpGet]
-        [Route("[action]/{TypeOfPost}")]
-        public IActionResult GetPosts(string TypeOfPost)
+        [Route("[action]/{TypeOfPost}/{ViewUserProfile}")]
+        public IActionResult GetPosts(string TypeOfPost, string ViewUserProfile)
         {
 
+            string Auth0IDAuthor = "";
+            if (ViewUserProfile == "-1")
+            {
+                Auth0IDAuthor = GetUserAuth0ID();
+            }
+            else
+            {
+                Auth0IDAuthor = ViewUserProfile;
+            }
+
             string ConnStr = GetDbConnString();
-            string Auth0IDAuthor = GetUserAuth0ID();
+
             List<GetPosts> getPosts = new List<GetPosts>();
 
             using (IDbConnection db = new SqlConnection(ConnStr))
@@ -368,12 +378,12 @@ namespace SocialMedia.Controller
                 var SQL = "";
                 if (TypeOfPost == "MainPagePosts")
                 {
-                    SQL = "select Auth0IDAuthor, a.PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID left join SM_Posts_File_Urls ON a.PostGuid = SM_Posts_File_Urls.PostGuid where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, a.PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments,FileUrl,FileType";
+                    SQL = "select * from ( select Auth0IDAuthor, a.PostGuid, AcctInfo.FullName, DateCreated, PostContent, count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join ( select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowerAuth0ID left join SM_Posts_File_Urls ON a.PostGuid = SM_Posts_File_Urls.PostGuid where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, a.PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType union select Auth0IDAuthor, a.PostGuid, AcctInfo.FullName, DateCreated, PostContent, count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join ( select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID LEFT join SM_Follow_Following_Table on Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID left join SM_Posts_File_Urls ON a.PostGuid = SM_Posts_File_Urls.PostGuid where SM_Follow_Following_Table.FollowerAuth0ID = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, a.PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments, FileUrl, FileType ) subquery order by DateCreated desc";
                 }
 
                 else if (TypeOfPost == "ProfilePosts")
                 {
-                    SQL = "select Auth0IDAuthor, PostGuid, AcctInfo.FullName, DateCreated, PostContent , count (Auth0IDWhoLiked) as PostLikeCount, DidUserLikePost, DisableSharing, DisableComments from ( select Auth0IDAuthor, Post.PostGuid, DateCreated, PostContent, Auth0IDWhoLiked, case when Auth0IDAuthor = Auth0IDWhoLiked then 'yes' else null end as DidUserLikePost, case when post.DisableSharing <> 'True' then 'False' end  as DisableSharing, case when post.DisableComments <> 'True' then 'False' end as DisableComments from SM_Posts Post left join (select * from SM_LikeCommentTable ) LikedComm on Post.Auth0IDAuthor = LikedComm.Auth0IDWhoLiked and Post.PostGuid = LikedComm.PostGuid ) a inner join SM_Account_Info AcctInfo on Auth0IDAuthor = AcctInfo.Auth0ID where Auth0IDAuthor = @Auth0IDAuthor group by Auth0IDAuthor, AcctInfo.FullName, PostGuid, DateCreated, PostContent, DidUserLikePost, DisableSharing, DisableComments ";
+                    SQL = "declare @PeopleCount int  SELECT * INTO #MyTempTable FROM ( select top 100 FullName,Auth0ID from SM_Account_Info left JOIN SM_Follow_Following_Table on SM_Account_Info.Auth0ID = SM_Follow_Following_Table.FollowingAuth0ID where Auth0ID <> @LoggedInUser and FullName <> '' and Auth0ID not in (select Auth0ID from SM_Follow_Following_Table left join SM_Account_Info on SM_Follow_Following_Table.FollowingAuth0ID = SM_Account_Info.Auth0ID where FollowerAuth0ID = @LoggedInUser ) ORDER BY NEWID() ) FindPeopleQuery set @PeopleCount = (SELECT count(*) from #MyTempTable where Auth0ID = @Auth0IDAuthor) if @PeopleCount > 0 SELECT '-1' as auth0idauthor else /*profile posts*/ SELECT auth0idauthor, a.postguid, AcctInfo.fullname, datecreated, postcontent, Count (auth0idwholiked) AS PostLikeCount, diduserlikepost, disablesharing, disablecomments, FileUrl, filetype/*, case when @ViewUserProfile <> '-1' then 'True' else 'False' end as ViewUserProfile */ FROM(SELECT auth0idauthor, Post.postguid, datecreated, postcontent, auth0idwholiked, CASE WHEN auth0idauthor = auth0idwholiked THEN 'yes' ELSE NULL END AS DidUserLikePost, CASE WHEN post.disablesharing <> 'True' THEN 'False' END AS DisableSharing, CASE WHEN post.disablecomments <> 'True' THEN 'False' END AS DisableComments FROM sm_posts Post LEFT JOIN(SELECT * FROM sm_likecommenttable) LikedComm ON Post.auth0idauthor = LikedComm.auth0idwholiked AND Post.postguid = LikedComm.postguid) a INNER JOIN sm_account_info AcctInfo ON auth0idauthor = AcctInfo.auth0id LEFT JOIN sm_posts_file_urls ON a.postguid = sm_posts_file_urls.postguid WHERE auth0idauthor = @Auth0IDAuthor GROUP BY auth0idauthor, AcctInfo.fullname, a.postguid, datecreated, postcontent, diduserlikepost, disablesharing, disablecomments, fileurl, filetype drop table #MyTempTable ";
                 }
                 getPosts = db.Query<GetPosts>(SQL, new
                 {
@@ -382,10 +392,22 @@ namespace SocialMedia.Controller
                         Value = Auth0IDAuthor,
                         IsFixedLength = false,
                         IsAnsi = true
+                    },
+
+
+                    LoggedInUser = new DbString
+                    {
+                        Value = GetUserAuth0ID(),
+                        IsFixedLength = false,
+                        IsAnsi = true
                     }
                 }).ToList();
             }
             return Ok(getPosts);
+
+
+
+
 
         }
 
@@ -393,7 +415,7 @@ namespace SocialMedia.Controller
         [Route("[action]")]
         public IActionResult GetNotifications()
         {
-            string SqlStr = "select FollowerAuth0ID, FollowingAuth0ID, FullName  + ' is now following you!' as Message from sm_follow_following_table inner join SM_Account_Info ON  SM_Account_Info.Auth0ID = sm_follow_following_table.FollowingAuth0ID where  FollowingAuth0ID = @LoggedInUser  and  UserNotified = 'N'";
+            string SqlStr = "select FollowerAuth0ID, FollowingAuth0ID, FullName  + ' is now following you!' as Message from sm_follow_following_table inner join SM_Account_Info ON SM_Account_Info.Auth0ID = sm_follow_following_table.FollowerAuth0ID where  FollowingAuth0ID = @LoggedInUser  and  UserNotified = 'N'";
             GlobalVariables.Parameter1 = GetUserAuth0ID();
             var SqlParameters = new
             {
@@ -441,11 +463,11 @@ namespace SocialMedia.Controller
             string SqlStr = "";
             if (SearchItem == "Posts")
             {
-                SqlStr = @"select SM_Account_Info.FullName as fullName, Auth0IDAuthor AS auth0IDAuthor,	DateCreated AS dateCreated,	PostContent AS postContent,	DisableSharing AS disableSharing,	DisableComments AS disableComments,	SM_Posts.PostGuid AS postGuid,	FileUrl AS fileUrl,	FileType AS fileType,	FollowerAuth0ID AS followerAuth0ID,	FollowingAuth0ID AS followingAuth0ID,	DateFollowed AS dateFollowed,	UserNotified AS userNotified from SM_Posts left join SM_Account_Info on SM_Posts.Auth0IDAuthor = SM_Account_Info.Auth0ID left join SM_Posts_File_Urls ON SM_Posts.PostGuid = SM_Posts_File_Urls.PostGuid left join SM_Follow_Following_Table on	SM_Posts.Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID where PostContent like @SearchTerm and (SM_Posts.Auth0IDAuthor = @LoggedInUser) ";
+                SqlStr = @"select SM_Account_Info.FullName as fullName, Auth0IDAuthor AS auth0IDAuthor, DateCreated AS dateCreated, PostContent AS postContent, DisableSharing AS disableSharing, DisableComments AS disableComments, SM_Posts.PostGuid AS postGuid, FileUrl AS fileUrl, FileType AS fileType, FollowerAuth0ID AS followerAuth0ID, FollowingAuth0ID AS followingAuth0ID, DateFollowed AS dateFollowed, UserNotified AS userNotified from SM_Posts left join SM_Account_Info on SM_Posts.Auth0IDAuthor = SM_Account_Info.Auth0ID left join SM_Posts_File_Urls ON SM_Posts.PostGuid = SM_Posts_File_Urls.PostGuid left join SM_Follow_Following_Table on SM_Posts.Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID where PostContent like @SearchTerm and (SM_Posts.Auth0IDAuthor = @LoggedInUser OR SM_Posts.Auth0IDAuthor = SM_Follow_Following_Table.FollowingAuth0ID) ";
             }
             else if (SearchItem == "Users")
             {
-                SqlStr = @"select  top 30  FullName as fullName, Auth0ID as auth0ID, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as profilePhotoUrl from SM_Account_Info left JOIN SM_Follow_Following_Table on SM_Account_Info.Auth0ID <>  SM_Follow_Following_Table.FollowingAuth0ID where Auth0ID <> @LoggedInUser and FullName <> '' and FollowerAuth0ID <> @LoggedInUser and FullName like @SearchTerm ORDER BY NEWID()";
+                SqlStr = @" select * into #GetFollowing from ( select Auth0ID, SM_Follow_Following_Table.followingAuth0ID from SM_Follow_Following_Table left join SM_Account_Info on SM_Follow_Following_Table.FollowingAuth0ID = SM_Account_Info.Auth0ID where FollowerAuth0ID = @LoggedInUser ) a select top 30 GetFollowing.Auth0ID, GetFollowing.FollowingAuth0ID as followingAuth0ID, SM_Account_Info.FullName as fullName, SM_Account_Info.Auth0ID as auth0ID, case when SM_Account_Info.ProfilePhotoUrl <> '' then SM_Account_Info.ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + SM_Account_Info.Auth0ID end as profilePhotoUrl, case when GetFollowing.Auth0ID is not null then CAST(1 AS BIT) else CAST(0 as bit) end as IsFollow from SM_Account_Info left join #GetFollowing GetFollowing on SM_Account_Info.Auth0ID = GetFollowing.Auth0ID where SM_Account_Info.Auth0ID <> @LoggedInUser and SM_Account_Info.FullName <> '' and SM_Account_Info.FullName like @SearchTerm ORDER BY NEWID() drop table #GetFollowing";
             }
             GlobalVariables.Parameter1 = "%" + SearchTerm + "%";
             GlobalVariables.Parameter2 = GetUserAuth0ID();

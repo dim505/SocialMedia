@@ -35,14 +35,14 @@ export default class Post extends Component {
             <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>R</Avatar>
           }
           action={
-            <div>
+            window.ViewUserProfile === '-1' ? <div>
               <IconButton
                 onClick={(e) => this.props.OpnPostMenu(e)}
                 aria-label="settings"
               >
                 <MoreVertIcon />
               </IconButton>
-            </div>
+            </div> : <div></div>
           }
           classes={{
             root: "TextAllignLeft",

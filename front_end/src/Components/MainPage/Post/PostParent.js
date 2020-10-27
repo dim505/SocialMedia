@@ -222,17 +222,7 @@ export default class PostParent extends Component {
     }
   };
 
-  RenderLikedPosts = () => {
-    var likes = this.context.Likes;
-    var MatchFound = likes.map((like) => {
-      if (like.postGuid.search(this.props.post.postGuid) !== -1) {
-        //this.setState({
-        //  PostFavorited: true,
-        // });
-        return true;
-      }
-    });
-  };
+ 
 
   render() {
     return (

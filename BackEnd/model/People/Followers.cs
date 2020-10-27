@@ -2,6 +2,8 @@
 {
     public class Followers
     {
+
+        public string Auth0ID { get; set; }
         public string FullName { get; set; }
         public string ProfilePhotoUrl { get; set; }
         public string FollowerAuth0ID { get; set; }

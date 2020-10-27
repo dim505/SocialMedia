@@ -120,6 +120,10 @@ a {
   opacity: 0;
 }
 
+.disappear {
+  display: none !important;
+}
+
 @media screen and (max-width: 650px) {
   [class*="PostModal"] {
     height: 90%;

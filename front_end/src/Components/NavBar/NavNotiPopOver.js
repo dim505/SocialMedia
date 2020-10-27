@@ -18,22 +18,8 @@ import { ApiCall } from "../SharedComponents/ApiCall";
 import NotificationActivity from "./NotificationActivity"
  
 export default class NavNotiPopOver extends Component {
-  state = {
-		Messages: []
-  };
-
  
- componentDidMount = () => {
-   
-	     ApiCall(
-      "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetNotifications`
-    ).then((results) => {
-      this.setState({
-        Messages: results,
-      });
-    });
- }
+
 
 
   render() {
@@ -49,9 +35,11 @@ export default class NavNotiPopOver extends Component {
                
                   <div className="NotiContentActivity">
                     {
-						this.state.Messages.length > 0 ? 						
-						this.state.Messages.map((message) => (
-                      <NotificationActivity message={message} />
+						this.props.Messages.length > 0 ? 						
+						this.props.Messages.map((message) => (
+                      <NotificationActivity
+						GetNotifications = {this.props.GetNotifications()}
+					  message={message} />
                     )) : <div className="NotiContentNoActivity">All Caught Up! </div> 
 					
 					

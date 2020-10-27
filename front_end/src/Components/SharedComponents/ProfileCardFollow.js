@@ -15,7 +15,7 @@ export default class ProfileCardFollow extends Component {
   };
 
   componentDidMount() {
-    if (this.props.IsFollow === true) {
+    if (this.props.IsFollow === true || this.props.Person.IsFollow === true) {
       this.setState({
         IsFollow: true,
       });
@@ -48,8 +48,11 @@ export default class ProfileCardFollow extends Component {
 
   
   Redirect = () => {
-    Window.ViewUserProfile = this.props.Person.Auth0ID
-	   this.context.RedirectToPage("/Profile")	  
+    window.ViewUserProfile = this.props.Person.auth0ID
+	  this.context.GetProfilePagePosts()
+    this.context.GetAccountInfo()
+    
+    this.context.RedirectToPage("/Profile")	  
   }
 
   render() {

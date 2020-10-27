@@ -75,14 +75,17 @@ export default class ProfileQuickStatsEditProfile extends Component {
             {this.context.AccountInfo[0].fullName}
           </Typography>
 
+
+          {window.ViewUserProfile === '-1'  ? 
           <Button
             onClick={() => {
               this.OpenDialog();
             }}
             color="primary"
           >
-            Edit Profile
+              Edit Profile 
           </Button>
+              : "" }
         </Paper>
 
         <ProQckStatsEditProDiag

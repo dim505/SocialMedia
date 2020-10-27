@@ -32,21 +32,14 @@ export default class ProfileImpact extends Component {
   };
 
   GetData = () => {
-	  
-	  if (Window.ViewUserProfile !== undefined)
-		  {console.log("test")} else {
         ApiCall(
           "Get",
-          `${process.env.REACT_APP_BackEndUrl}/api/profile/GetProfileStats/`//${Window.ViewUserProfile}
+          `${process.env.REACT_APP_BackEndUrl}/api/profile/GetProfileStats/${window.ViewUserProfile}`
         ).then((results) => {
           this.setState({
             ProfileStat: results,
           });
         });
-
-      }
-	  
-
   };
   render() {
     return (

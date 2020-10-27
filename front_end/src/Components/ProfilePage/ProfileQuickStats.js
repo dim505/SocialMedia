@@ -12,6 +12,24 @@ import PostParent from "../MainPage/Post/PostParent";
 export default class ProfileQuickStats extends Component {
   static contextType = Context;
 
+  RenderPosts = () => {
+      if (this.context.ProfilePagePosts.length === 0){
+          return (<h1>No Posts..... Please add some </h1>)
+      } else if (this.context.ProfilePagePosts[0].auth0IDAuthor === '-1') {
+        return (<h1>Sorry.... Please follow the user if you want to see their posts </h1>)
+      } else {
+        return(
+        this.context.ProfilePagePosts.map((post) => (
+          <Grid item lg={4} md={6} xs={12}>
+            <PostParent post={post} />
+          </Grid>
+        )))
+
+      }
+
+
+
+  }
   render() {
     return (
       <div>
@@ -36,15 +54,7 @@ export default class ProfileQuickStats extends Component {
         </Grid>
         <div className="ProfileTitle"> Your Posts</div>
         <Grid spacing={1} container>
-          {this.context.ProfilePagePosts.length === 0 ? (
-            <h1>No Posts..... Please add some </h1>
-          ) : (
-            this.context.ProfilePagePosts.map((post) => (
-              <Grid item lg={4} md={6} xs={12}>
-                <PostParent post={post} />
-              </Grid>
-            ))
-          )}
+          {this.RenderPosts()}
         </Grid>
       </div>
     );

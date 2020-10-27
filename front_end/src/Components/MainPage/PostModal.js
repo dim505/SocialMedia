@@ -28,7 +28,8 @@ export default class PostModal extends Component {
   UploadFile: false,
   FileUploaded: null,
   ShowLoader: false,
-  FileType: ""
+  FileType: "",
+  SupportedFileTypes: ""
 };
 
   componentDidMount = () => {
@@ -114,10 +115,11 @@ export default class PostModal extends Component {
 
  
 
-  UploadFile = (FileType) => {
+  UploadFile = (FileType,SupportedFileTypes ) => {
     this.setState({
       UploadFile: !this.state.UploadFile,
-      FileType: FileType
+      FileType: FileType,
+	  SupportedFileTypes: SupportedFileTypes
     });
   };
 
@@ -176,7 +178,7 @@ export default class PostModal extends Component {
           <IconButton
           disabled={this.props.ModalType === "Edit" ? true : false}
             onClick={() => {
-              this.UploadFile("Image");
+              this.UploadFile("Image", "image/*");
             }}
           >
             <ImageIcon />
@@ -184,7 +186,7 @@ export default class PostModal extends Component {
           <IconButton
           disabled={this.props.ModalType === "Edit" ? true : false}
             onClick={() => {
-              this.UploadFile("Video");
+              this.UploadFile("Video", "video/*");
             }}
           >
             <VideocamIcon />
@@ -192,6 +194,7 @@ export default class PostModal extends Component {
 
           <Fade opposite collapse when={this.state.UploadFile}>
             <DropzoneArea
+				acceptedFiles={[this.state.SupportedFileTypes]}
               onChange={(event) => this.HandleFiles(event)}
               filesLimit={1}
               maxFileSize={100000000}

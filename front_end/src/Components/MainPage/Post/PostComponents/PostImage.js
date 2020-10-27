@@ -7,12 +7,19 @@ export default class PostImage extends Component {
   state = { OpenLightBox: false };
   
   OpenLightBox = () => {
+    window.NavBarDrawer = document.getElementById("NavBarDrawer");
+    window.NavBarDrawer.classList.add("disappear");
+    window.NavBar = document.getElementById("NavBar");
+    window.NavBar.classList.add("disappear");
+
     this.setState({
       OpenLightBox: true
     });
   };
 
   CloseLightBox = () => {
+    window.NavBarDrawer.classList.remove("disappear");
+    window.NavBar.classList.remove("disappear");
     this.setState({
       OpenLightBox: false
     });

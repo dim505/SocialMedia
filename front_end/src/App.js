@@ -29,7 +29,6 @@ class App extends Component {
       authenticated: false,
       MainPagePosts: [],
       ProfilePagePosts: [],
-      Likes: [],
       AccountInfo: [
         {
           fullName: "",
@@ -39,20 +38,33 @@ class App extends Component {
           webAddress: "",
           Tagline: "",
         },
-      ],
+      ],  
     };
+    this.NavBarChild = React.createRef();
   }
 
   //sets title, get data, check if visiting user is authenticated
   async componentDidMount() {
+    window.ViewUserProfile = "-1";
     window.getTokenSilently = await this.props.auth.getTokenSilently();
     document.title = "Fusion Connect";
     this.LoadAzureStorage();
     this.GetMainPagePosts();
     this.GetProfilePagePosts();
-    this.GetLikedPosts();
     this.GetAccountInfo();
     this.isUserAuthenticated();
+    this.unlisten = this.props.history.listen((location, action) => {
+      console.log(location.pathname)
+      if (location.pathname !== "/Profile" && window.ViewUserProfile !== "-1") {
+        window.ViewUserProfile = "-1";
+        this.GetAccountInfo();
+        this.GetProfilePagePosts();
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
   }
 
   //checks to see if user is authenticated
@@ -70,7 +82,7 @@ class App extends Component {
   GetMainPagePosts = () => {
     ApiCall(
       "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/MainPagePosts`
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/MainPagePosts/${window.ViewUserProfile}`
     ).then((results) => {
       this.setState({
         MainPagePosts: results,
@@ -78,11 +90,11 @@ class App extends Component {
     });
   };
 
-  //gets all the posts related to the main page
+  //gets all the posts related to the profile page
   GetProfilePagePosts = () => {
     ApiCall(
       "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/ProfilePosts`
+      `${process.env.REACT_APP_BackEndUrl}/api/home/GetPosts/ProfilePosts/${window.ViewUserProfile}`
     ).then((results) => {
       this.setState({
         ProfilePagePosts: results,
@@ -90,21 +102,12 @@ class App extends Component {
     });
   };
 
-  GetLikedPosts = () => {
-    ApiCall(
-      "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/home/GetLikes`
-    ).then((results) => {
-      this.setState({
-        Likes: results,
-      });
-    });
-  };
+ 
 
   GetAccountInfo = () => {
     ApiCall(
       "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/Profile/GetAccountInfo`
+      `${process.env.REACT_APP_BackEndUrl}/api/Profile/GetAccountInfo/${window.ViewUserProfile}`
     ).then((results) => {
       if (results.length > 0) {
         this.setState({
@@ -129,6 +132,7 @@ class App extends Component {
 
   RedirectToPage = (PageToPush) => {
     const {history} = this.props
+    this.NavBarChild.current.HandleMenuClick(PageToPush.substring(1))
 	  history.push(PageToPush)
   }
 
@@ -158,7 +162,6 @@ class App extends Component {
           RedirectToPage: (PageToPush) => this.RedirectToPage(PageToPush),
           MainPagePosts: this.state.MainPagePosts,
           ProfilePagePosts: this.state.ProfilePagePosts,
-          Likes: this.state.Likes,
           AccountInfo: this.state.AccountInfo,
           ShowLoader: this.state.ShowLoader,
         }}
@@ -181,7 +184,9 @@ class App extends Component {
                   !this.state.ShowLoader ? "MainBodyStyleFade" : ""
                 }`}
               >
-                <NavBar auth={this.props.auth} />
+                <NavBar 
+                ref={this.NavBarChild}
+                auth={this.props.auth} />
                 <Route exact path="/">
                   <Fade collapse>
                     <MainFeed />

@@ -12,5 +12,6 @@
         public string Auth0ID { get; set; }
 		public string ProfilePhotoUrl { get; set; }
 		public string BannerPhotoUrl { get; set; }
+		public string ViewUserProfile {get;set;}
     }
 }

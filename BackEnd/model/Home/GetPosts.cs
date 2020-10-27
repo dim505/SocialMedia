@@ -24,6 +24,8 @@ namespace SocialMedia.model
         public string FileUrl { get; set; }
 
         public string FileType { get; set; }
+		
+		public string ViewUserProfile {get;set;}
     }
 }
 

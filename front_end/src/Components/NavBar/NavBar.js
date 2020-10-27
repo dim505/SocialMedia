@@ -28,6 +28,10 @@ import "./Navbar.css";
 import NotificationActivity from "./NotificationActivity";
 import Context from "../SharedComponents/context";
 import NavNotiPopOver from "./NavNotiPopOver"
+import { ApiCall } from "../SharedComponents/ApiCall";
+import Badge from '@material-ui/core/Badge';
+
+
 //component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
 export default class NavBar extends Component {
   static contextType = Context;
@@ -39,8 +43,28 @@ export default class NavBar extends Component {
     SearchBarAnchorEl: null,
     OpenDialog: false,
     OpenSearchBarDropdown: false,
-    SearchTerm: ""
+    SearchTerm: "",
+	Messages: []
   };
+  
+   componentDidMount = () => {
+  this.GetNotifications();
+  
+
+ }
+
+ GetNotifications = () => {
+        ApiCall(
+          "Get",
+          `${process.env.REACT_APP_BackEndUrl}/api/home/GetNotifications`
+        ).then((results) => {
+          this.setState({
+            Messages: results,
+          });
+        });
+ }
+ 
+ 
 
   //this function open nav drawer to see page names
   OpenDrawer = () => {
@@ -111,6 +135,7 @@ export default class NavBar extends Component {
     return (
       <div>
         <Drawer
+          id="NavBarDrawer"
           variant="permanent"
           classes={{
             paper: this.state.OpenDrawer ? "DrawerStyle" : "DrawerStyleClosed",
@@ -189,6 +214,7 @@ export default class NavBar extends Component {
           </List>
         </Drawer>
         <AppBar
+         id="NavBar"
           position="fixed"
           classes={{
             positionFixed: "AppBarStyle",
@@ -216,8 +242,15 @@ export default class NavBar extends Component {
                   color="inherit"
                   aria-label="menu"
                 >
+			                  <Badge
+                    color="secondary"
+                    badgeContent={this.state.Messages.length}
+                  >
+
                   <NotificationsNoneIcon fontSize="default" />
-                </IconButton>
+               </Badge>
+
+ </IconButton>
 
                 <IconButton
                   onClick={(event) => {
@@ -250,6 +283,8 @@ export default class NavBar extends Component {
                 </Popover>
                 {/*Notifications pop over menu */}
 					<NavNotiPopOver
+							GetNotifications = {() => this.GetNotifications()}
+							Messages = {this.state.Messages}
 							CloseNotiPopOver = {() => this.CloseNotiPopOver()}
 							PopOverNotiAnchorEl = {this.state.PopOverNotiAnchorEl}
 					/>

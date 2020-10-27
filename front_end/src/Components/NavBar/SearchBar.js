@@ -64,6 +64,7 @@ class SearchBar extends Component {
 		window.SearchTabValue = 0
 	}
     const { history } = this.props;
+     
     history.push('/SearchResults') 
 	}
 
