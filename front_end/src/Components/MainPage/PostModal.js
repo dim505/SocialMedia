@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+import Axios from 'axios';
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -41,7 +40,7 @@ export default class PostModal extends Component {
   };
 
   //submits the post information to the appropriate end point
-  SubmitPost = () => {
+  SubmitPost = async () => {
     this.setState({
       ShowLoader: true
     });
@@ -70,6 +69,7 @@ export default class PostModal extends Component {
       var MyData = {};
       var PostGuid  = uuidv4()
       var FileUrl = ""
+      var TempTagList = "";
       
       if (this.state.FileUploaded !== null) {
         var ext = this.state.FileUploaded[0].name.split(".").pop();
@@ -88,16 +88,40 @@ export default class PostModal extends Component {
         } else {
           FileUrl = ""
       }
+
+      if (!this.state.FileUploaded[0].type.includes("video"))
+      {
+
+        MyData.Url = FileUrl;
+        //makes api call
+  var Results =  await Axios.post(
+    `https://computervision123456789.cognitiveservices.azure.com/vision/v2.0/tag?language=en`,
+    MyData,
+    {
+      headers: {
+        "Ocp-Apim-Subscription-Key": `89074e4bd4ab4f84b38d5c7811cc831a`
+      }
+    }
+  ).then((results) => {
+    const TempTagArr = results.data.tags.filter(
+      (result) => result.confidence > 0.75
+    );
+    TempTagArr.map((tag) => (TempTagList += " " + tag.name + ","));
+    TempTagList = TempTagList.slice(0, -1);
+  });
+      }
+
+
+
       
       MyData.AddPost = {
         PostGuid: PostGuid,
         PostContent: this.state.Post,
         DateCreated: moment().format("LL"),
         FileUrl: FileUrl,
-        FileType: this.state.FileType
+        FileType: this.state.FileType,
+        TempTagList : TempTagList
       };
-
-
 
 
       ApiCall(

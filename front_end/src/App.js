@@ -192,10 +192,8 @@ class App extends Component {
                     <MainFeed />
                   </Fade>
                 </Route>
-
                 <Route path="/Profile">
-                  <Fade collapse>
-                     
+                  <Fade collapse>         
                     <ProfileQuickStats />
                   </Fade>
                 </Route>
@@ -204,22 +202,13 @@ class App extends Component {
                     <PeoplePage />
                   </Fade>
                 </Route>
-				
 				<Route path="/SearchResults">
                   <Fade collapse>
                     <SearchResults />
                   </Fade>
                 </Route>
-
                 <NameReq AccountInfo={this.state.AccountInfo} />
-
-                <SnackBar
-                  OpenNoti={this.state.OpenNoti}
-                  CloseNoti={this.CloseNoti}
-                  message={this.state.Message}
-                />
               </div>
-
               <div className="TurnToLandScape">
                 {" "}
                 <Typography variant="h2" gutterBottom>
@@ -231,6 +220,11 @@ class App extends Component {
               <ScrollUpButton />
             </div>
           )}
+        <SnackBar
+                  OpenNoti={this.state.OpenNoti}
+                  CloseNoti={this.CloseNoti}
+                  message={this.state.Message}
+                />
         </div>
       </Context.Provider>
     );

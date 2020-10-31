@@ -7,16 +7,27 @@ import BackgroundBanner from "../SharedComponents/BackgroundBanner";
 import download from "../download.jpg";
 import ProfileImpact from "./ProfileImpact";
 import PostParent from "../MainPage/Post/PostParent";
-
+import Typography from '@material-ui/core/Typography';
 //this component is the parent that houses the people page
 export default class ProfileQuickStats extends Component {
   static contextType = Context;
 
   RenderPosts = () => {
       if (this.context.ProfilePagePosts.length === 0){
-          return (<h1>No Posts..... Please add some </h1>)
+          return (
+		  
+		  
+		  		      <Typography variant="h5" gutterBottom>
+        No Posts..... Please add some
+      </Typography>
+		 )
       } else if (this.context.ProfilePagePosts[0].auth0IDAuthor === '-1') {
-        return (<h1>Sorry.... Please follow the user if you want to see their posts </h1>)
+        return (
+		      <Typography variant="h5" gutterBottom>
+        Sorry.... Please follow the user if you want to see their posts
+      </Typography>
+		
+		)
       } else {
         return(
         this.context.ProfilePagePosts.map((post) => (

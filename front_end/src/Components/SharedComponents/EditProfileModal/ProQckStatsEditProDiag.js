@@ -12,8 +12,7 @@ import ProfilePic from "../../download.jpg";
 import Avatar from "@material-ui/core/Avatar";
 import UploadPhoto from "./UploadPhoto";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
-import Fade from "@material-ui/core/Fade";
-import SnackBar from "../SnackBar";
+ 
 import Tooltip from "@material-ui/core/Tooltip";
 import BackgroundBanner from "../BackgroundBanner";
 import download from "../../download.jpg";

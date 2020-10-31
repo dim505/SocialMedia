@@ -4,12 +4,20 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Tooltip from "../SharedComponents/Tooltip";
 import LiveHelpOutlinedIcon from "@material-ui/icons/LiveHelpOutlined";
+import Context from "../SharedComponents/context";
+
 //shows the log in screen when the app first loads 
 export default class LogInScreen extends Component {
+  static contextType = Context;
+  
   //redirects user to log in page
   Login = () => {
     this.props.auth.loginWithRedirect();
   };
+  
+  componentDidMount () {
+    this.context.OpenNoti("Please note, only Chrome and Edge Chromium is being supported at this time")
+  }
 
   render() {
     return (

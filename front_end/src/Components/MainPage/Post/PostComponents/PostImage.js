@@ -44,6 +44,11 @@ export default class PostImage extends Component {
           alt="Img"
         />
 
+<Typography variant="overline" display="block" gutterBottom>
+          Tags: {this.props.post.tempTagList}
+        </Typography>
+
+
         <Typography
           classes={{
             body1: "PostContent"

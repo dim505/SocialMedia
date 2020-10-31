@@ -134,6 +134,11 @@ a {
 @media screen and (max-width: 650px) {
   [class*="MainBodyStyle"] {
     margin-right: 10px;
-    margin-left: 75px;
+    margin-left: 10px;
   }
+}
+
+.lb-img {
+  width: 80vw !important;
+  height: 70vh;
 }

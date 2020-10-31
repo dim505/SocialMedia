@@ -12,6 +12,7 @@
 }
 
 .AppBarStyle {
+	transition: top 0.3s !important;
   z-index: 1300 !important;
   padding-left: 10px;
   padding-top: 5px;
@@ -124,3 +125,16 @@
 .HelpIcon {
   margin-bottom: -12px;
 }
+
+
+@media screen and (max-width: 650px) {
+  [class*="DrawerStyleClosed"] {
+    width: 0px;
+  }
+
+  [class*="MainBodyStyle"] {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+

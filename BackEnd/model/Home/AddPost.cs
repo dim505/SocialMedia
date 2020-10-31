@@ -7,6 +7,7 @@
         public string PostContent { get; set; }
         public string FileUrl { get; set; }
         public string FileType { get; set; }
+        public string TempTagList { get; set; }
 
 
     }
