@@ -8,7 +8,7 @@ import { ApiCall } from "../../../SharedComponents/ApiCall";
 import moment from "moment";
 import Context from "../../../SharedComponents/context";
 import { uuidv4 } from "../../../SharedComponents/SharedFunctions";
-
+import Mic from "../../../SharedComponents/mic/mic";
 
 //component/form used to add a commment to a post 
 export default class AddPostComment extends Component {
@@ -42,6 +42,15 @@ export default class AddPostComment extends Component {
       this.context.OpenNoti("Comment was Added");
     });
   };
+
+  HandleMicOutput = (MicOutput) => {
+    debugger;
+    this.setState({
+      AddPostCommentVal: this.state.AddPostCommentVal.concat(MicOutput)
+    });
+  };
+
+
   render() {
     return (
       <div>
@@ -50,8 +59,10 @@ export default class AddPostComment extends Component {
           classes={{
             root: "TextAllignLeft",
           }}
-          title={
+          title={<div>
+          
             <InputBase
+              multiline={true}
               onChange={(event) =>
                 this.onChange({ AddPostCommentVal: event.target.value })
               }
@@ -60,6 +71,11 @@ export default class AddPostComment extends Component {
               placeholder="Add a comment"
               inputProps={{ "aria-label": "search" }}
             />
+              <Mic
+                HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
+                class="AddCommentMic"
+              />
+            </div>
           }
         />
 

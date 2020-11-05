@@ -38,6 +38,7 @@ export const EditProfileInfoForm = (props) => {
         </Typography>
 
         <TextField
+          disabled={props.isUserAFollower}
           id="FullName"
           name="FullName"
           label="Full Name"
@@ -48,6 +49,7 @@ export const EditProfileInfoForm = (props) => {
           error={touched.FullName && Boolean(errors.FullName)}
         />
         <TextField
+          disabled={props.isUserAFollower}
           fullWidth
           id="Tagline"
           label="Tagline"
@@ -55,6 +57,7 @@ export const EditProfileInfoForm = (props) => {
           onChange={change.bind(null, "Tagline")}
         />
         <TextField
+          disabled={props.isUserAFollower}
           fullWidth
           id="CompanyName"
           label="Company Name"
@@ -62,6 +65,7 @@ export const EditProfileInfoForm = (props) => {
           onChange={change.bind(null, "CompanyName")}
         />
         <TextField
+          disabled={props.isUserAFollower}
           fullWidth
           id="Twitter"
           label="Twitter"
@@ -69,6 +73,7 @@ export const EditProfileInfoForm = (props) => {
           onChange={change.bind(null, "Twitter")}
         />
         <TextField
+          disabled={props.isUserAFollower}
           fullWidth
           id="Facebook"
           label="Facebook"
@@ -76,6 +81,7 @@ export const EditProfileInfoForm = (props) => {
           onChange={change.bind(null, "Facebook")}
         />
         <TextField
+          disabled={props.isUserAFollower}
           fullWidth
           id="WebAddress"
           label="Web Address"
@@ -84,10 +90,20 @@ export const EditProfileInfoForm = (props) => {
         />
       </Paper>
       <DialogActions>
-        <Button onClick={props.CloseDialog}>Cancel</Button>
-        <Button type="submit" variant="contained" color="primary" autoFocus>
-          Update Info
-        </Button>
+
+        {props.isUserAFollower ? 
+
+<Button variant="contained" color="primary" autoFocus onClick={props.CloseDialog}>Close</Button>
+ :
+ <div>
+ <Button onClick={props.CloseDialog}>Cancel</Button>
+ <Button type="submit" variant="contained" color="primary" autoFocus>
+   Update Info
+ </Button>
+ </div>
+
+        }
+
       </DialogActions>
     </form>
   );

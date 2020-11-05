@@ -209,7 +209,7 @@ namespace SocialMedia.Controller
 
             using (IDbConnection db = new SqlConnection(ConnStr))
             {
-                accountInfo = db.Query<AccountInfo>("select FullName,Tagline,CompanyName,Twitter,Facebook,WebAddress,Auth0ID, case when BannerPhotoUrl <> '' then  BannerPhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Banner' + Auth0ID end as BannerPhotoUrl, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl, case when @ViewUserProfile <> '-1' then 'True' else 'False' end as ViewUserProfile from SM_Account_Info  where Auth0ID = @Auth0ID", new
+                accountInfo = db.Query<AccountInfo>("select case when DBO.IsUserAFollower(@LoggedInUser, @Auth0ID) > 0 then '-1' else '' end as IsUserAFollower, FullName,Tagline,CompanyName,Twitter,Facebook,WebAddress,Auth0ID, case when BannerPhotoUrl <> '' then  BannerPhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Banner' + Auth0ID end as BannerPhotoUrl, case when ProfilePhotoUrl <> '' then ProfilePhotoUrl else 'https://api.adorable.io/avatars/285/' + 'Profile' + Auth0ID end as ProfilePhotoUrl  from SM_Account_Info  where Auth0ID = @Auth0ID", new
                 {
                     Auth0ID = new DbString
                     {
@@ -219,9 +219,9 @@ namespace SocialMedia.Controller
                     },
 
 
-                    ViewUserProfile = new DbString
+                    LoggedInUser = new DbString
                     {
-                        Value = ViewUserProfile,
+                        Value = GetUserAuth0ID(),
                         IsFixedLength = false,
                         IsAnsi = true
                     }

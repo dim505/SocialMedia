@@ -12,7 +12,6 @@ import ProfilePic from "../../download.jpg";
 import Avatar from "@material-ui/core/Avatar";
 import UploadPhoto from "./UploadPhoto";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
- 
 import Tooltip from "@material-ui/core/Tooltip";
 import BackgroundBanner from "../BackgroundBanner";
 import download from "../../download.jpg";
@@ -111,19 +110,25 @@ export default class ProQckStatsEditProDiag extends Component {
               alt="Remy Sharp"
               src={this.context.AccountInfo[0].profilePhotoUrl}
             />
-            <Tooltip title="Click To Add Profile Photo">
-              <AddAPhotoOutlinedIcon
-                onClick={() => {
-                  this.setState({
-                    ShowPhotoUpload: true,
-                    FileTypeBeingUploaded: "ProfilePhoto",
-                  });
-                }}
-                classes={{
-                  root: "ChangeAvatarPic",
-                }}
-              />
-            </Tooltip>
+
+            {  window.ViewUserProfile === '-1' ? 
+                            <Tooltip title="Click To Add Profile Photo">
+                            <AddAPhotoOutlinedIcon
+                              onClick={() => {
+                                this.setState({
+                                  ShowPhotoUpload: true,
+                                  FileTypeBeingUploaded: "ProfilePhoto",
+                                });
+                              }}
+                              classes={{
+                                root: "ChangeAvatarPic",
+                              }}
+                            />
+                          </Tooltip> : <div/>
+
+
+            }
+
             <Typography
               classes={{
                 root: "EditProfileModalName",
@@ -133,19 +138,27 @@ export default class ProQckStatsEditProDiag extends Component {
             >
               {this.context.AccountInfo[0].fullName}
             </Typography>
-            <Tooltip title="Click To Upload Banner Photo">
-              <AddAPhotoOutlinedIcon
-                onClick={() => {
-                  this.setState({
-                    ShowPhotoUpload: true,
-                    FileTypeBeingUploaded: "BannerPhoto",
-                  });
-                }}
-                classes={{
-                  root: "UploadBannerIcon",
-                }}
-              />
-            </Tooltip>
+            {  window.ViewUserProfile === '-1' ?  
+
+
+<Tooltip title="Click To Upload Banner Photo">
+<AddAPhotoOutlinedIcon
+  onClick={() => {
+    this.setState({
+      ShowPhotoUpload: true,
+      FileTypeBeingUploaded: "BannerPhoto",
+    });
+  }}
+  classes={{
+    root: "UploadBannerIcon",
+  }}
+/>
+</Tooltip> :  <div />
+          
+          }
+            
+            
+            
           </div>
 
           <Formik
@@ -162,6 +175,7 @@ export default class ProQckStatsEditProDiag extends Component {
             onSubmit={this.submitValues}
             render={(props) => (
               <EditProfileInfoForm
+                isUserAFollower={ window.ViewUserProfile !== '-1'}
                 CloseDialog={this.props.CloseDialog}
                 {...props}
               />

@@ -19,6 +19,7 @@ import ImageIcon from "@material-ui/icons/Image";
 import Fade from "react-reveal/Fade";
 import { DropzoneArea } from "material-ui-dropzone";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Mic from "../SharedComponents/mic/mic";
 
 //component loads the first add post or edit post modal
 export default class PostModal extends Component {
@@ -28,7 +29,8 @@ export default class PostModal extends Component {
   FileUploaded: null,
   ShowLoader: false,
   FileType: "",
-  SupportedFileTypes: ""
+  SupportedFileTypes: "",
+  StartMic: false
 };
 
   componentDidMount = () => {
@@ -162,6 +164,15 @@ export default class PostModal extends Component {
     this.setState(NewState);
   };
 
+  HandleMicOutput = (MicOutput) => {
+    console.log(MicOutput)
+    this.setState({
+      Post: this.state.Post.concat(MicOutput)
+    });
+  };
+
+
+
   render() {
     return (
       <div>
@@ -188,13 +199,21 @@ export default class PostModal extends Component {
           />
           <CardContent>
             <TextField
+            multiline={true}
               value={this.state.Post}
+              classes={{
+                root: "Add_EditPostTextBox"
+              }}
               onChange={(event) =>
                 this.HandleUpdate({ Post: event.target.value })
               }
               fullWidth={true}
               label="What's new with you?"
             />
+          <Mic
+            class="mic"
+            HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
+          />
           </CardContent>
 
 

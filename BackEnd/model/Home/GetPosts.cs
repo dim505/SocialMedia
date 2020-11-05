@@ -25,6 +25,7 @@ namespace SocialMedia.model
 
         public string FileType { get; set; }
 
+        public string ProfilePhotoUrl { get; set; }
         public string ViewUserProfile { get; set; }
         public string TempTagList { get; set; }
 

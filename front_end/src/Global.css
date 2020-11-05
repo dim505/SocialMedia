@@ -142,3 +142,22 @@ a {
   width: 80vw !important;
   height: 70vh;
 }
+
+.Mui-disabled {
+  color: #303030 !important;
+}
+
+.Add_EditPostTextBox {
+  width: calc(100% - 50px) !important;
+}
+
+.mic {
+  cursor: pointer;
+  display: inline;
+}
+
+.AddCommentMic {
+  position: absolute;
+  margin-top: -5px;
+  display: inline;
+}

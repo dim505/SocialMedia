@@ -46,6 +46,35 @@ export default class ProfileQuickStatsEditProfile extends Component {
     });
   };
 
+  RenderProfileButton = () => {
+        if (window.ViewUserProfile === '-1') {
+          return (<Button
+            onClick={() => {
+              this.OpenDialog();
+            }}
+            color="primary"
+          >
+              Edit Profile 
+          </Button>)
+
+        } else if (this.context.AccountInfo[0].isUserAFollower === '-1') {
+              return ( <div/>    )
+
+        } else {
+
+          return (<Button
+            onClick={() => {
+              this.OpenDialog();
+            }}
+            color="primary"
+          >
+              View Profile Info
+          </Button>)
+
+        }
+
+  }
+
   render() {
     return (
       <div>
@@ -74,18 +103,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
           >
             {this.context.AccountInfo[0].fullName}
           </Typography>
-
-
-          {window.ViewUserProfile === '-1'  ? 
-          <Button
-            onClick={() => {
-              this.OpenDialog();
-            }}
-            color="primary"
-          >
-              Edit Profile 
-          </Button>
-              : "" }
+              {this.RenderProfileButton()}
         </Paper>
 
         <ProQckStatsEditProDiag
