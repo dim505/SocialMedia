@@ -5,6 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 export default function SnackBar(props) {
   return (
     <Snackbar
+      autoHideDuration={props.autoHideDuration ? props.autoHideDuration : null }
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       key={{ vertical: "bottom", horizontal: "center" }}
       open={props.OpenNoti}

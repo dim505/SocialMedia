@@ -1,3 +1,27 @@
 .GridContainer {
   margin-top: 45px !important;
 }
+
+
+
+.Add_EditPostTextBox {
+  width: calc(100% - 50px) !important;
+}
+
+.mic {
+  cursor: pointer;
+  display: inline;
+}
+
+.AddCommentMicFade {
+  opacity: 100% !important;
+}
+
+.AddCommentMic {
+  transition: opacity 0.3s !important;
+  opacity: 0%;
+  position: absolute;
+  margin-top: -5px;
+  display: inline;
+}
+

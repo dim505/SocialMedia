@@ -28,6 +28,8 @@ body {
 }
 
 .PostModal {
+  overflow-y: auto;
+  height: 90vh;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -51,8 +53,17 @@ body {
   transition: opacity 2s;
 }
 
+#LogInScreen {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
 @media only screen and (max-width: 500px) {
   .MainBodyStyle {
+    opacity: 0 !important;
+  }
+
+  #LogInScreen {
     opacity: 0 !important;
   }
 
@@ -70,20 +81,12 @@ body {
   opacity: 0;
   position: absolute;
   text-align: center;
-  transition: opacity 1s;
   display: none;
 }
 
 .MainBodyStyleFade {
   opacity: 1;
 }
-
-/*
-.EditProfileAddPhotoIcon {
-  position: relative;
-  margin-right: 0;
-}
-*/
 
 .YourCircle {
   background-color: white;
@@ -145,19 +148,4 @@ a {
 
 .Mui-disabled {
   color: #303030 !important;
-}
-
-.Add_EditPostTextBox {
-  width: calc(100% - 50px) !important;
-}
-
-.mic {
-  cursor: pointer;
-  display: inline;
-}
-
-.AddCommentMic {
-  position: absolute;
-  margin-top: -5px;
-  display: inline;
 }

@@ -1,18 +1,20 @@
 /* NAV BAR STYLE  */
 .appBarShift {
-  width: calc(100% - 240px) !important ;
-
+  width: calc(100% - 200px) !important ;
   right: 0 !important;
   transition: width 0.25s !important;
 }
 
 .appBarClosed {
-  transition: width 0.25s !important;
+  transition: all 0.3s ease-out !important;
   width: 100% !important ;
 }
 
+.AppBarScrollShift {
+  transition: top 0.3s !important;
+}
+
 .AppBarStyle {
-	transition: top 0.3s !important;
   z-index: 1300 !important;
   padding-left: 10px;
   padding-top: 5px;
@@ -27,11 +29,11 @@
 
 .CloseDrawerIcon {
   position: relative;
-  left: 90px;
+  left: 70px;
 }
 
 .DrawerStyle {
-  width: 240px;
+  width: 200px;
   transition: width 0.25s !important;
 }
 
@@ -126,7 +128,6 @@
   margin-bottom: -12px;
 }
 
-
 @media screen and (max-width: 650px) {
   [class*="DrawerStyleClosed"] {
     width: 0px;
@@ -137,4 +138,3 @@
     margin-left: 10px;
   }
 }
-

@@ -28,9 +28,10 @@ export default class ProfileCardFollow extends Component {
         "Post",
         `${process.env.REACT_APP_BackEndUrl}/api/People/FollowPerson/${this.props.Person.auth0ID}`
       ).then((results) => {
-        this.setState({
+       /* this.setState({
           IsFollow: true,
-        });
+        });*/
+        this.context.OpenNoti("You are following " + this.props.Person.fullName, 2000)
         this.props.GetData();
       });
     } else if (this.state.IsFollow === true) {
@@ -38,9 +39,10 @@ export default class ProfileCardFollow extends Component {
         "Delete",
         `${process.env.REACT_APP_BackEndUrl}/api/People/DeleteFollowPerson/${this.props.Person.followingAuth0ID}`
       ).then((results) => {
-        this.setState({
+       /* this.setState({
           IsFollow: false,
-        });
+        }); */
+        this.context.OpenNoti("You are unfollowing " + this.props.Person.fullName, 2000)
         this.props.GetData();
       });
     }
@@ -51,7 +53,6 @@ export default class ProfileCardFollow extends Component {
     window.ViewUserProfile = this.props.Person.auth0ID
 	  this.context.GetProfilePagePosts()
     this.context.GetAccountInfo()
-    
     this.context.RedirectToPage("/Profile")	  
   }
 

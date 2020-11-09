@@ -9,6 +9,7 @@ import moment from "moment";
 import Context from "../../../SharedComponents/context";
 import { uuidv4 } from "../../../SharedComponents/SharedFunctions";
 import Mic from "../../../SharedComponents/mic/mic";
+import Fade from 'react-reveal/Fade';
 
 //component/form used to add a commment to a post 
 export default class AddPostComment extends Component {
@@ -71,10 +72,13 @@ export default class AddPostComment extends Component {
               placeholder="Add a comment"
               inputProps={{ "aria-label": "search" }}
             />
+        
               <Mic
+                postGuid = {this.props.post.postGuid}
                 HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
                 class="AddCommentMic"
               />
+           
             </div>
           }
         />

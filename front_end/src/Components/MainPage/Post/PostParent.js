@@ -11,6 +11,7 @@ import PostMenu from "./PostComponents/PostMenu";
 import Post from "./PostComponents/Post";
 import Context from "../../SharedComponents/context";
 import { ApiCall } from "../../SharedComponents/ApiCall";
+import Typography from "@material-ui/core/Typography";
 import "./Post.css";
 //this houses the all components related to the post component
 export default class PostParent extends Component {
@@ -194,11 +195,16 @@ export default class PostParent extends Component {
   };
 
   //this displays the comments the post
-  HandleAddCommentClick = () => {
+  HandleAddCommentClick = async (event) => {
+    console.log(event)
     this.GetComments();
-    this.setState({
+    await this.setState({
       ShowComment: !this.state.ShowComment,
     });
+      if (this.state.ShowComment === false ) {
+        document.getElementById(this.props.post.postGuid).style.opacity = "0%"
+      }
+    
   };
 
   //this function renders the appropriate modal
@@ -247,7 +253,12 @@ export default class PostParent extends Component {
               />
             ))
           ) : (
-            <h3>Sorry No Comments found</h3>
+
+            <Typography variant="h6" gutterBottom>
+            Sorry No Comments found
+          </Typography>
+
+          
           )}
           <Divider />
 

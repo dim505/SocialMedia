@@ -117,10 +117,11 @@ class App extends Component {
     });
   };
   //function opens notification alert
-  OpenNoti = (message) => {
+  OpenNoti = (message, autoHideDuration) => {
     this.setState({
       OpenNoti: true,
       Message: message,
+      autoHideDuration: autoHideDuration 
     });
   };
   //function closes  notification alert
@@ -153,7 +154,7 @@ class App extends Component {
       <Context.Provider
         value={{
           test: "123",
-          OpenNoti: (message) => this.OpenNoti(message),
+          OpenNoti: (message, autoHideDuration) => this.OpenNoti(message, autoHideDuration),
           CloseNoti: () => this.CloseNoti(),
           GetMainPagePosts: () => this.GetMainPagePosts(),
           GetProfilePagePosts: () => this.GetProfilePagePosts(),
@@ -170,6 +171,8 @@ class App extends Component {
           {!this.state.authenticated ? (
             <Fade collapse>
               <LogInScreen auth={this.props.auth} />
+
+
             </Fade>
           ) : (
             <div>
@@ -209,7 +212,13 @@ class App extends Component {
                 </Route>
                 <NameReq AccountInfo={this.state.AccountInfo} />
               </div>
-              <div className="TurnToLandScape">
+
+
+              <ScrollUpButton />
+            </div>
+          )}
+
+<div className="TurnToLandScape">
                 {" "}
                 <Typography variant="h2" gutterBottom>
                   Please turn your device to landscape to view this application
@@ -217,10 +226,9 @@ class App extends Component {
                 <ScrollUpButton />
               </div>
 
-              <ScrollUpButton />
-            </div>
-          )}
+
         <SnackBar
+                  autoHideDuration= {this.state.autoHideDuration}
                   OpenNoti={this.state.OpenNoti}
                   CloseNoti={this.CloseNoti}
                   message={this.state.Message}

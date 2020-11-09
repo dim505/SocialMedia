@@ -57,7 +57,7 @@ export default class NavBar extends Component {
       var currentScrollPos = window.pageYOffset;
       if (prevScrollpos > currentScrollPos) {
         document.getElementById("NavBar").style.top = "0";
-      } else if (prevScrollpos < currentScrollPos && window.innerWidth < 650) {
+      } else if (prevScrollpos < currentScrollPos && window.innerWidth < 1024) {
         document.getElementById("NavBar").style.top = "-55px";
       }
       prevScrollpos = currentScrollPos;

@@ -21,7 +21,7 @@ export default class LogInScreen extends Component {
 
   render() {
     return (
-      <div>
+      <div id="LogInScreen">
         <AccountCircleIcon style={{ fontSize: 48 }} />
         <Typography variant="h5" gutterBottom>
           Welcome To Fusion Connect

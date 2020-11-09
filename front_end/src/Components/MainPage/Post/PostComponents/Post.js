@@ -32,7 +32,7 @@ export default class Post extends Component {
       <div>
         <CardHeader
           avatar={
-            <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>R</Avatar>
+            <Avatar src={this.props.post.profilePhotoUrl}>R</Avatar>
           }
           action={
             window.ViewUserProfile === '-1' ? <div>
@@ -83,7 +83,7 @@ export default class Post extends Component {
           <div className="NumFavorite">{this.props.post.postLikeCount}</div>
           <div className="PostIconStyle">
             <IconButton
-              onClick={() => this.props.HandleAddCommentClick()}
+              onClick={(event) => this.props.HandleAddCommentClick(event)}
               aria-label="show more"
             >
               <MessageIcon />

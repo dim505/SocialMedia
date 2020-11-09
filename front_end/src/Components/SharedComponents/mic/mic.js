@@ -2,13 +2,18 @@ import React, { Component } from "react";
 import { VoicePlayer, VoiceRecognition } from "react-voice-components";
 import mic from "./mic.gif";
 import mic_animate from "./mic-animate.gif";
-
 export default class Mic extends Component {
   state = {
     StartMic: false
   };
 
-  componentDidMount = () => {};
+  componentDidMount = () => {  
+    if (this.props.class === "AddCommentMic") {
+      document.getElementById(this.props.postGuid).style.opacity  = "100%"
+    }
+  };
+
+
 
 
   onResult  = (e)  => {
@@ -28,25 +33,28 @@ export default class Mic extends Component {
       (!!window.chrome.webstore || !!window.chrome.runtime)
     ) {
       return (
-        <div class={this.props.class}>
+        <React.Fragment>
+           
           {this.state.StartMic ? (
-            <div class={this.props.class}>
+            <React.Fragment>
               <img
                 onClick={() => this.StartMic()}
                 src={mic_animate}
                 alt="mic"
               />
               <VoiceRecognition onResult={this.onResult} continuous={true} />
-            </div>
+              </React.Fragment>
           ) : (
             <img
-              class={this.props.class}
+              id="MicImg"
               onClick={() => this.StartMic()}
               src={mic}
               alt="mic"
             />
           )}
-        </div>
+
+          
+        </React.Fragment>
       );
     } else {
       return <div />;
@@ -54,6 +62,8 @@ export default class Mic extends Component {
   };
 
   render() {
-    return <div class={this.props.class}>{this.RenderMicComp()}</div>;
+    return <div
+    id={this.props.postGuid}
+    class={this.props.class}>{this.RenderMicComp()}</div>;
   }
 }

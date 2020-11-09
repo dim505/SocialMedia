@@ -210,6 +210,7 @@ export default class PostModal extends Component {
               fullWidth={true}
               label="What's new with you?"
             />
+            
           <Mic
             class="mic"
             HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
