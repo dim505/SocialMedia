@@ -18,6 +18,8 @@ import "./Components/SharedComponents/ShareComponents.css";
 import NameReq from "./Components/NameReq";
 import SearchResults from "./Components/NavBar/SearchResults"
 import { withRouter } from "react-router-dom";
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
@@ -45,6 +47,7 @@ class App extends Component {
 
   //sets title, get data, check if visiting user is authenticated
   async componentDidMount() {
+    window.prevScrollpos = 0;
     window.ViewUserProfile = "-1";
     window.getTokenSilently = await this.props.auth.getTokenSilently();
     document.title = "Fusion Connect";
@@ -176,6 +179,30 @@ class App extends Component {
             </Fade>
           ) : (
             <div>
+
+<PerfectScrollbar onScrollUp={(container  ) => {
+  /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+  var currentScrollPos = container.scrollTop;
+  console.log(container.scrollTop )
+  if (window.prevScrollpos > currentScrollPos) {
+    document.getElementById("NavBar").style.top = "0";
+  }
+  window.prevScrollpos = currentScrollPos
+  }}
+  
+  onScrollDown={(container) => {
+
+    var currentScrollPos = container.scrollTop;
+    if (window.prevScrollpos < currentScrollPos && window.innerWidth < 1024) {
+      document.getElementById("NavBar").style.top = "-55px";
+    }
+    window.prevScrollpos = currentScrollPos 
+  }}
+  
+  
+  
+  >
+
               <Fade collapse unmountOnExit when={this.state.ShowLoader}>
                 <div className={`Loader `}>
                   <LinearProgress />
@@ -215,6 +242,8 @@ class App extends Component {
 
 
               <ScrollUpButton />
+              </PerfectScrollbar>
+
             </div>
           )}
 

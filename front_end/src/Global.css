@@ -149,3 +149,7 @@ a {
 .Mui-disabled {
   color: #303030 !important;
 }
+
+.scrollbar-container {
+  height: 100vh !important;
+}

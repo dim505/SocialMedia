@@ -38,7 +38,7 @@ export default class NavNotiPopOver extends Component {
 						this.props.Messages.length > 0 ? 						
 						this.props.Messages.map((message) => (
                       <NotificationActivity
-						GetNotifications = {this.props.GetNotifications()}
+						GetNotifications = {this.props.GetNotifications}
 					  message={message} />
                     )) : <div className="NotiContentNoActivity">All Caught Up! </div> 
 					

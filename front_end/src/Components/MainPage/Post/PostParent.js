@@ -105,7 +105,7 @@ export default class PostParent extends Component {
 
   //tracks that the user liked a post or not
   HandleFavoritePost = async () => {
-    if (this.props.post.didUserLikePost !== "yes") {
+    if (this.props.post.didUserLikePost !== "True") {
       var MyData = {};
       MyData.AddLikedComment = {
         PostGuid: this.props.post.postGuid,

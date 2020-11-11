@@ -74,7 +74,7 @@ export default class Post extends Component {
             <FavoriteBorderIcon
               classes={{
                 root:
-                  this.props.post.didUserLikePost === "yes"
+                  this.props.post.didUserLikePost === "True"
                     ? "FavoriteIconStyle"
                     : "",
               }}

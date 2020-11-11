@@ -49,19 +49,6 @@ export default class NavBar extends Component {
   
    componentDidMount = () => {
 	this.GetNotifications();
- 
-    /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
-    var prevScrollpos = window.pageYOffset;
-    window.onscroll = function () {
-       
-      var currentScrollPos = window.pageYOffset;
-      if (prevScrollpos > currentScrollPos) {
-        document.getElementById("NavBar").style.top = "0";
-      } else if (prevScrollpos < currentScrollPos && window.innerWidth < 1024) {
-        document.getElementById("NavBar").style.top = "-55px";
-      }
-      prevScrollpos = currentScrollPos;
-    };
 
  }
 
