@@ -17,7 +17,7 @@ export default class Mic extends Component {
 
 
   onResult  = (e)  => {
-    debugger;
+ 
     this.props.HandleMicOutput(e.finalTranscript);
   };
 

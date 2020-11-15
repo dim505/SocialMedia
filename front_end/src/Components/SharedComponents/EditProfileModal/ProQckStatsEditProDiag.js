@@ -20,6 +20,7 @@ import { Formik } from "formik";
 import { EditProfileInfoForm } from "./EditProfileInfoForm";
 import * as Yup from "yup";
 import Context from "../context";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const validationSchema = Yup.object({
   FullName: Yup.string("Please Enter Your Name").required("Name is Required"),
@@ -89,6 +90,16 @@ export default class ProQckStatsEditProDiag extends Component {
     }
   };
 
+  handleClickAway = () => {
+    console.log("1");
+    if (this.context.AccountInfo[0].fullName === "") {
+      this.context.OpenNoti(
+        "Please Enter Your Name and Click UPDATE INFO Before Proceeding"   
+      );
+    }
+  };
+
+
   render() {
     return (
       <Dialog
@@ -102,12 +113,14 @@ export default class ProQckStatsEditProDiag extends Component {
             picture={this.context.AccountInfo[0].bannerPhotoUrl}
             PictureSize="200px"
           />
-          <div className="Avatar_Center">
+         <ClickAwayListener onClickAway={this.handleClickAway}>
+          <div>          <div className="Avatar_Center">
             <Avatar
               classes={{
                 root: "AvatarStyle",
               }}
               alt="Remy Sharp"
+              src={this.context.AccountInfo[0].fullName}
               src={this.context.AccountInfo[0].profilePhotoUrl}
             />
 
@@ -181,6 +194,10 @@ export default class ProQckStatsEditProDiag extends Component {
               />
             )}
           />
+
+</div>
+
+          </ClickAwayListener> 
         </DialogContent>
 
         <UploadPhoto

@@ -48,7 +48,7 @@
 .search {
   margin-right: 60px !important;
   text-align: left;
-  width: 100%;
+  width: 90%;
   padding-right: 15px;
   margin-left: 20px !important;
   padding: 5px;
@@ -128,7 +128,7 @@
   margin-bottom: -12px;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 1024px) {
   [class*="DrawerStyleClosed"] {
     width: 0px;
   }

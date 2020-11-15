@@ -45,7 +45,7 @@ export default class AddPostComment extends Component {
   };
 
   HandleMicOutput = (MicOutput) => {
-    debugger;
+    
     this.setState({
       AddPostCommentVal: this.state.AddPostCommentVal.concat(MicOutput)
     });
@@ -56,7 +56,12 @@ export default class AddPostComment extends Component {
     return (
       <div>
         <CardHeader
-          avatar={<Avatar>R</Avatar>}
+          avatar={<Avatar
+            alt={this.context.AccountInfo[0].fullName}
+            src={this.context.AccountInfo[0].profilePhotoUrl}
+          >
+            
+          </Avatar>}
           classes={{
             root: "TextAllignLeft",
           }}

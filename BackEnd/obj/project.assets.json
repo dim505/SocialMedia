@@ -2437,7 +2437,7 @@
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
       },
-      "Twilio/5.44.0": {
+      "Twilio/5.49.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "5.3.0",
@@ -7948,10 +7948,10 @@
         "system.xml.xdocument.nuspec"
       ]
     },
-    "Twilio/5.44.0": {
-      "sha512": "69yoQASygBxbwqmE/BNHzU5LjtGryJdn/OZWiGMq9lhuuix0Mk5uLNCnOBeULPI6WjLMwDPwKr4XzKiGFFRl+w==",
+    "Twilio/5.49.0": {
+      "sha512": "BYXbNfxGEFSHCKpcwCIj/HBmTdfjSQG3yNljVk6s2YdpQLLPMjVbwmiKVoC5PXulGa4MCx4/h6FrGosZDelluA==",
       "type": "package",
-      "path": "twilio/5.44.0",
+      "path": "twilio/5.49.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -7963,7 +7963,7 @@
         "lib/netstandard1.4/Twilio.xml",
         "lib/netstandard2.0/Twilio.dll",
         "lib/netstandard2.0/Twilio.xml",
-        "twilio.5.44.0.nupkg.sha512",
+        "twilio.5.49.0.nupkg.sha512",
         "twilio.nuspec"
       ]
     }
@@ -7985,7 +7985,7 @@
       "System.Configuration.ConfigurationManager >= 4.7.0",
       "System.Data.SqlClient >= 4.8.0",
       "System.IdentityModel.Tokens.Jwt >= 6.5.0",
-      "Twilio >= 5.44.0"
+      "Twilio >= 5.49.0"
     ]
   },
   "packageFolders": {
@@ -8091,7 +8091,7 @@
           },
           "Twilio": {
             "target": "Package",
-            "version": "[5.44.0, )"
+            "version": "[5.49.0, )"
           }
         },
         "imports": [

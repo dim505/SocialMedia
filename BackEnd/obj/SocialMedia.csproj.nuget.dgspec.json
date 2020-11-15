@@ -103,7 +103,7 @@
             },
             "Twilio": {
               "target": "Package",
-              "version": "[5.44.0, )"
+              "version": "[5.49.0, )"
             }
           },
           "imports": [

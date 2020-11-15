@@ -14,13 +14,12 @@ import Context from "./Components/SharedComponents/context";
 import { ApiCall } from "./Components/SharedComponents/ApiCall";
 import Typography from "@material-ui/core/Typography";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
-import "./Components/SharedComponents/ShareComponents.css";
 import NameReq from "./Components/NameReq";
 import SearchResults from "./Components/NavBar/SearchResults"
 import { withRouter } from "react-router-dom";
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
+import Messenger from "./Components/Messenger/Messenger";
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
   constructor(props) {
@@ -227,11 +226,21 @@ class App extends Component {
                     <ProfileQuickStats />
                   </Fade>
                 </Route>
+
+                <Route path="/Messenger">
+                  <Fade collapse>
+                  <Messenger />
+                  </Fade>
+                </Route>
+                
                 <Route path="/People">
                   <Fade collapse>
                     <PeoplePage />
                   </Fade>
                 </Route>
+
+
+                
 				<Route path="/SearchResults">
                   <Fade collapse>
                     <SearchResults />

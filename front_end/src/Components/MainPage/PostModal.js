@@ -188,9 +188,12 @@ export default class PostModal extends Component {
         )}
           <CardHeader
             avatar={
-              <Avatar src={this.context.AccountInfo[0].profilePhotoUrl}>
-                R
-              </Avatar>
+              
+              <Avatar 
+              alt={this.context.AccountInfo[0].fullName}
+              src={this.context.AccountInfo[0].profilePhotoUrl}/>
+                
+              
             }
             classes={{
               root: "TextAllignLeft",

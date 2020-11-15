@@ -31,7 +31,9 @@ export default class AddPostButton extends Component {
       <div>
         <Paper elevation={3}>
           <Button onClick={() => this.OpnModal()} fullWidth={true}>
-            <Avatar src={this.context.AccountInfo[0].profilePhotoUrl} />
+            <Avatar 
+            alt={this.context.AccountInfo[0].fullName}
+            src={this.context.AccountInfo[0].profilePhotoUrl} />
 
             <p id="PostStatus"> Whats New With You? </p>
           </Button>

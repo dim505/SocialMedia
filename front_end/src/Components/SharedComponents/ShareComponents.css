@@ -3,20 +3,18 @@
 }
 
 .AvatarStyle {
-    transition: border 1s;
-    border: 2px solid;
-    width: 100px!important;
-    height: 100px!important;
-    font-size: 36px!important;
-    margin: auto;
+  transition: border 1s;
+  border: 2px solid;
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 36px !important;
+  margin: auto;
 }
 
 .AvatarStyle:hover {
-    border: 3px solid lightgreen;
-    cursor: pointer;
+  border: 3px solid lightgreen;
+  cursor: pointer;
 }
-
-
 
 .UploadBannerIcon {
   background-color: white;
@@ -36,8 +34,6 @@
   cursor: pointer;
   transform: scale(1.3);
 }
-
-
 
 .ChangeAvatarPic {
   background-color: white;
@@ -76,8 +72,6 @@
   transform: scale(1.3);
 }
 
-
-
 .EditProfileModalForm {
   margin-left: 22px;
   margin-right: 22px;
@@ -87,4 +81,3 @@
 .EditProfileModalName {
   text-align: center;
 }
-

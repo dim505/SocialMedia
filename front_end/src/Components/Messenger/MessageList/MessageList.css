@@ -1,0 +1,95 @@
+.message-list-container {
+  padding: 5px;
+  padding-bottom: 70px;
+}
+
+.ComeposeMessage {
+  padding-left: 10px;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 14px;
+}
+
+.ComeposeMessageInput {
+  color: rgba(29, 5, 5, 0.4);
+  font-size: 14px;
+  padding-left: 10px;
+  width: 80%;
+}
+
+.ComeposeMessageInputType {
+  color: black !important;
+}
+
+.SeachContactHeader {
+  text-align: left;
+  padding-left: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.34);
+}
+
+/* css for compose button */
+.compose {
+  right: 0;
+  width: calc(100% - 365px);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #eeeef1;
+  position: fixed;
+
+  bottom: 0px;
+}
+
+@supports (backdrop-filter: blur(20px)) {
+  .compose {
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+  }
+}
+
+.compose-input {
+  padding-left: 10px;
+  border-radius: 18px;
+  flex: 1;
+  border: none;
+  font-size: 18px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.compose-input::placeholder {
+  opacity: 0.3;
+}
+
+.compose .toolbar-button {
+  color: #bbbbbf;
+  margin-left: 15px;
+}
+
+.compose .toolbar-button:hover {
+  color: #99999c;
+}
+
+.EmojiMenu {
+  padding: 0px !important;
+}
+.EmojiMenuPaper {
+  top: calc(100vh - 375px) !important;
+}
+
+.SearchContactDropDown {
+  top: 50px;
+  left: 40px;
+  position: absolute;
+  width: 320px;
+}
+
+.SelectedPerson {
+  padding: 5px 0px 5px 10px;
+  border-radius: 10px;
+  color: #0084ff;
+  background-color: #cbe6fe;
+}

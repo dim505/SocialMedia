@@ -30,7 +30,7 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
-    <PackageReference Include="Twilio" Version="5.44.0" />
+    <PackageReference Include="Twilio" Version="5.49.0" />
   </ItemGroup>
 
 

@@ -68,7 +68,11 @@ export default class PostComment extends Component {
     return (
       <div>
         <CardHeader
-          avatar={<Avatar>R</Avatar>}
+          avatar={<Avatar
+          src={this.props.comment.profilePhotoUrl}
+          alt={this.props.comment.fullName}
+          
+          />}
           action={
             <div>
               <IconButton

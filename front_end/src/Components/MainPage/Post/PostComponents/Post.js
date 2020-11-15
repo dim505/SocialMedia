@@ -32,7 +32,9 @@ export default class Post extends Component {
       <div>
         <CardHeader
           avatar={
-            <Avatar src={this.props.post.profilePhotoUrl}>R</Avatar>
+            <Avatar src={this.props.post.profilePhotoUrl}
+                    alt={this.props.post.fullName}
+            />
           }
           action={
             window.ViewUserProfile === '-1' ? <div>

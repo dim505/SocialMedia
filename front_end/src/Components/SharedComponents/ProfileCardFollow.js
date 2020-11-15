@@ -7,6 +7,7 @@ import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckS
 import { ApiCall } from "../SharedComponents/ApiCall";
 import Tooltip from "@material-ui/core/Tooltip";
 import Context from "./context";
+import "./ShareComponents.css";
 //this card shows the person who you are following info card
 export default class ProfileCardFollow extends Component {
   static contextType = Context;
@@ -73,7 +74,7 @@ export default class ProfileCardFollow extends Component {
               classes={{
                 root: "AvatarStyle",
               }}
-              alt="Remy Sharp"
+              alt={this.props.Person.fullName} 
               src={this.props.Person.profilePhotoUrl}
             />
             </Tooltip>

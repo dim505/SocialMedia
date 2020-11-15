@@ -21,11 +21,12 @@ export default class NameReq extends Component {
       this.state.OpenDialog !== true &&
       this.context.ShowLoader === false
     ) {
-      this.OpenDialog();
       this.context.OpenNoti(
-        "Please Enter Your Name and Click UPDATE INFO Before Proceeding",
-        "top"
+        "Please Enter Your Name and Click UPDATE INFO Before Proceeding"
+      
       );
+      this.OpenDialog();
+
     } else if (
       this.props.AccountInfo[0].fullName !== "" &&
       this.state.OpenDialog === true

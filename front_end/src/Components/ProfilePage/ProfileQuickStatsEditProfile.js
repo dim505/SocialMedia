@@ -90,7 +90,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
               classes={{
                 root: "AvatarStyle",
               }}
-              alt="Remy Sharp"
+              alt={this.context.AccountInfo[0].fullName}
               src={this.context.AccountInfo[0].profilePhotoUrl}
             />
           </div>

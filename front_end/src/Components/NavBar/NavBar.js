@@ -30,6 +30,7 @@ import Context from "../SharedComponents/context";
 import NavNotiPopOver from "./NavNotiPopOver"
 import { ApiCall } from "../SharedComponents/ApiCall";
 import Badge from '@material-ui/core/Badge';
+import MessageIcon from '@material-ui/icons/Message';
 
 
 //component goes at top of page, contains search  bar, drawer, log in button ect. top level compoent for the nav bar
@@ -190,6 +191,31 @@ export default class NavBar extends Component {
               </ListItem>
             </NavLink>
 
+
+            <NavLink
+              className="navbar__link"
+              activeClassName="navbar__link--active"
+              to="/Messenger"
+            >
+              <ListItem
+                classes={{
+                  root: this.state.ShowPage === "Messenger" ? "ActivePage" : "",
+                }}
+                button
+                onClick={() => this.HandleMenuClick("Messenger")}
+              >
+                <ListItemIcon>
+                  <Tooltip title="Messenger">
+                  <MessageIcon />
+                  </Tooltip>
+                </ListItemIcon>
+
+                <ListItemText primary="Messenger" />
+              </ListItem>
+            </NavLink>     
+            
+
+
             <NavLink
               className="navbar__link"
               activeClassName="navbar__link--active"
@@ -260,7 +286,7 @@ export default class NavBar extends Component {
                   aria-label="menu"
                 >
                   <Avatar
-                    alt="Remy Sharp"
+                    alt={this.context.AccountInfo[0].fullName}
                     src={this.context.AccountInfo[0].profilePhotoUrl}
                   />
                 </IconButton>
