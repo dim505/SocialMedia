@@ -11,24 +11,25 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace SocialMedia.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class MessengerController : ControllerBase
     {
 
 
 
 
-
+        private readonly ITokenGenerator _tokenGenerator;
         private readonly IConfiguration _config;
-        public MessengerController(IConfiguration config)
+        public MessengerController(IConfiguration config, ITokenGenerator tokenGenerator)
         {
             _config = config;
-
+            _tokenGenerator = tokenGenerator;
         }
 
         //function used to get auth0ID for signed in user 
@@ -85,7 +86,7 @@ namespace SocialMedia.Controller
         public IActionResult GetMessengerUsers()
         {
             /* LoggedInUserAuth0ID	FollowingAuth0ID	FullName	ProfilePhotoUrl */
-            var SqlStr = @"select @LoggedInUser as LoggedInUserAuth0ID, Auth0ID as FollowingAuth0ID, FullName, ProfilePhotoUrl from ( select distinct t2.FollowerAuth0ID from SM_Follow_Following_Table t1 inner join SM_Follow_Following_Table t2 on t1.FollowerAuth0ID = t2.FollowingAuth0ID where @LoggedInUser = t1.FollowerAuth0ID OR @LoggedInUser = t2.FollowingAuth0ID and t1.FollowingAuth0ID = t2.FollowerAuth0ID ) as SubQuery inner join SM_Account_Info on SubQuery.FollowerAuth0ID = SM_Account_Info.Auth0ID";
+            var SqlStr = @"select @LoggedInUser as LoggedInUserAuth0ID, Auth0ID as FollowingAuth0ID, FullName, ProfilePhotoUrl from ( select distinct t2.FollowerAuth0ID from SM_Follow_Following_Table t1 inner join SM_Follow_Following_Table t2 on t1.FollowerAuth0ID = t2.FollowingAuth0ID where @LoggedInUser = t1.FollowerAuth0ID and @LoggedInUser = t2.FollowingAuth0ID and t1.FollowingAuth0ID = t2.FollowerAuth0ID ) as SubQuery inner join SM_Account_Info on SubQuery.FollowerAuth0ID = SM_Account_Info.Auth0ID";
             var SqlParameters = new
             {
                 LoggedInUser = new DbString
@@ -97,6 +98,38 @@ namespace SocialMedia.Controller
             };
             dynamic results = DbQuery(SqlStr, SqlParameters);
             return (results);
+        }
+
+
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult GetToken([FromBody] JObject data)
+        {
+
+            GetToken getToken = data["GetToken"].ToObject<GetToken>();
+            if (getToken.device == null || getToken.LoggedInUserAuth0ID == null)
+            {
+                return null;
+
+            }
+            var token = _tokenGenerator.Generate(getToken.LoggedInUserAuth0ID, getToken.device);
+            return Ok(token);
+
+        }
+
+        //this end point deletes a post from the database 
+        [HttpPost]
+        [Route("[action]/{FollowingAuth0ID}")]
+        public IActionResult ChatStarted(string FollowingAuth0ID)
+        {
+            string SqlStr = @"insert into ChatStarted values (@LoggedInUserAuth0ID,@FollowingAuth0ID)";
+            var SqlParameters = new
+            {
+                FollowingAuth0ID = new DbString { Value = FollowingAuth0ID, IsFixedLength = false, IsAnsi = true },
+                LoggedInUserAuth0ID = new DbString { Value = GetUserAuth0ID(), IsFixedLength = false, IsAnsi = true }
+            };
+            dynamic results = DbExecute(SqlStr, SqlParameters);
+            return Ok();
         }
 
 

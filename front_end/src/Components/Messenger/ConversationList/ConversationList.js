@@ -6,8 +6,8 @@ import Toolbar from "./Toolbar";
 export default class ConversationList extends React.Component {
   state = {
     FilteredConversations: [ ],
-    InitialConversations: [ ],
-    ConvoSelected: ""
+    InitialConversations: [ ]
+ 
   };
 
 
@@ -25,11 +25,9 @@ export default class ConversationList extends React.Component {
 
  
   //loads new conversation in the conversation window on the right
-  HandleConversationClick = (name, address, tenGuid) => {
-    window.address = " (" + address + ")";
-    console.log(name);
-    this.setState({ ConvoSelected: name });
-    this.props.HandleConversationClick(name, tenGuid);
+  HandleConversationClick = (name, FollowingAuth0ID) => {
+     
+    this.props.HandleConversationClick(name, FollowingAuth0ID);
   };
 
   //filters the list of people who are typed in the  search people search bar
@@ -62,7 +60,7 @@ export default class ConversationList extends React.Component {
               id={conversation.FollowingAuth0ID}
               data={conversation}
               HandleConversationClick={this.HandleConversationClick}
-              ConvoSelected={this.state.ConvoSelected}
+              ConvoSelected={this.props.ConvoSelected}
             />
           ))
         )}

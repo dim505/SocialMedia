@@ -15,20 +15,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 export default class MessageListToolBar extends React.Component {
   state = {
     ContactName: "",
-    ContactPersonSelected: "",
-    SuggestedPeople: [
-      {
-        FullName: "bobSmith",
-        ProfilePicture:
-          "https://i.pinimg.com/280x280_RS/77/4a/d6/774ad65e34b5161c8f448980b5756d3d.jpg"
-      },
-
-      {
-        FullName: "Nein Nine Nein",
-        ProfilePicture:
-          "https://i.pinimg.com/280x280_RS/77/4a/d6/774ad65e34b5161c8f448980b5756d3d.jpg"
-      }
-    ]
+    ContactPersonSelected: ""
   };
 
   HandleChange = (event) => {
@@ -39,10 +26,11 @@ export default class MessageListToolBar extends React.Component {
     this.setState({ ContactName: "" });
   };
 
-  SelectPerson = (FullName) => {
+  SelectPerson = (FullName,FollowingAuth0ID) => {
+    this.props.HandleConversationClick(FullName,FollowingAuth0ID)
     this.setState({
       ContactName: "",
-      ContactPersonSelected: FullName
+      ContactPersonSelected: ""
     });
   };
 
@@ -54,6 +42,39 @@ export default class MessageListToolBar extends React.Component {
       return "ComeposeMessageInput ComeposeMessageInputType";
     }
   };
+
+  RenderContacts = () => {
+
+
+    console.log(this.props.Users.filter(person => person.FullName.includes(this.state.ContactName)))
+
+    var FilteredPerson = this.props.Users.filter(person => person.FullName.includes(this.state.ContactName))
+    if (FilteredPerson.length >= 1) {
+          return (
+            FilteredPerson.map
+            (FilteredPerson => (
+                         
+              <ListItem
+               key={FilteredPerson.FollowingAuth0ID}
+               button
+               onClick={() => this.SelectPerson(FilteredPerson.FullName,FilteredPerson.FollowingAuth0ID)}
+               >
+               <ListItemIcon>
+                 <Avatar src={FilteredPerson.ProfilePhotoUrl} />
+               </ListItemIcon>
+
+               <ListItemText primary={FilteredPerson.FullName} />
+               </ListItem>  
+         ))
+    )
+    } else {
+        return (<p>Sorry no matches found</p>)
+
+    }
+
+
+    
+  }
 
   render() {
     return (
@@ -88,7 +109,9 @@ export default class MessageListToolBar extends React.Component {
         ) : (
           <div className="toolbar">
             <h1 className="toolbar-title">{this.props.ConvoSelected}</h1>
-            <div className="RightAllgin">
+        {this.props.ConvoSelected === ""  ? 
+         <div/> :
+        <div className="RightAllgin">
               <IconButton>
                 <PhoneIcon />
               </IconButton>
@@ -96,6 +119,7 @@ export default class MessageListToolBar extends React.Component {
                 <VideoCallIcon />
               </IconButton>
             </div>
+          }  
           </div>
         )}
         {Boolean(this.state.ContactName) ? (
@@ -108,21 +132,8 @@ export default class MessageListToolBar extends React.Component {
             >
               <List>
                 <div className="SeachContactHeader">CONTACTS </div>
+                    {this.RenderContacts()}
 
-                {this.state.SuggestedPeople.map((person) => (
-                  <>
-                    <ListItem
-                      button
-                      onClick={() => this.SelectPerson(person.FullName)}
-                    >
-                      <ListItemIcon>
-                        <Avatar src={person.ProfilePicture} />
-                      </ListItemIcon>
-
-                      <ListItemText primary={person.FullName} />
-                    </ListItem>
-                  </>
-                ))}
               </List>
             </Paper>
           </ClickAwayListener>

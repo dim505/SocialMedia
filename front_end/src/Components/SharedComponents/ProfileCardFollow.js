@@ -7,7 +7,7 @@ import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckS
 import { ApiCall } from "../SharedComponents/ApiCall";
 import Tooltip from "@material-ui/core/Tooltip";
 import Context from "./context";
-import "./ShareComponents.css";
+import "./ShareComponents.scss";
 //this card shows the person who you are following info card
 export default class ProfileCardFollow extends Component {
   static contextType = Context;
@@ -33,6 +33,7 @@ export default class ProfileCardFollow extends Component {
           IsFollow: true,
         });*/
         this.context.OpenNoti("You are following " + this.props.Person.fullName, 2000)
+        this.context.GetMainPagePosts()
         this.props.GetData();
       });
     } else if (this.state.IsFollow === true) {
@@ -44,6 +45,7 @@ export default class ProfileCardFollow extends Component {
           IsFollow: false,
         }); */
         this.context.OpenNoti("You are unfollowing " + this.props.Person.fullName, 2000)
+        this.context.GetMainPagePosts()
         this.props.GetData();
       });
     }

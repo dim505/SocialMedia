@@ -24,7 +24,7 @@ import Popover from "@material-ui/core/Popover";
 import SearchBar from "./SearchBar";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Tooltip from "@material-ui/core/Tooltip";
-import "./Navbar.css";
+import "./Navbar.scss";
 import NotificationActivity from "./NotificationActivity";
 import Context from "../SharedComponents/context";
 import NavNotiPopOver from "./NavNotiPopOver"

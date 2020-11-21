@@ -1,5 +1,5 @@
 import React from "react";
-import "./ConversationSearch.css";
+import "./ConversationSearch.scss";
 
 
 //this is the search people search on top of the conversation list

@@ -3,7 +3,7 @@ import LogInScreen from "./Components/LogIn/LogInScreen";
 import NavBar from "./Components/NavBar/NavBar";
 import MainFeed from "./Components/MainPage/MainFeed";
 import ProfileQuickStats from "./Components/ProfilePage/ProfileQuickStats";
-import "./Global.css";
+import "./Global.scss";
 import { Route } from "react-router-dom";
 import PeoplePage from "./Components/PeoplePage/PeoplePage";
 import Logo from "./Components/SharedComponents/SocialMediaLogo.png";

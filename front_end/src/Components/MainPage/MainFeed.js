@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import AddNewFeedButton from "./AddPostButton";
 import PostParent from "./Post/PostParent";
 import Context from "../SharedComponents/context";
-import "./MainPage.css"
+import "./MainPage.scss"
 //displays all the component on the main page / home page
 export default class MainFeed extends Component {
   static contextType = Context;

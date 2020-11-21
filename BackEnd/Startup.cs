@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using SocialMedia;
 
 namespace AMSBackEnd
 {
@@ -40,7 +41,7 @@ namespace AMSBackEnd
             });
             services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
-
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             string domain = "https://dev-5wttvoce.auth0.com/";
             services.AddAuthentication(options =>

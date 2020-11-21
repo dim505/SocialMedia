@@ -1,7 +1,7 @@
 import React from "react";
 import ConversationList from "./ConversationList/ConversationList";
 import MessageList from "./MessageList/MessageList";
-import "./Messenger.css";
+import "./Messenger.scss";
 import Fade from "react-reveal/Fade";
 import Grid from "@material-ui/core/Grid";
 import { ApiCall } from "../SharedComponents/ApiCall";
@@ -29,15 +29,13 @@ export default class Messenger extends React.Component {
       this.setState({
         Users: results,
       });
-      
-
     });
   }
   //this tracks what conversation is being selected
-  HandleConversationClick = (ConvoSelected, tenGuid) => {
+  HandleConversationClick = (ConvoSelected, FollowingAuth0ID) => {
     this.setState({
       ConvoSelected: ConvoSelected,
-      tenGuid: tenGuid,
+      FollowingAuth0ID: FollowingAuth0ID,
       OpenNewMessage: false
     });
   };
@@ -49,15 +47,18 @@ export default class Messenger extends React.Component {
   };
 
   OpenNewMessage = (OpenOrClose) => {
+
     this.setState({
       OpenNewMessage: OpenOrClose
     });
+    document.getElementsByClassName("scrollable content")[0].scrollTop = 0
   };
   render() {
     return (
       <div className="messenger">
         <div className="scrollable sidebar">
           <ConversationList
+          ConvoSelected={this.state.ConvoSelected}
             Users = {this.state.Users}
             OpenNewMessage={(OpenOrClose) => this.OpenNewMessage(OpenOrClose)}
             auth={this.props.auth}
@@ -68,9 +69,11 @@ export default class Messenger extends React.Component {
 
         <div className="scrollable content">
           <MessageList
+            Users = {this.state.Users}
             OpenNewMessage={this.state.OpenNewMessage}
             ConvoSelected={this.state.ConvoSelected}
-            tenGuid={this.state.tenGuid}
+            FollowingAuth0ID={this.state.FollowingAuth0ID}
+            HandleConversationClick={this.HandleConversationClick}
             InitialConversations={this.state.InitialConversations}
           />
         </div>

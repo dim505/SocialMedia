@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import FindPeopleParent from "./FindPeople/FindPeopleParent";
 import FollowingPeopleParent from "./FollowingPeople/FollowingPeopleParent";
 import Followers from "./Followers/Followers";
-import "./people.css";
+import "./people.scss";
 import { ApiCall } from "../SharedComponents/ApiCall";
 
 

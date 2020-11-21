@@ -1,28 +1,20 @@
 import React, { Component } from "react";
 import Chat from "twilio-chat";
-import Toolbar from "../ConversationList/Toolbar";
-import ToolbarButton from "../ConversationList/ToolbarButton";
+import { ApiCall } from "../../SharedComponents/ApiCall";
 import Message from "./Message/message";
 import moment from "moment";
 import Axios from "axios";
-import SendIcon from "@material-ui/icons/Send";
+import Context from "../../SharedComponents/context";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import "./MessageList.css";
+import "./MessageList.scss";
 import Fade from "react-reveal/Fade";
 import Typography from "@material-ui/core/Typography";
-import { date } from "yup";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import Picker from "emoji-picker-react";
-import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
-import IconButton from "@material-ui/core/IconButton";
-import { Scrollbars } from "react-custom-scrollbars";
 import MessageListToolBar from "./MessageListToolBar";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import UploadPhoto from "./UploadPhoto";
-
+import MessageCompose from "./MessageCompose"
 //parent that contains all the messages for the selected conversation
 export default class MessageList extends Component {
+  static contextType = Context;
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +25,7 @@ export default class MessageList extends Component {
   }
 
   componentDidMount() {
-    window.address = " ";
+     
     window.ApiCallAlreadyMade = false;
     window.MY_USER_ID = "";
 
@@ -46,22 +38,14 @@ export default class MessageList extends Component {
       this.setState({
         ShowPhotoUpload: false
       });
-    } else if (Filename.includes("Banner")) {
-      this.setState({
-        ShowPhotoUpload: false,
-        BannerUrl:
-          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-          Filename
-      });
-    } else if (Filename.includes("Profile")) {
-      this.setState({
-        ShowPhotoUpload: false,
-        ProfileUrl:
-          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
-          Filename
-      });
-    }
+    } 
   };
+
+  ShowPhotoUpload  = () => {
+      this.setState({
+        ShowPhotoUpload: true
+      })
+  }
 
   HandleScroll = async () => {
     var ChannelMessageCount = await this.channel.getMessagesCount();
@@ -87,7 +71,7 @@ export default class MessageList extends Component {
     window.removeEventListener("scroll", this.HandleScroll, true);
   }
   async componentDidUpdate(prevProps) {
-    if (prevProps.FollowingAuth0ID !== this.props.FollowingAuth0ID && this.props.FollowingAuth0ID !== "") {
+    if (prevProps.ConvoSelected !== this.props.ConvoSelected && this.props.ConvoSelected !== "") {
       await this.CallLoader("open");
       this.GetChatData();
       this.renderMessages();
@@ -113,26 +97,39 @@ export default class MessageList extends Component {
     var Mydata = {};
     var GetToken = {
       device: "browser",
-      TenGuid: this.props.InitialConversations[0].landLordAuth0ID
+      LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID
     };
     Mydata.GetToken = GetToken;
-    window.MY_USER_ID = this.props.InitialConversations[0].landLordAuth0ID;
+    window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID;
     let result = await Axios.post(
-      /*`https://cors-anywhere.herokuapp.com/*/ `${process.env.REACT_APP_BackEndUrl}/api/Tenhome/GetToken`,
+      /*`https://cors-anywhere.herokuapp.com/*/ `${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetToken`,
       Mydata
     )
       .then(async (result) => this.setupChatClient(result))
-      .catch(this.handleError);
+      .catch(this.handleError );
   }
 
   //this functions set up twillo chat client and get data from twillo servers
   async setupChatClient(result) {
     var client = await Chat.create(result.data);
 
-    window.channelName =
-      this.props.tenGuid +
+    if (this.props.FollowingAuth0ID > this.props.Users[0].LoggedInUserAuth0ID)
+    {
+      window.channelName =
+      this.props.FollowingAuth0ID +
       "-" +
-      this.props.InitialConversations[0].landLordAuth0ID;
+      this.props.Users[0].LoggedInUserAuth0ID;
+
+    } else {
+
+      window.channelName =
+      this.props.Users[0].LoggedInUserAuth0ID +
+      "-" +
+      this.props.FollowingAuth0ID;
+
+
+    }
+
     this.client = client;
     this.client
       .getChannelByUniqueName(window.channelName)
@@ -154,7 +151,7 @@ export default class MessageList extends Component {
       .then(() => {
         this.channel.on("messageAdded", (message) => {
           if (
-            this.props.InitialConversations[0].landLordAuth0ID !==
+            this.props.Users[0].LoggedInUserAuth0ID !==
               message.author &&
             window.PreviousMessageID !== message.state.index
           ) {
@@ -172,7 +169,7 @@ export default class MessageList extends Component {
 
   //notifies user when it cant load chat data
   handleError = () => {
-    this.OpenNoti("Chat failed to Load :C");
+    this.context.OpenNoti("Chat failed to Load :C");
   };
 
   LoadMessages = async (messages) => {
@@ -282,22 +279,10 @@ export default class MessageList extends Component {
     return tempMessages;
   };
 
-  ShowPicker = (event) => {
-    console.log(event.currentTarget);
-    this.setState({
-      anchorEl: event.currentTarget
-    });
-  };
-
-  //closes menu with options pertaining to comment
-  ClosePostMenu = () => {
-    this.setState({
-      anchorEl: null
-    });
-  };
 
   //adds message to message list when enter is pressed
   handleOnKeyPress = (e) => {
+    console.log(e)
     if (e.key === "Enter" && e.target.value !== "") {
       this.UpdateMessage();
     }
@@ -306,12 +291,30 @@ export default class MessageList extends Component {
   //updates the message list after the user hits enter to submit the message
   UpdateMessage = async (fileName) => {
    
+    if (      this.state.Messages.length <= 0 &&
+      this.props.FollowingAuth0ID !== undefined &&
+      this.state.ShowLoader !== true) 
+      {
+        var MyData = {}
+        ApiCall(
+          "Post",
+          `${process.env.REACT_APP_BackEndUrl}/api/Messenger/ChatStarted/${this.props.FollowingAuth0ID}`,
+          MyData
+        ).then()
+
+      }
     var Message = "";
     if (fileName !== undefined) {
       Message = fileName;
     } else {
       Message = document.getElementsByClassName("compose-input")[0].value;
     }
+/*
+    this.channel.sendMessage(
+      Message
+    );*/
+    document.getElementsByClassName("compose-input")[0].value = "";
+    
     await this.setState((prevState) => ({
       Messages: [
         ...prevState.Messages,
@@ -323,11 +326,8 @@ export default class MessageList extends Component {
         }
       ]
     }));
-    /*
-    this.channel.sendMessage(
-      document.getElementsByClassName("compose-input")[0].value
-    );*/
-    document.getElementsByClassName("compose-input")[0].value = "";
+    
+
     this.renderMessages();
     var ScrollDiv = document.getElementsByClassName("scrollable content")[0];
     ScrollDiv.scrollTop = ScrollDiv.scrollHeight;
@@ -338,7 +338,7 @@ export default class MessageList extends Component {
 
     if (
       this.state.Messages.length <= 0 &&
-      this.props.tenGuid !== "" &&
+      this.props.FollowingAuth0ID !== undefined &&
       this.state.ShowLoader !== true
     ) {
       return (
@@ -355,48 +355,23 @@ export default class MessageList extends Component {
             {this.renderMessages()}
           </div>
 
-          <div className="compose">
-            <input
-              multiline={true}
-              onKeyPress={this.handleOnKeyPress}
-              type="text"
-              className="compose-input"
-              placeholder="Type a message"
-            />
-
-            <SendIcon onClick={this.UpdateMessage} style={{ fontSize: 36 }} />
-          </div>
+          
+         <MessageCompose 
+         handleOnKeyPress={this.handleOnKeyPress}
+         UpdateMessage={this.UpdateMessage}
+         ShowPhotoUpload = {this.ShowPhotoUpload}
+         ClosePhotoUpload={this.ClosePhotoUpload}/>
         </React.Fragment>
       );
-    } else if (this.props.tenGuid !== "") {
+    } else if (this.props.FollowingAuth0ID !== undefined) {
       return (
         <React.Fragment>
-          <div className="message-list-container">{this.renderMessages()}</div>
-
-          <div className="compose">
-            <IconButton
-              onClick={() => {
-                this.setState({
-                  ShowPhotoUpload: true,
-                  FileTypeBeingUploaded: "BannerPhoto"
-                });
-              }}
-            >
-              <AttachFileIcon />
-            </IconButton>
-            <input
-              onKeyPress={this.handleOnKeyPress}
-              type="text"
-              className="compose-input"
-              placeholder="Type a message"
-            />
-            <IconButton onClick={(event) => this.ShowPicker(event)}>
-              <EmojiEmotionsIcon />
-            </IconButton>
-            <IconButton onClick={this.UpdateMessage}>
-              <SendIcon style={{ fontSize: 36 }} />
-            </IconButton>
-          </div>
+          <div className="message-list-container">{this.renderMessages()}</div>    
+          <MessageCompose 
+          handleOnKeyPress={this.handleOnKeyPress}
+         UpdateMessage={this.UpdateMessage}
+         ShowPhotoUpload = {this.ShowPhotoUpload}
+         ClosePhotoUpload={this.ClosePhotoUpload}/>
         </React.Fragment>
       );
     } else {
@@ -408,19 +383,14 @@ export default class MessageList extends Component {
     }
   };
 
-  onEmojiClick = (event, emojiObject) => {
-    document.getElementsByClassName("compose-input")[0].value =
-      document.getElementsByClassName("compose-input")[0].value +
-      emojiObject.emoji;
-    this.setState({
-      chosenEmoji: emojiObject
-    });
-  };
+
 
   render() {
     return (
       <div className="message-list">
         <MessageListToolBar
+          HandleConversationClick={this.props.HandleConversationClick}
+          Users = {this.props.Users}
           OpenNewMessage={this.props.OpenNewMessage}
           ConvoSelected={this.props.ConvoSelected}
         />
@@ -430,22 +400,7 @@ export default class MessageList extends Component {
 
         {this.ShowMessages()}
 
-        <Menu
-          classes={{
-            list: "EmojiMenu",
-            paper: "EmojiMenuPaper"
-          }}
-          anchorEl={this.state.anchorEl}
-          keepMounted
-          open={Boolean(this.state.anchorEl)}
-          onClose={this.ClosePostMenu}
-        >
-          <Picker
-            onEmojiClick={(event, emojiObject) =>
-              this.onEmojiClick(event, emojiObject)
-            }
-          />
-        </Menu>
+
 
         <UploadPhoto
           UpdateMessage={this.UpdateMessage}

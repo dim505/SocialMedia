@@ -34,7 +34,7 @@ export default class UploadPhoto extends Component {
     var ext = this.state.files[0].name.split(".").pop();
 
     Filename =
-      "ConversationFileAttachment_Insert_Auth0IDHere____" +
+    window.channelName + this.state.files[0].name.split(".")[0] +
       this.state.files[0].name.lastIndexOf(".") +
       "." +
       ext;

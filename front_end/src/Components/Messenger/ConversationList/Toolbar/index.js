@@ -1,5 +1,5 @@
 import React from "react";
-import "./Toolbar.css";
+import "./Toolbar.scss";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 

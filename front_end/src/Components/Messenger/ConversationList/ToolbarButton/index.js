@@ -1,5 +1,5 @@
 import React from 'react';
-import './ToolbarButton.css';
+import './ToolbarButton.scss';
 
 
 //Obsolete code 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import "./Message.css";
+import "./Message.scss";
 import AttachFileIcon from "@material-ui/icons/Attachment";
 
 //this is the message comn
@@ -13,7 +13,7 @@ export default class Message extends Component {
       )
     ) {
       var message = this.props.data.message.replace(
-        "https://shellstorage123.blob.core.windows.net/socialmedia/",
+        `https://shellstorage123.blob.core.windows.net/socialmedia/${window.channelName}`,
         ""
       );
 
@@ -21,7 +21,7 @@ export default class Message extends Component {
         <React.Fragment>
           {" "}
           <AttachFileIcon classes={{ root: "MessageAttachmentIcon" }} />
-          <a href={this.props.data.message}>{message}</a>
+          <a href={this.props.data.message} download="bite maaa" >{message}</a>
         </React.Fragment>
       );
     } else {

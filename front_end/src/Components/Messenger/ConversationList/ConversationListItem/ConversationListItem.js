@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "./ConversationListItem.css";
+import "./ConversationListItem.scss";
 import Avatar from "@material-ui/core/Avatar";
 
 //contains a single profile picture and a name for each conversation
 export default class ConversationListItem extends Component {
-  componentDidMount() {}
+    
 
   //updates who is selected
   HandleConversationClick = (name, FollowingAuth0ID) => {
@@ -29,7 +29,7 @@ export default class ConversationListItem extends Component {
         <Avatar
           classes={{ root: "MessengerAvatarStyle" }}
           alt={this.props.data.FullName}
-          src={this.props.data.LoggedInUserAuth0ID}
+          src={this.props.data.ProfilePhotoUrl}
         />
 
         <div className="conversation-info">

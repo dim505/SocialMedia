@@ -12,7 +12,7 @@ import Post from "./PostComponents/Post";
 import Context from "../../SharedComponents/context";
 import { ApiCall } from "../../SharedComponents/ApiCall";
 import Typography from "@material-ui/core/Typography";
-import "./Post.css";
+import "./Post.scss";
 //this houses the all components related to the post component
 export default class PostParent extends Component {
   static contextType = Context;
