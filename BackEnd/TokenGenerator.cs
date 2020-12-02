@@ -11,7 +11,7 @@ namespace SocialMedia
 
     public interface ITokenGenerator
     {
-        string Generate(string identity, string endpendpointIdointId);
+        string Generate(string identity, string endpendpointIdointId, string TokenType);
 
 
     }
@@ -25,14 +25,40 @@ namespace SocialMedia
             _config = config;
         }
 
-        public string Generate(string identity, string endpointId)
+        public string Generate(string identity, string endpointId, string TokenType)
         {
-            var grants = new HashSet<IGrant>
+
+
+            HashSet<IGrant> grants = null;
+            if (TokenType == "Chat")
+            {
+
+                grants = new HashSet<IGrant>
             {
 
                 new ChatGrant   {EndpointId = endpointId, ServiceSid = _config["TwilioAccount:ChatServiceSid"], }
 
             };
+            }
+            else if (TokenType == "Voice")
+            {
+                var grant = new VoiceGrant();
+                grant.OutgoingApplicationSid = _config["TwiloVoiceAppSid"];
+                grants = new HashSet<IGrant>
+                {
+                    {grant}
+                };
+
+            }
+            else if (TokenType == "Video")
+            {
+                var grant = new VideoGrant();
+                grant.Room = "TestRoom";
+                grants = new HashSet<IGrant> { grant };
+
+            }
+
+
 
             var token = new Token(
                                 _config["TwilioAccount:AccountSid"],

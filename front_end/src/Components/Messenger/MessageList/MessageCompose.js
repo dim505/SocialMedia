@@ -34,7 +34,6 @@ export default class MessageCompose extends Component {
 
     
     ShowPicker = (event) => {
-        console.log(event.currentTarget);
         this.setState({
           anchorEl: event.currentTarget
         });

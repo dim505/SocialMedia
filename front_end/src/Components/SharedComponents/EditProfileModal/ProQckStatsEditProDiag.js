@@ -91,7 +91,6 @@ export default class ProQckStatsEditProDiag extends Component {
   };
 
   handleClickAway = () => {
-    console.log("1");
     if (this.context.AccountInfo[0].fullName === "") {
       this.context.OpenNoti(
         "Please Enter Your Name and Click UPDATE INFO Before Proceeding"   

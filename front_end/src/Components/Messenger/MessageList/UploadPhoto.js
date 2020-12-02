@@ -55,6 +55,9 @@ export default class UploadPhoto extends Component {
     this.props.UpdateMessage(
       "https://shellstorage123.blob.core.windows.net/socialmedia/" + Filename
     );
+    this.setState({
+      ShowLoader: false
+    })
     this.props.ClosePhotoUpload();
   };
 

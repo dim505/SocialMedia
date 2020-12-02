@@ -196,7 +196,7 @@ export default class PostParent extends Component {
 
   //this displays the comments the post
   HandleAddCommentClick = async (event) => {
-    console.log(event)
+    
     this.GetComments();
     await this.setState({
       ShowComment: !this.state.ShowComment,

@@ -165,7 +165,7 @@ export default class PostModal extends Component {
   };
 
   HandleMicOutput = (MicOutput) => {
-    console.log(MicOutput)
+ 
     this.setState({
       Post: this.state.Post.concat(MicOutput)
     });

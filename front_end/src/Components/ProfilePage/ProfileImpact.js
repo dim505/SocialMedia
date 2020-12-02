@@ -27,7 +27,7 @@ export default class ProfileImpact extends Component {
   };
 
   componentDidMount = () => {
-    console.log("ProfileImpact");
+    
     this.GetData();
   };
 

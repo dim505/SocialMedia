@@ -12,7 +12,7 @@ export default function ConversationSearch(props) {
     <div className="conversation-search">
       <input
         className="conversation-search-input"
-        placeholder="Search People"
+        placeholder="Search Consersations"
         onChange={handleChange}
       />
     </div>

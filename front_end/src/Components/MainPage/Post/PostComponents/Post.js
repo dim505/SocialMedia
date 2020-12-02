@@ -67,6 +67,7 @@ export default class Post extends Component {
 
         <CardActions disableSpacing>
           <IconButton
+          disabled={window.ViewUserProfile !== '-1'}
             classes={{
               root: "FavoriteIconButton",
             }}
@@ -85,6 +86,7 @@ export default class Post extends Component {
           <div className="NumFavorite">{this.props.post.postLikeCount}</div>
           <div className="PostIconStyle">
             <IconButton
+              
               onClick={(event) => this.props.HandleAddCommentClick(event)}
               aria-label="show more"
             >

@@ -33,6 +33,10 @@
   .compose {
     width: calc(100% - 75px) !important;
   }
+
+  .ConvoListToolTip {
+    display: block !important;
+  }
 }
 .container {
   padding: 10px;
@@ -59,4 +63,8 @@
 
 .conversation-list {
   overflow-x: hidden;
+}
+
+.ConvoListToolTip {
+  display: none;
 }

@@ -56,7 +56,7 @@ class App extends Component {
     this.GetAccountInfo();
     this.isUserAuthenticated();
     this.unlisten = this.props.history.listen((location, action) => {
-      console.log(location.pathname)
+       
       if (location.pathname !== "/Profile" && window.ViewUserProfile !== "-1") {
         window.ViewUserProfile = "-1";
         this.GetAccountInfo();
@@ -182,7 +182,7 @@ class App extends Component {
 <PerfectScrollbar onScrollUp={(container  ) => {
   /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
   var currentScrollPos = container.scrollTop;
-  console.log(container.scrollTop )
+   
   if (window.prevScrollpos > currentScrollPos) {
     document.getElementById("NavBar").style.top = "0";
   }

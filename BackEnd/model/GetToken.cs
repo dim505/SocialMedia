@@ -8,6 +8,8 @@
 
         public string LoggedInUserAuth0ID { get; set; }
 
+        public string TokenType { get; set; }
+
 
     }
 }

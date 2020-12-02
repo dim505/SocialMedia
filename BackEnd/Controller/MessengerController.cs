@@ -85,8 +85,8 @@ namespace SocialMedia.Controller
         [Route("[action]")]
         public IActionResult GetMessengerUsers()
         {
-            /* LoggedInUserAuth0ID	FollowingAuth0ID	FullName	ProfilePhotoUrl */
-            var SqlStr = @"select @LoggedInUser as LoggedInUserAuth0ID, Auth0ID as FollowingAuth0ID, FullName, ProfilePhotoUrl from ( select distinct t2.FollowerAuth0ID from SM_Follow_Following_Table t1 inner join SM_Follow_Following_Table t2 on t1.FollowerAuth0ID = t2.FollowingAuth0ID where @LoggedInUser = t1.FollowerAuth0ID and @LoggedInUser = t2.FollowingAuth0ID and t1.FollowingAuth0ID = t2.FollowerAuth0ID ) as SubQuery inner join SM_Account_Info on SubQuery.FollowerAuth0ID = SM_Account_Info.Auth0ID";
+            /* LoggedInUserAuth0ID	FollowingAuth0ID	FullName	ProfilePhotoUrl ChatStarted */
+            var SqlStr = @"select @LoggedInUser as LoggedInUserAuth0ID, Auth0ID as FollowingAuth0ID, FullName, ProfilePhotoUrl, CASE when ChatStarted.LoggedInUserAuth0ID is not null then cast(1 as bit) else cast(0 as bit) end as ChatStarted from ( select distinct t2.FollowerAuth0ID from SM_Follow_Following_Table t1 inner join SM_Follow_Following_Table t2 on t1.FollowerAuth0ID = t2.FollowingAuth0ID where @LoggedInUser = t1.FollowerAuth0ID and @LoggedInUser = t2.FollowingAuth0ID and t1.FollowingAuth0ID = t2.FollowerAuth0ID ) as SubQuery left join ChatStarted on ChatStarted.FollowingAuth0ID = SubQuery.FollowerAuth0ID inner join SM_Account_Info on SubQuery.FollowerAuth0ID = SM_Account_Info.Auth0ID";
             var SqlParameters = new
             {
                 LoggedInUser = new DbString
@@ -107,12 +107,13 @@ namespace SocialMedia.Controller
         {
 
             GetToken getToken = data["GetToken"].ToObject<GetToken>();
+
+
             if (getToken.device == null || getToken.LoggedInUserAuth0ID == null)
             {
                 return null;
-
             }
-            var token = _tokenGenerator.Generate(getToken.LoggedInUserAuth0ID, getToken.device);
+            var token = _tokenGenerator.Generate(getToken.LoggedInUserAuth0ID, getToken.device, getToken.TokenType);
             return Ok(token);
 
         }
@@ -122,7 +123,7 @@ namespace SocialMedia.Controller
         [Route("[action]/{FollowingAuth0ID}")]
         public IActionResult ChatStarted(string FollowingAuth0ID)
         {
-            string SqlStr = @"insert into ChatStarted values (@LoggedInUserAuth0ID,@FollowingAuth0ID)";
+            string SqlStr = @"insert into ChatStarted values (@LoggedInUserAuth0ID,@FollowingAuth0ID), (@FollowingAuth0ID, @LoggedInUserAuth0ID) ";
             var SqlParameters = new
             {
                 FollowingAuth0ID = new DbString { Value = FollowingAuth0ID, IsFixedLength = false, IsAnsi = true },

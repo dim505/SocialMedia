@@ -26,7 +26,7 @@ export default class NotificationActivity extends Component {
       
     ).then(() => {
 		this.props.GetNotifications()
-		console.log("deleted")
+		 
     });
 
     

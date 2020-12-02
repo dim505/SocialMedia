@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./ConversationListItem.scss";
 import Avatar from "@material-ui/core/Avatar";
-
+import Tooltip from "@material-ui/core/Tooltip";
 //contains a single profile picture and a name for each conversation
 export default class ConversationListItem extends Component {
     
@@ -13,6 +13,10 @@ export default class ConversationListItem extends Component {
 
   render() {
     return (
+      <Tooltip 
+      placement="right"
+      classes={{popper: "ConvoListToolTip"}}
+      title={this.props.data.FullName}>
       <div
         Key={this.props.data.FollowingAuth0ID}
         onClick={() =>
@@ -36,6 +40,7 @@ export default class ConversationListItem extends Component {
           <h5 className="conversation-title">{this.props.data.FullName}</h5>
         </div>
       </div>
+      </Tooltip>
     );
   }
 }

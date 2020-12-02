@@ -33,6 +33,7 @@
     "react-share": "^4.2.1",
     "react-voice-components": "^1.0.0",
     "twilio-chat": "^4.0.0",
+    "twilio-client": "^1.13.0",
     "yup": "^0.29.3"
   },
   "scripts": {

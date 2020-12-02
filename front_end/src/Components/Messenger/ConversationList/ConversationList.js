@@ -26,7 +26,6 @@ export default class ConversationList extends React.Component {
  
   //loads new conversation in the conversation window on the right
   HandleConversationClick = (name, FollowingAuth0ID) => {
-     
     this.props.HandleConversationClick(name, FollowingAuth0ID);
   };
 
@@ -42,17 +41,15 @@ export default class ConversationList extends React.Component {
     this.setState({
       FilteredConversations: conversations
     });
-    console.log(conversations);
+     
   };
   render() {
     return (
-     
-
       <div className="conversation-list">
         <Toolbar OpenNewMessage={this.props.OpenNewMessage} title="Messenger" />
         <ConversationSearch HandlePeopleSearch={this.HandlePeopleSearch} />
         {this.state.FilteredConversations.length === 0 ? (
-          <p> No people were found </p>
+          <p> No conversations found </p>
         ) : (
           this.state.FilteredConversations.map((conversation) => (
             <ConversationListItem

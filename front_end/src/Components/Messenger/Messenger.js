@@ -59,7 +59,7 @@ export default class Messenger extends React.Component {
         <div className="scrollable sidebar">
           <ConversationList
           ConvoSelected={this.state.ConvoSelected}
-            Users = {this.state.Users}
+            Users = {this.state.Users.filter((user) => {return user.ChatStarted === true}  )}
             OpenNewMessage={(OpenOrClose) => this.OpenNewMessage(OpenOrClose)}
             auth={this.props.auth}
             HandleConversationClick={this.HandleConversationClick}
@@ -69,6 +69,7 @@ export default class Messenger extends React.Component {
 
         <div className="scrollable content">
           <MessageList
+          GetUsers = {this.GetUsers}
             Users = {this.state.Users}
             OpenNewMessage={this.state.OpenNewMessage}
             ConvoSelected={this.state.ConvoSelected}

@@ -29,7 +29,7 @@ export default class MessageList extends Component {
     window.ApiCallAlreadyMade = false;
     window.MY_USER_ID = "";
 
-    //window.addEventListener("scroll", this.HandleScroll, true);
+    window.addEventListener("scroll", this.HandleScroll, true);
   }
 
   //closes the photo dropzone
@@ -102,7 +102,7 @@ export default class MessageList extends Component {
     Mydata.GetToken = GetToken;
     window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID;
     let result = await Axios.post(
-      /*`https://cors-anywhere.herokuapp.com/*/ `${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetToken`,
+      /*`https://cors-anywhere.herokuapp.com/*/`${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetToken`,
       Mydata
     )
       .then(async (result) => this.setupChatClient(result))
@@ -159,10 +159,10 @@ export default class MessageList extends Component {
             this.LoadMessages(message);
           }
 
-          console.log(message.author + "in chrome", message.body);
+           
         });
 
-        console.log("Success");
+         
       })
       .catch(this.handleError);
   }
@@ -174,7 +174,7 @@ export default class MessageList extends Component {
 
   LoadMessages = async (messages) => {
     var MessageArray = [];
-    console.log(messages);
+     
 
     if (messages.items !== undefined) {
       messages.items.map((message) => {
@@ -282,7 +282,7 @@ export default class MessageList extends Component {
 
   //adds message to message list when enter is pressed
   handleOnKeyPress = (e) => {
-    console.log(e)
+     
     if (e.key === "Enter" && e.target.value !== "") {
       this.UpdateMessage();
     }
@@ -300,7 +300,9 @@ export default class MessageList extends Component {
           "Post",
           `${process.env.REACT_APP_BackEndUrl}/api/Messenger/ChatStarted/${this.props.FollowingAuth0ID}`,
           MyData
-        ).then()
+        ).then(
+                this.props.GetUsers()
+        )
 
       }
     var Message = "";
@@ -309,10 +311,10 @@ export default class MessageList extends Component {
     } else {
       Message = document.getElementsByClassName("compose-input")[0].value;
     }
-/*
+
     this.channel.sendMessage(
       Message
-    );*/
+    );
     document.getElementsByClassName("compose-input")[0].value = "";
     
     await this.setState((prevState) => ({

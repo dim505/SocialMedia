@@ -24,7 +24,7 @@ class SearchResults extends Component {
     this.GetData();
 
     this.unlisten = this.props.history.listen((location, action) => {
-      console.log(location.pathname)
+      
       if (location.pathname === "/SearchResults") {
         this.GetData();
       }
