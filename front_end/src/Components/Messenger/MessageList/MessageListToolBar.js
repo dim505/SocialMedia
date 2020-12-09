@@ -16,8 +16,11 @@ import { Device } from 'twilio-client';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Fade';
+import Axios from 'axios';
+import Context from "../../SharedComponents/context";
 
 export default class MessageListToolBar extends React.Component {
+  static contextType = Context;
   state = {
     ContactName: "",
     ContactPersonSelected: "",
@@ -26,26 +29,31 @@ export default class MessageListToolBar extends React.Component {
 
   componentDidMount = () => {
 
-    this.GetVoiceToken()
+    
 
   }
 
+  componentDidUpdate = () => {
+    if  (!window.device && this.props.ConvoSelected !== "") {
+              this.GetVoiceToken()
+    }
+  }
   GetVoiceToken = async () => {
 
       var Mydata = {};
       var GetToken = {
         device: "browser",
-        LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID
+        LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID.replace("|",""),
+        TokenType: "Voice"
       };
-      Mydata.GetToken = GetToken;
-      window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID;
+        Mydata.GetToken = GetToken;
+      window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID.replace("|","");
       let result = await Axios.post(
         /*`https://cors-anywhere.herokuapp.com/*/`${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetToken`,
         Mydata
       )
         .then(async (result) => {
-        var Token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2JmN2Q0MTU2Zjk4MzQxOTkzZTFlMmZmYThhNTE3MTVhLTE2MDY2NTAwMjEiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJ0aGVfdXNlcl9pZCIsInZvaWNlIjp7ImluY29taW5nIjp7ImFsbG93Ijp0cnVlfSwib3V0Z29pbmciOnsiYXBwbGljYXRpb25fc2lkIjoiQVA5NmNmMjVmYzI3NzY4NGUxMzE1YjAwNWYwMDJjY2U4YyJ9fX0sImlhdCI6MTYwNjY1MDAyMiwiZXhwIjoxNjA2NjUzNjIyLCJpc3MiOiJTS2JmN2Q0MTU2Zjk4MzQxOTkzZTFlMmZmYThhNTE3MTVhIiwic3ViIjoiQUMzNGE2MTZkMGM0ZWUwZWMyZmNiYjVlMWNlOWNmNWYxYyJ9.pNQof2tkELpDHmCuATpdsGMTXUOHwXKbLv4jLx4eyic";
+        var Token = result.data
           // Setup Twilio.Device
           window.device = new Device(Token, {
             // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
@@ -67,13 +75,30 @@ export default class MessageListToolBar extends React.Component {
           window.device.on("ready", function (device) {
             console.log("Twilio.Device Ready!");
           });
+      
+          window.device.on("incoming", (conn) => {
+            this.setState({
+              IncomingCall: true,
+              CallingPerson: conn.parameters.From,
+              conn: conn
+            });
+          });
+      
+          window.device.on("error", (error) => {
+            console.log(error);
+          });
+      
+          window.device.on("disconnect", () => {
+            this.EndCall();
+          });
         
-        
+          console.log(result)
+        }      
         )
         .catch(this.handleError );
     
-
-  }
+      }
+  
   HandleChange = (event) => {
     this.setState({ ContactName: event.target.value });
   };
@@ -81,15 +106,27 @@ export default class MessageListToolBar extends React.Component {
   CallFollower = () => {
       if  (window.device) {
             this.setState({CallingPerson: this.props.ConvoSelected})
-            var OutgoingConnection = window.device.connect({To: "4134754431"})
+            var OutgoingConnection = window.device.connect({To: "the_user_id"/*this.props.FollowingAuth0ID.replace("|","")*/})
             OutgoingConnection.on("ringing", () => {console.log("ringing")})
       }
   }
 
+ 
+
+  PickUpCall = () => {
+    this.state.conn.accept();
+    this.setState({
+      IncomingCall: null
+    });
+  };
+
+
   EndCall = () => {
     console.log("Hanging up...");
     if (window.device) {
-      this.setState({CallingPerson: null})
+      this.setState({
+        IncomingCall: null,
+        CallingPerson: null})
       window.device.disconnectAll();
     }
 
@@ -186,7 +223,7 @@ export default class MessageListToolBar extends React.Component {
                 <PhoneIcon />
               </IconButton>
               <IconButton>
-                <VideoCallIcon />
+                <VideoCallIcon onClick={() => this.context.CallVideoChat(true)} />
               </IconButton>
             </div>
           }  
@@ -195,22 +232,24 @@ export default class MessageListToolBar extends React.Component {
  
  
 
-          {this.state.CallingPerson ? 
-        
-            <Paper classes={{root: "Calling"}}>
-        <Typography variant="h5" gutterBottom>
-        {this.state.CallingPerson}
-          </Typography>
-          <IconButton onClick={this.EndCall}>
-          <CallEndIcon/>
-          </IconButton>         
-          
+          {this.state.CallingPerson ? (
+          <Paper classes={{ root: "Calling" }}>
+            <Typography variant="h5" gutterBottom>
+              {this.state.CallingPerson}
+            </Typography>
+            {this.state.IncomingCall ? (
+              <IconButton onClick={this.PickUpCall}>
+                <PhoneIcon classes={{ root: "CallingPickUp" }} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={this.EndCall}>
+                <CallEndIcon classes={{ root: "CallingEndCall" }} />
+              </IconButton>
+            )}
           </Paper>
-
-       
-
-            : <div/>
-          }
+        ) : (
+          <div />
+        )}
 
         {Boolean(this.state.ContactName) ? (
           <ClickAwayListener onClickAway={this.handleClickAway}>

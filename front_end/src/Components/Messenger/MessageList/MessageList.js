@@ -97,7 +97,8 @@ export default class MessageList extends Component {
     var Mydata = {};
     var GetToken = {
       device: "browser",
-      LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID
+      LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID,
+      TokenType: "Chat"
     };
     Mydata.GetToken = GetToken;
     window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID;
@@ -395,6 +396,7 @@ export default class MessageList extends Component {
           Users = {this.props.Users}
           OpenNewMessage={this.props.OpenNewMessage}
           ConvoSelected={this.props.ConvoSelected}
+          FollowingAuth0ID = {this.props.FollowingAuth0ID}
         />
         <Fade top opposite when={this.state.ShowLoader}>
           <LinearProgress />

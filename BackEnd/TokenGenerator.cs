@@ -11,7 +11,7 @@ namespace SocialMedia
 
     public interface ITokenGenerator
     {
-        string Generate(string identity, string endpendpointIdointId, string TokenType);
+        string Generate(string identity, string channelName, string endpendpointIdointId, string TokenType);
 
 
     }
@@ -25,7 +25,7 @@ namespace SocialMedia
             _config = config;
         }
 
-        public string Generate(string identity, string endpointId, string TokenType)
+        public string Generate(string identity, string channelName, string endpointId, string TokenType)
         {
 
 
@@ -44,6 +44,8 @@ namespace SocialMedia
             {
                 var grant = new VoiceGrant();
                 grant.OutgoingApplicationSid = _config["TwiloVoiceAppSid"];
+                // Optional: add to allow incoming calls
+                grant.IncomingAllow = true;
                 grants = new HashSet<IGrant>
                 {
                     {grant}
@@ -53,7 +55,7 @@ namespace SocialMedia
             else if (TokenType == "Video")
             {
                 var grant = new VideoGrant();
-                grant.Room = "TestRoom";
+                grant.Room = channelName;
                 grants = new HashSet<IGrant> { grant };
 
             }

@@ -113,7 +113,7 @@ namespace SocialMedia.Controller
             {
                 return null;
             }
-            var token = _tokenGenerator.Generate(getToken.LoggedInUserAuth0ID, getToken.device, getToken.TokenType);
+            var token = _tokenGenerator.Generate(getToken.LoggedInUserAuth0ID, getToken.channelName, getToken.device, getToken.TokenType);
             return Ok(token);
 
         }

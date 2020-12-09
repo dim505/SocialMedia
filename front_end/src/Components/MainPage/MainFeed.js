@@ -7,7 +7,7 @@ import "./MainPage.scss"
 //displays all the component on the main page / home page
 export default class MainFeed extends Component {
   static contextType = Context;
-
+ 
   render() {
     return (
       <Grid
@@ -17,7 +17,7 @@ export default class MainFeed extends Component {
         container={true}
         spacing={3}
         justify="center"
-      >
+      >    
         <Grid container={true} spacing={3} justify="center">
           <Grid justify="center" item>
             <AddNewFeedButton />

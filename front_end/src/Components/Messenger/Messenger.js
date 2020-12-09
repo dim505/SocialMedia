@@ -5,9 +5,11 @@ import "./Messenger.scss";
 import Fade from "react-reveal/Fade";
 import Grid from "@material-ui/core/Grid";
 import { ApiCall } from "../SharedComponents/ApiCall";
+import Context from "../SharedComponents/context";
 
 //parent that houses the land lord chat application
 export default class Messenger extends React.Component {
+  static contextType = Context;
   state = {
     ConvoSelected: "",
     tenGuid: "",
@@ -16,23 +18,9 @@ export default class Messenger extends React.Component {
     Users: []
   };
 
-  componentDidMount = () => {
-      this.GetUsers()
-  }
-
-  GetUsers = () => {
-    ApiCall(
-      "Get",
-      `${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetMessengerUsers`
-    ).then((results) => {
-      window.DataLoaded = false
-      this.setState({
-        Users: results,
-      });
-    });
-  }
   //this tracks what conversation is being selected
   HandleConversationClick = (ConvoSelected, FollowingAuth0ID) => {
+    window.FollowerAuth0ID = FollowingAuth0ID;
     this.setState({
       ConvoSelected: ConvoSelected,
       FollowingAuth0ID: FollowingAuth0ID,
@@ -59,7 +47,7 @@ export default class Messenger extends React.Component {
         <div className="scrollable sidebar">
           <ConversationList
           ConvoSelected={this.state.ConvoSelected}
-            Users = {this.state.Users.filter((user) => {return user.ChatStarted === true}  )}
+            Users = {this.context.Users.filter((user) => {return user.ChatStarted === true}  )}
             OpenNewMessage={(OpenOrClose) => this.OpenNewMessage(OpenOrClose)}
             auth={this.props.auth}
             HandleConversationClick={this.HandleConversationClick}
@@ -69,8 +57,8 @@ export default class Messenger extends React.Component {
 
         <div className="scrollable content">
           <MessageList
-          GetUsers = {this.GetUsers}
-            Users = {this.state.Users}
+          GetUsers = {this.context.GetUsers}
+            Users = {this.context.Users}
             OpenNewMessage={this.state.OpenNewMessage}
             ConvoSelected={this.state.ConvoSelected}
             FollowingAuth0ID={this.state.FollowingAuth0ID}

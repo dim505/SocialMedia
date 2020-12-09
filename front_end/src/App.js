@@ -4,6 +4,7 @@ import NavBar from "./Components/NavBar/NavBar";
 import MainFeed from "./Components/MainPage/MainFeed";
 import ProfileQuickStats from "./Components/ProfilePage/ProfileQuickStats";
 import "./Global.scss";
+import Modal from "@material-ui/core/Modal";
 import { Route } from "react-router-dom";
 import PeoplePage from "./Components/PeoplePage/PeoplePage";
 import Logo from "./Components/SharedComponents/SocialMediaLogo.png";
@@ -20,12 +21,17 @@ import { withRouter } from "react-router-dom";
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import Messenger from "./Components/Messenger/Messenger";
+import VideoChatContainer from "./Components/SharedComponents/VideoChat/VideoChatContainer"
+ 
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
+  static contextType = Context;
   constructor(props) {
     super(props);
 
     this.state = {
+      Users: [],
+      ShowVideoChat: false,
       ShowLoader: true,
       authenticated: false,
       MainPagePosts: [],
@@ -55,6 +61,7 @@ class App extends Component {
     this.GetProfilePagePosts();
     this.GetAccountInfo();
     this.isUserAuthenticated();
+    this.GetUsers()
     this.unlisten = this.props.history.listen((location, action) => {
        
       if (location.pathname !== "/Profile" && window.ViewUserProfile !== "-1") {
@@ -139,6 +146,24 @@ class App extends Component {
 	  history.push(PageToPush)
   }
 
+  CallVideoChat = (TrueOrFalse) => {
+    this.setState({ ShowVideoChat: TrueOrFalse });
+  };
+
+
+  GetUsers = () => {
+    ApiCall(
+      "Get",
+      `${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetMessengerUsers`
+    ).then((results) => {
+      window.DataLoaded = false
+      this.setState({
+        Users: results,
+      });
+    });
+  }
+
+
   //loads the azure services needed for photo upload
   LoadAzureStorage = () => {
     var blobSasUrl =
@@ -163,10 +188,13 @@ class App extends Component {
           GetLikedPosts: () => this.GetLikedPosts,
           GetAccountInfo: () => this.GetAccountInfo(),
           RedirectToPage: (PageToPush) => this.RedirectToPage(PageToPush),
+          CallVideoChat: (TrueOrFalse) => this.CallVideoChat(TrueOrFalse),
+          GetUsers: () => this.GetUsers(),
           MainPagePosts: this.state.MainPagePosts,
           ProfilePagePosts: this.state.ProfilePagePosts,
           AccountInfo: this.state.AccountInfo,
           ShowLoader: this.state.ShowLoader,
+          Users: this.state.Users
         }}
       >
         <div className="App">
@@ -263,6 +291,24 @@ class App extends Component {
                 </Typography>
                 <ScrollUpButton />
               </div>
+
+
+              <Modal
+          hideBackdrop={true}
+          open={this.state.ShowVideoChat}
+          closeAfterTransition
+          BackdropProps={{
+            timeout: 500
+          }}
+        >
+          <VideoChatContainer
+            Users = {this.state.Users}
+            CallVideoChat={this.CallVideoChat}
+            ShowVideoChat={this.state.ShowVideoChat}
+          />
+        </Modal>
+
+
 
 
         <SnackBar
