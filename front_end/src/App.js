@@ -16,13 +16,13 @@ import { ApiCall } from "./Components/SharedComponents/ApiCall";
 import Typography from "@material-ui/core/Typography";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
 import NameReq from "./Components/NameReq";
-import SearchResults from "./Components/NavBar/SearchResults"
+import SearchResults from "./Components/NavBar/SearchResults";
 import { withRouter } from "react-router-dom";
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import "react-perfect-scrollbar/dist/css/styles.css";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import Messenger from "./Components/Messenger/Messenger";
-import VideoChatContainer from "./Components/SharedComponents/VideoChat/VideoChatContainer"
- 
+import VideoChatContainer from "./Components/SharedComponents/VideoChat/VideoChatContainer";
+import VoiceCalling from "./Components/SharedComponents/VoiceCalling";
 //parent Component that acts as the parent for all other Components in the social media site
 class App extends Component {
   static contextType = Context;
@@ -45,9 +45,10 @@ class App extends Component {
           webAddress: "",
           Tagline: "",
         },
-      ],  
+      ],
     };
     this.NavBarChild = React.createRef();
+    this.VideoCallRef = React.createRef();
   }
 
   //sets title, get data, check if visiting user is authenticated
@@ -61,9 +62,8 @@ class App extends Component {
     this.GetProfilePagePosts();
     this.GetAccountInfo();
     this.isUserAuthenticated();
-    this.GetUsers()
+    this.GetUsers();
     this.unlisten = this.props.history.listen((location, action) => {
-       
       if (location.pathname !== "/Profile" && window.ViewUserProfile !== "-1") {
         window.ViewUserProfile = "-1";
         this.GetAccountInfo();
@@ -111,8 +111,7 @@ class App extends Component {
     });
   };
 
- 
-
+  //gets profile account info
   GetAccountInfo = () => {
     ApiCall(
       "Get",
@@ -130,7 +129,7 @@ class App extends Component {
     this.setState({
       OpenNoti: true,
       Message: message,
-      autoHideDuration: autoHideDuration 
+      autoHideDuration: autoHideDuration,
     });
   };
   //function closes  notification alert
@@ -140,29 +139,30 @@ class App extends Component {
     });
   };
 
+  //redirect users to another page
   RedirectToPage = (PageToPush) => {
-    const {history} = this.props
-    this.NavBarChild.current.HandleMenuClick(PageToPush.substring(1))
-	  history.push(PageToPush)
-  }
+    const { history } = this.props;
+    this.NavBarChild.current.HandleMenuClick(PageToPush.substring(1));
+    history.push(PageToPush);
+  };
 
+  //opens the video chat
   CallVideoChat = (TrueOrFalse) => {
     this.setState({ ShowVideoChat: TrueOrFalse });
   };
 
-
+  //gets users that you can chat with
   GetUsers = () => {
     ApiCall(
       "Get",
       `${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetMessengerUsers`
     ).then((results) => {
-      window.DataLoaded = false
+      window.DataLoaded = false;
       this.setState({
         Users: results,
       });
     });
-  }
-
+  };
 
   //loads the azure services needed for photo upload
   LoadAzureStorage = () => {
@@ -176,12 +176,17 @@ class App extends Component {
     window.blobServiceClient = new BlobServiceClient(blobSasUrl);
   };
 
+  CallFollower = (ConvoSelected,FollowingAuth0ID) => {
+      this.VideoCallRef.current.CallFollower(ConvoSelected,FollowingAuth0ID)
+  }
+
   render() {
     return (
       <Context.Provider
         value={{
           test: "123",
-          OpenNoti: (message, autoHideDuration) => this.OpenNoti(message, autoHideDuration),
+          OpenNoti: (message, autoHideDuration) =>
+            this.OpenNoti(message, autoHideDuration),
           CloseNoti: () => this.CloseNoti(),
           GetMainPagePosts: () => this.GetMainPagePosts(),
           GetProfilePagePosts: () => this.GetProfilePagePosts(),
@@ -190,133 +195,122 @@ class App extends Component {
           RedirectToPage: (PageToPush) => this.RedirectToPage(PageToPush),
           CallVideoChat: (TrueOrFalse) => this.CallVideoChat(TrueOrFalse),
           GetUsers: () => this.GetUsers(),
+          CallFollower: (ConvoSelected,FollowingAuth0ID) => this.CallFollower(ConvoSelected,FollowingAuth0ID),
           MainPagePosts: this.state.MainPagePosts,
           ProfilePagePosts: this.state.ProfilePagePosts,
           AccountInfo: this.state.AccountInfo,
           ShowLoader: this.state.ShowLoader,
-          Users: this.state.Users
+          Users: this.state.Users,
         }}
       >
         <div className="App">
           {!this.state.authenticated ? (
             <Fade collapse>
               <LogInScreen auth={this.props.auth} />
-
-
             </Fade>
           ) : (
             <div>
+              <PerfectScrollbar
+                onScrollUp={(container) => {
+                  /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+                  var currentScrollPos = container.scrollTop;
 
-<PerfectScrollbar onScrollUp={(container  ) => {
-  /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
-  var currentScrollPos = container.scrollTop;
-   
-  if (window.prevScrollpos > currentScrollPos) {
-    document.getElementById("NavBar").style.top = "0";
-  }
-  window.prevScrollpos = currentScrollPos
-  }}
-  
-  onScrollDown={(container) => {
-
-    var currentScrollPos = container.scrollTop;
-    if (window.prevScrollpos < currentScrollPos && window.innerWidth < 1024) {
-      document.getElementById("NavBar").style.top = "-55px";
-    }
-    window.prevScrollpos = currentScrollPos 
-  }}
-  
-  
-  
-  >
-
-              <Fade collapse unmountOnExit when={this.state.ShowLoader}>
-                <div className={`Loader `}>
-                  <LinearProgress />
-                  <img src={Logo} />
-                </div>
-              </Fade>
-              <div
-                className={`MainBodyStyle ${
-                  !this.state.ShowLoader ? "MainBodyStyleFade" : ""
-                }`}
+                  if (window.prevScrollpos > currentScrollPos) {
+                    document.getElementById("NavBar").style.top = "0";
+                  }
+                  window.prevScrollpos = currentScrollPos;
+                }}
+                onScrollDown={(container) => {
+                  var currentScrollPos = container.scrollTop;
+                  if (
+                    window.prevScrollpos < currentScrollPos &&
+                    window.innerWidth < 1024
+                  ) {
+                    document.getElementById("NavBar").style.top = "-55px";
+                  }
+                  window.prevScrollpos = currentScrollPos;
+                }}
               >
-                <NavBar 
-                ref={this.NavBarChild}
-                auth={this.props.auth} />
-                <Route exact path="/">
-                  <Fade collapse>
-                    <MainFeed />
-                  </Fade>
-                </Route>
-                <Route path="/Profile">
-                  <Fade collapse>         
-                    <ProfileQuickStats />
-                  </Fade>
-                </Route>
+                <Fade collapse unmountOnExit when={this.state.ShowLoader}>
+                  <div className={`Loader `}>
+                    <LinearProgress />
+                    <img src={Logo} />
+                  </div>
+                </Fade>
+                <div
+                  className={`MainBodyStyle ${
+                    !this.state.ShowLoader ? "MainBodyStyleFade" : ""
+                  }`}
+                >
+                  <NavBar ref={this.NavBarChild} auth={this.props.auth} />
+                  <Route exact path="/">
+                    <Fade collapse>
+                      <MainFeed />
+                    </Fade>
+                  </Route>
+                  <Route path="/Profile">
+                    <Fade collapse>
+                      <ProfileQuickStats />
+                    </Fade>
+                  </Route>
 
-                <Route path="/Messenger">
-                  <Fade collapse>
-                  <Messenger />
-                  </Fade>
-                </Route>
-                
-                <Route path="/People">
-                  <Fade collapse>
-                    <PeoplePage />
-                  </Fade>
-                </Route>
+                  <Route path="/Messenger">
+                    <Fade collapse>
+                      <Messenger />
+                    </Fade>
+                  </Route>
 
+                  <Route path="/People">
+                    <Fade collapse>
+                      <PeoplePage />
+                    </Fade>
+                  </Route>
 
-                
-				<Route path="/SearchResults">
-                  <Fade collapse>
-                    <SearchResults />
-                  </Fade>
-                </Route>
-                <NameReq AccountInfo={this.state.AccountInfo} />
-              </div>
+                  <Route path="/SearchResults">
+                    <Fade collapse>
+                      <SearchResults />
+                    </Fade>
+                  </Route>
+                  <NameReq AccountInfo={this.state.AccountInfo} />
+                </div>
 
-
-              <ScrollUpButton />
+                <ScrollUpButton />
               </PerfectScrollbar>
-
             </div>
           )}
 
-<div className="TurnToLandScape">
-                {" "}
-                <Typography variant="h2" gutterBottom>
-                  Please turn your device to landscape to view this application
-                </Typography>
-                <ScrollUpButton />
-              </div>
+          <div className="TurnToLandScape">
+            {" "}
+            <Typography variant="h2" gutterBottom>
+              Please turn your device to landscape to view this application
+            </Typography>
+            <ScrollUpButton />
+          </div>
 
 
-              <Modal
-          hideBackdrop={true}
-          open={this.state.ShowVideoChat}
-          closeAfterTransition
-          BackdropProps={{
-            timeout: 500
-          }}
-        >
-          <VideoChatContainer
-            Users = {this.state.Users}
-            CallVideoChat={this.CallVideoChat}
-            ShowVideoChat={this.state.ShowVideoChat}
+          <VoiceCalling ref={this.VideoCallRef} Users={this.state.Users} />
+
+          <Modal
+            hideBackdrop={true}
+            open={this.state.ShowVideoChat}
+            closeAfterTransition
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <VideoChatContainer
+              Users={this.state.Users}
+              CallVideoChat={this.CallVideoChat}
+              ShowVideoChat={this.state.ShowVideoChat}
+            />
+          </Modal>
+
+          <SnackBar
+            autoHideDuration={this.state.autoHideDuration}
+            OpenNoti={this.state.OpenNoti}
+            CloseNoti={this.CloseNoti}
+            message={this.state.Message}
           />
-        </Modal>
-
-
-
-
-        <SnackBar
-                  autoHideDuration= {this.state.autoHideDuration}
-                  OpenNoti={this.state.OpenNoti}
-                  CloseNoti={this.CloseNoti}
-                  message={this.state.Message}
-                />
         </div>
       </Context.Provider>
     );

@@ -16,6 +16,7 @@ import PostVideo from "./PostVideo"
 export default class Post extends Component {
   static contextType = Context;
 
+	//returns a different component depending on the Post type 
   RenderPost = () => {
       if (this.props.post.fileType ==='Image') {
           return <PostImage post={this.props.post} />
@@ -92,7 +93,10 @@ export default class Post extends Component {
             >
               <MessageIcon />
             </IconButton>
-            {this.props.state.DisableSharing === true ? null : (
+            {this.props.state.DisableSharing === true || this.props.post.disableSharing === true ? 
+            
+            
+            <div/> : (
               <IconButton onClick={this.props.OpnModal} aria-label="share">
                 <ShareIcon />
               </IconButton>

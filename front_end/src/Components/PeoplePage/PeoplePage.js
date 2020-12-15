@@ -25,6 +25,7 @@ export default class PeoplePage extends Component {
     });
   };
 
+  //gets all data for the people page 
   GetData = () => {
     ApiCall(
       "Get",

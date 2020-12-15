@@ -23,6 +23,7 @@ export default class ProfileCardFollow extends Component {
     }
   }
 
+	//updates the follow/following status 
   HandleFollowUnfollow = () => {
     if (this.state.IsFollow === false) {
       ApiCall(
@@ -51,7 +52,7 @@ export default class ProfileCardFollow extends Component {
     }
   };
 
-  
+  //redirects user to profile page when trying to view users profile 
   Redirect = () => {
     window.ViewUserProfile = this.props.Person.auth0ID
 	  this.context.GetProfilePagePosts()

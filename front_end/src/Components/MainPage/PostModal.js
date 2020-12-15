@@ -149,6 +149,7 @@ export default class PostModal extends Component {
     });
   };
 
+		
   HandleFiles = (files) => {
     
     if (files.length !== 0) {
@@ -164,6 +165,7 @@ export default class PostModal extends Component {
     this.setState(NewState);
   };
 
+	//updates state as the user speaks into the mIC 
   HandleMicOutput = (MicOutput) => {
  
     this.setState({

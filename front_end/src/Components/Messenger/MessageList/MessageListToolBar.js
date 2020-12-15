@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Fade';
 import Axios from 'axios';
 import Context from "../../SharedComponents/context";
-
+//toolbar displayed at the top of the message app 
 export default class MessageListToolBar extends React.Component {
   static contextType = Context;
   state = {
@@ -27,115 +27,18 @@ export default class MessageListToolBar extends React.Component {
     CallingPerson:  null
   };
 
-  componentDidMount = () => {
-
-    
-
-  }
-
-  componentDidUpdate = () => {
-    if  (!window.device && this.props.ConvoSelected !== "") {
-              this.GetVoiceToken()
-    }
-  }
-  GetVoiceToken = async () => {
-
-      var Mydata = {};
-      var GetToken = {
-        device: "browser",
-        LoggedInUserAuth0ID: this.props.Users[0].LoggedInUserAuth0ID.replace("|",""),
-        TokenType: "Voice"
-      };
-        Mydata.GetToken = GetToken;
-      window.MY_USER_ID = this.props.Users[0].LoggedInUserAuth0ID.replace("|","");
-      let result = await Axios.post(
-        /*`https://cors-anywhere.herokuapp.com/*/`${process.env.REACT_APP_BackEndUrl}/api/Messenger/GetToken`,
-        Mydata
-      )
-        .then(async (result) => {
-        var Token = result.data
-          // Setup Twilio.Device
-          window.device = new Device(Token, {
-            // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
-            // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
-            codecPreferences: ["opus", "pcmu"],
-            // Use fake DTMF tones client-side. Real tones are still sent to the other end of the call,
-            // but the client-side DTMF tones are fake. This prevents the local mic capturing the DTMF tone
-            // a second time and sending the tone twice. This will be default in 2.0.
-            fakeLocalDTMF: true,
-            // Use `enableRingingState` to enable the device to emit the `ringing`
-            // state. The TwiML backend also needs to have the attribute
-            // `answerOnBridge` also set to true in the `Dial` verb. This option
-            // changes the behavior of the SDK to consider a call `ringing` starting
-            // from the connection to the TwiML backend to when the recipient of
-            // the `Dial` verb answers.
-            enableRingingState: true
-          });
-      
-          window.device.on("ready", function (device) {
-            console.log("Twilio.Device Ready!");
-          });
-      
-          window.device.on("incoming", (conn) => {
-            this.setState({
-              IncomingCall: true,
-              CallingPerson: conn.parameters.From,
-              conn: conn
-            });
-          });
-      
-          window.device.on("error", (error) => {
-            console.log(error);
-          });
-      
-          window.device.on("disconnect", () => {
-            this.EndCall();
-          });
-        
-          console.log(result)
-        }      
-        )
-        .catch(this.handleError );
-    
-      }
-  
+    //keeps track of the the person typed in the new conversation field
   HandleChange = (event) => {
     this.setState({ ContactName: event.target.value });
   };
 
-  CallFollower = () => {
-      if  (window.device) {
-            this.setState({CallingPerson: this.props.ConvoSelected})
-            var OutgoingConnection = window.device.connect({To: "the_user_id"/*this.props.FollowingAuth0ID.replace("|","")*/})
-            OutgoingConnection.on("ringing", () => {console.log("ringing")})
-      }
-  }
-
- 
-
-  PickUpCall = () => {
-    this.state.conn.accept();
-    this.setState({
-      IncomingCall: null
-    });
-  };
-
-
-  EndCall = () => {
-    console.log("Hanging up...");
-    if (window.device) {
-      this.setState({
-        IncomingCall: null,
-        CallingPerson: null})
-      window.device.disconnectAll();
-    }
-
-  }
-
+	//WHEN COMPOSEING A NEW MESSAGE, THIS FUNCTION CLEARS THE SUGGESTED CONTACTS 
   handleClickAway = () => {
     this.setState({ ContactName: "" });
   };
 
+
+//SELECTS THE PERSON FOR THE NEW CONVERSATION 
   SelectPerson = (FullName,FollowingAuth0ID) => {
     this.props.HandleConversationClick(FullName,FollowingAuth0ID)
     this.setState({
@@ -144,6 +47,7 @@ export default class MessageListToolBar extends React.Component {
     });
   };
 
+//CHANGES THE STYLE OF THE INPUT DEPENDING WHAT IS TYPE IN THE NEW CONVERSATION BAR 
   RenderInputclass = () => {
      
     if (this.state.ContactName === "") {
@@ -153,6 +57,7 @@ export default class MessageListToolBar extends React.Component {
     }
   };
 
+//RENDERS THE APPROPRIATE POPUP FOR THE NEW CONVERSATION SUGGESTION 
   RenderContacts = () => {
 
     var FilteredPerson = this.props.Users.filter(person => person.FullName.includes(this.state.ContactName))
@@ -219,7 +124,7 @@ export default class MessageListToolBar extends React.Component {
         {this.props.ConvoSelected === ""  ? 
          <div/> :
         <div className="RightAllgin">
-              <IconButton onClick={this.CallFollower}>
+              <IconButton onClick={() => this.context.CallFollower(this.props.ConvoSelected, this.props.FollowingAuth0ID)}>
                 <PhoneIcon />
               </IconButton>
               <IconButton>
@@ -232,24 +137,7 @@ export default class MessageListToolBar extends React.Component {
  
  
 
-          {this.state.CallingPerson ? (
-          <Paper classes={{ root: "Calling" }}>
-            <Typography variant="h5" gutterBottom>
-              {this.state.CallingPerson}
-            </Typography>
-            {this.state.IncomingCall ? (
-              <IconButton onClick={this.PickUpCall}>
-                <PhoneIcon classes={{ root: "CallingPickUp" }} />
-              </IconButton>
-            ) : (
-              <IconButton onClick={this.EndCall}>
-                <CallEndIcon classes={{ root: "CallingEndCall" }} />
-              </IconButton>
-            )}
-          </Paper>
-        ) : (
-          <div />
-        )}
+
 
         {Boolean(this.state.ContactName) ? (
           <ClickAwayListener onClickAway={this.handleClickAway}>

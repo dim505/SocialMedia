@@ -11,7 +11,14 @@ export default class ConversationList extends React.Component {
   };
 
 
-  componentDidUpdate = () => {}
+ componentDidMount  = () => {
+  window.DataLoaded = false
+  this.setState({
+    InitialConversations : this.props.Users
+  })
+
+ }
+ 
  static getDerivedStateFromProps =  (props,state ) => {
      
   if (window.DataLoaded === false ) { 

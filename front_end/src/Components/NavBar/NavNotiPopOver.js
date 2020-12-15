@@ -17,6 +17,8 @@ import {
 import { ApiCall } from "../SharedComponents/ApiCall";
 import NotificationActivity from "./NotificationActivity"
  
+ 
+ //container that holds all the notifications for the end user 
 export default class NavNotiPopOver extends Component {
  
 

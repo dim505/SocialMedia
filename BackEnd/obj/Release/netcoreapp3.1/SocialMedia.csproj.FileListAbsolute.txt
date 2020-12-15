@@ -137,7 +137,6 @@ C:\scratch\SocialMedia\BackEnd\bin\Release\netcoreapp3.1\runtimes\win\lib\netcor
 C:\scratch\SocialMedia\BackEnd\bin\Release\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\staticwebassets\SocialMedia.StaticWebAssets.Manifest.cache
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\staticwebassets\SocialMedia.StaticWebAssets.xml
-C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.MvcApplicationPartsAssemblyInfo.cache
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.AssemblyInfoInputs.cache
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.AssemblyInfo.cs
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.RazorTargetAssemblyInfo.cache
@@ -145,3 +144,5 @@ C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.csproj.Copy
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.dll
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.pdb
 C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.csprojAssemblyReference.cache
+C:\scratch\SocialMedia\BackEnd\bin\Release\netcoreapp3.1\NgrokAspNetCore.Lib.dll
+C:\scratch\SocialMedia\BackEnd\obj\Release\netcoreapp3.1\SocialMedia.MvcApplicationPartsAssemblyInfo.cache

@@ -55,6 +55,7 @@ class SearchBar extends Component {
   };
 
   
+	//initiates the search to get the data 
 	SearchSubmit = (SearchItem) => {
 		window.SearchTerm = this.state.SearchTerm
 	if (SearchItem === 'Users') {

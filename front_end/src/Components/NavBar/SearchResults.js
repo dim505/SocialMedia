@@ -9,6 +9,8 @@ import PostParent from "../MainPage/Post/PostParent";
 import ProfileCardFollow from "../SharedComponents/ProfileCardFollow"
 import { withRouter } from "react-router-dom";
 
+
+//this displays the various search results from the search bar in the nav bar
 class SearchResults extends Component {
   state = {
     value: 0,
@@ -22,7 +24,7 @@ class SearchResults extends Component {
 	value: window.SearchTabValue
   })
     this.GetData();
-
+	//listens for page pages and gets data if page is search results 
     this.unlisten = this.props.history.listen((location, action) => {
       
       if (location.pathname === "/SearchResults") {
@@ -31,13 +33,14 @@ class SearchResults extends Component {
     });
   };
 
+	//kills event listener 
   componentWillUnmount() {
       this.unlisten();
   }
 
 
 
-
+	//makes api call to get data 
   GetData = () => {
     ApiCall(
       "Get",
@@ -58,6 +61,7 @@ class SearchResults extends Component {
     }); 
   };
 
+	//keeps value of the selected tab in the header
   handleChange = (event, newValue) => {
     this.setState({
       value: newValue

@@ -10,6 +10,7 @@ export default class EditPostComment extends Component {
     PostComment: "edit post ",
   };
 
+	//keeps track of comment being typed in 
   handleChange = (newState) => {
     this.setState(newState);
   };

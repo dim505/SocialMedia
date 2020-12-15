@@ -31,7 +31,7 @@ export default class PostParent extends Component {
 
   componentDidMount = async () => {
  
-
+//disables the comments and sharing buttons accordly
     if (
       this.state.DisableSharing === 123 ||
       this.state.DisableAddComments === 123
@@ -43,6 +43,7 @@ export default class PostParent extends Component {
     }
   };
 
+	//disables the comments and sharing buttons accordly
   componentDidUpdate(prevProps) {
  
 
@@ -92,6 +93,7 @@ export default class PostParent extends Component {
     });
   };
 
+//gets comments for post when viewing comments 
   GetComments = () => {
     ApiCall(
       "Get",
@@ -262,7 +264,7 @@ export default class PostParent extends Component {
           )}
           <Divider />
 
-          {this.state.DisableAddComments === true ? (
+          {this.state.DisableAddComments === true || this.props.post.disableComments === true ? (
             <div> </div>
           ) : (
             <AddPostComment

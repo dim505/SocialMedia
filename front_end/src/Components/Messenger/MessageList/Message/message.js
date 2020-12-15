@@ -3,10 +3,12 @@ import moment from "moment";
 import "./Message.scss";
 import AttachFileIcon from "@material-ui/icons/Attachment";
 
-//this is the message comn
+//this is the message component that has the actual data of the message (little blue bubble)
 export default class Message extends Component {
   Message = () => {
     
+	
+	//returns attachment component or just message 
     if (
       this.props.data.message.includes(
         "https://shellstorage123.blob.core.windows.net/socialmedia"

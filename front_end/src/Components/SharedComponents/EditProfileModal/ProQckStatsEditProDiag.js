@@ -38,7 +38,7 @@ export default class ProQckStatsEditProDiag extends Component {
     BannerUrl:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
   };
-
+   //submits data to update profile info and refesh the app 
   submitValues = (values) => {
     var MyData = {};
     MyData.AccountInfo = values;
@@ -89,7 +89,7 @@ export default class ProQckStatsEditProDiag extends Component {
       });
     }
   };
-
+	//if user tried to click away of modal, this reminds them they need to enter their name
   handleClickAway = () => {
     if (this.context.AccountInfo[0].fullName === "") {
       this.context.OpenNoti(

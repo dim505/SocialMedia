@@ -34,6 +34,7 @@ export default class Messenger extends React.Component {
     });
   };
 
+  //when somone wants to compose a new message, it brings the page to the top 
   OpenNewMessage = (OpenOrClose) => {
 
     this.setState({

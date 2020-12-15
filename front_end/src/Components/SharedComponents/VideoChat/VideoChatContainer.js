@@ -9,18 +9,25 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Context from "../../SharedComponents/context";
 
+//CONTAINS THE OVERLAY FOR THE VIDEO CHAT WINDOW 
 const VideoChatContainer = (props) => {
   const context = useContext(Context)
+  //KEEPS TRACK OF REMOTE PARTICIPANTS 
   const [participants, setParticipants] = useState([]);
+  //KEEPS TRACK OF THE ROOM 
   const [room, SetRoom] = useState(null);
+   //KEEPS TRACK OF THE VIDEO TOKEN
   const [token, SetToken] = useState(null);
 
+	//EXICUTES WHEN A REMOTE PARTICIPANT JOINS THE VIDEO CHAT 
+	
   const participantConnected = (participant) => {
     debugger;
     setParticipants((prevParticipants) => [...prevParticipants, participant]);
     console.log("participant Connected: " + participant);
   };
 
+	//REMOVE PARTICIPANT FROM STATE WHEN THEY LEAVE THE VIDEO CHAT 
   const participantDisconnected = (participant) => {
     setParticipants((prevParticipants) =>
       prevParticipants.filter((p) => p !== participant)
@@ -28,6 +35,8 @@ const VideoChatContainer = (props) => {
     console.log("participant disconnected " + participant);
   };
 
+	//CONNECTS TO ROOM ON INTIAL LOAD 
+	
   useEffect(() => {
     ConnectToRoom();
     return (room) => {
@@ -35,6 +44,8 @@ const VideoChatContainer = (props) => {
     };
   }, []);
 
+	//GETS TOKEN AND CONNECTS TO ROOM 
+	
   const ConnectToRoom = () => {
     var channelName = ""
     if (window.FollowerAuth0ID > props.Users[0].LoggedInUserAuth0ID)
@@ -74,14 +85,20 @@ const VideoChatContainer = (props) => {
     }).then(
       async (room) => {
         debugger;
+		//SETS ROOM STATE 
         await SetRoom(room);
         console.log("Connected to Room :", room.name);
+			//EVENT LISTENER WHEN A REMOTE USER CONNECTS 
         room.on("participantConnected", participantConnected);
+			//EVENT LISTENER WHEN A REMOTE USER CONNECTS 
         room.on("participantDisconnected", participantDisconnected);
+			//ADDS PARTICIPANTS TO STATE TO PEOPLE WHO ARE ALREADY CONNECTED TO THE ROOM 
         room.participants.forEach(participantConnected);
       },
       (error) => {
+		  //lets user know it could not load video 
         context.OpenNoti("Error!!! Could not load Video Chat")
+		//closes out video modal 
         props.CallVideoChat(false)
         console.error(error.message);
       }

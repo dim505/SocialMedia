@@ -16,6 +16,7 @@ export default class LogInScreen extends Component {
   };
   
   componentDidMount () {
+	  //tells user only chrome is supported
     this.context.OpenNoti("Please note, only Chrome and Edge Chromium is being supported at this time")
   }
 

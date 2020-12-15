@@ -5,6 +5,7 @@ import Context from "./SharedComponents/context";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ReactDOM from "react-dom";
 
+//container that pop ups when requiring user to prepopulate name when first logging in
 export default class NameReq extends Component {
   static contextType = Context;
   state = {
@@ -15,6 +16,7 @@ export default class NameReq extends Component {
     this.ShouldOpenProfileEdit();
   };
 
+	//checks if the user is logging in for the first time
   ShouldOpenProfileEdit = () => {
     if (
       this.props.AccountInfo[0].fullName === "" &&
@@ -26,7 +28,7 @@ export default class NameReq extends Component {
       
       );
       this.OpenDialog();
-
+		//otherwise if name is present, it closes the dialog
     } else if (
       this.props.AccountInfo[0].fullName !== "" &&
       this.state.OpenDialog === true
@@ -35,16 +37,18 @@ export default class NameReq extends Component {
       this.context.CloseNoti();
     }
   };
+  
+  
   componentDidUpdate(prevProps) {
     this.ShouldOpenProfileEdit();
   }
-
+	//opens the dialog
   OpenDialog = () => {
     this.setState({
       OpenDialog: true,
     });
   };
-
+//closes the dialog
   CloseDialog = () => {
     this.setState({
       OpenDialog: false,

@@ -10,6 +10,7 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Fade from "react-reveal/Fade";
 import { ApiCall } from "../SharedComponents/ApiCall";
 
+//this contains the notification item when a user follows you 
 export default class NotificationActivity extends Component {
   state = {
     ShowNoti: true,
@@ -19,7 +20,7 @@ export default class NotificationActivity extends Component {
       ShowNoti: false,
     });
 
-    
+    //removes notification 
     ApiCall(
       "Delete",
       `${process.env.REACT_APP_BackEndUrl}/api/Home/DeleteNotification/${this.props.message.FollowerAuth0ID}/${this.props.message.FollowingAuth0ID}`

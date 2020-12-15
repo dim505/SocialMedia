@@ -7,6 +7,9 @@ import ProQckStatsEditProDiag from "../SharedComponents/EditProfileModal/ProQckS
 import BackgroundBanner from "../SharedComponents/BackgroundBanner";
 import SnackBar from "../SharedComponents/SnackBar";
 import Context from "../SharedComponents/context";
+import IconButton from "@material-ui/core/IconButton";
+import VideoCallIcon from "@material-ui/icons/VideoCall";
+import PhoneIcon from "@material-ui/icons/Phone";
 
 //this shows the edit account into card when going to the people page
 export default class ProfileQuickStatsEditProfile extends Component {
@@ -46,6 +49,7 @@ export default class ProfileQuickStatsEditProfile extends Component {
     });
   };
 
+	//renders a different profile button depending on who is viewing it 
   RenderProfileButton = () => {
         if (window.ViewUserProfile === '-1') {
           return (<Button
@@ -62,14 +66,29 @@ export default class ProfileQuickStatsEditProfile extends Component {
 
         } else {
 
-          return (<Button
+          return (
+          
+          <div>
+          <Button
             onClick={() => {
               this.OpenDialog();
             }}
             color="primary"
           >
               View Profile Info
-          </Button>)
+          </Button>
+          {/* <IconButton onClick={() => this.context.CallFollower(this.props.ConvoSelected, this.props.FollowingAuth0ID)}>
+                <PhoneIcon />
+              </IconButton>
+              <IconButton>
+                <VideoCallIcon onClick={() => this.context.CallVideoChat(true)} />
+              </IconButton>
+             */}
+         
+             
+
+            </div>
+          )
 
         }
 

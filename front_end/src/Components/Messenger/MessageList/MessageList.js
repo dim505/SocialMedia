@@ -47,6 +47,7 @@ export default class MessageList extends Component {
       })
   }
 
+	//gets more conversations when user scrolls up
   HandleScroll = async () => {
     var ChannelMessageCount = await this.channel.getMessagesCount();
     var index = ChannelMessageCount - this.state.Messages.length;
@@ -78,6 +79,7 @@ export default class MessageList extends Component {
     }
   }
 
+	//calls loader when the chat loads begins 
   CallLoader = async (action) => {
     if (action === "open") {
       await this.setState({
@@ -173,6 +175,7 @@ export default class MessageList extends Component {
     this.context.OpenNoti("Chat failed to Load :C");
   };
 
+	//gets called to update state and render messages on screen 
   LoadMessages = async (messages) => {
     var MessageArray = [];
      
@@ -336,6 +339,7 @@ export default class MessageList extends Component {
     ScrollDiv.scrollTop = ScrollDiv.scrollHeight;
   };
 
+	//depending if a conversation is loaded, or if there is a conversation, it will load the correct message componenet
   ShowMessages = () => {
    
 

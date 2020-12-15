@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 export default class ProfileQuickStats extends Component {
   static contextType = Context;
 
+	//renders the posts in the profile page., depending on who is view it, it will return a different post
   RenderPosts = () => {
       if (this.context.ProfilePagePosts.length === 0){
           return (
@@ -63,7 +64,7 @@ export default class ProfileQuickStats extends Component {
             <ProfileImpact />
           </Grid>
         </Grid>
-        <div className="ProfileTitle"> Your Posts</div>
+        <div className="ProfileTitle"> Posts</div>
         <Grid spacing={1} container>
           {this.RenderPosts()}
         </Grid>

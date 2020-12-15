@@ -34,6 +34,7 @@ export default class AddPostComment extends Component {
       CommentGuid: uuidv4(),
     };
 
+	//makes the api call to add the comment 
     ApiCall(
       "Post",
       `${process.env.REACT_APP_BackEndUrl}/api/home/AddComment`,
@@ -44,6 +45,7 @@ export default class AddPostComment extends Component {
     });
   };
 
+	//updates the textfield as the number speaks into the mic 
   HandleMicOutput = (MicOutput) => {
     
     this.setState({

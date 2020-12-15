@@ -19,20 +19,20 @@ export default class UploadPhoto extends Component {
     ShowLoader: false
   }
   static contextType = Context;
-
+//updates file state as its dragged into the dialog box 
   HandleFileDrag = (files) => {
     this.setState({
       files: files,
     });
   };
-
+	//this updated photo to azure and updates database 
   UploadPhoto = async () => {
     var MyData = {};
     var Filename = "";
     this.setState({
       ShowLoader: true
     })
-  
+  //uploads banner photo
     if (this.props.FileTypeBeingUploaded === "BannerPhoto") {
       var ext = this.state.files[0].name.split(".").pop();
 
@@ -63,6 +63,7 @@ export default class UploadPhoto extends Component {
         this.props.ClosePhotoUpload(window.Filename);
         this.context.OpenNoti("Banner Photo Uploaded");
       });
+	  	  //uploads profile photo
     } else if (this.props.FileTypeBeingUploaded === "ProfilePhoto") {
       MyData = {};
       var ext = this.state.files[0].name.split(".").pop();

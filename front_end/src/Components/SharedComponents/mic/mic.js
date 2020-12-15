@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { VoicePlayer, VoiceRecognition } from "react-voice-components";
 import mic from "./mic.gif";
 import mic_animate from "./mic-animate.gif";
+
+//this component displays the actual Mic 
 export default class Mic extends Component {
   state = {
     StartMic: false
   };
 
+	
   componentDidMount = () => {  
     if (this.props.class === "AddCommentMic") {
       document.getElementById(this.props.postGuid).style.opacity  = "100%"
@@ -15,18 +18,20 @@ export default class Mic extends Component {
 
 
 
-
+	//sends transcripted text to parent to update textfield
   onResult  = (e)  => {
  
     this.props.HandleMicOutput(e.finalTranscript);
   };
 
+	//starts the mic to record 
   StartMic = () => {
     this.setState({
       StartMic: !this.state.StartMic
     });
   };
 
+	//only renders mic when browser is chrome 
   RenderMicComp = () => {
     if (
       !!window.chrome &&

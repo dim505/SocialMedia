@@ -53,6 +53,7 @@ export default class NavBar extends Component {
 
  }
 
+	//gets notification data 
  GetNotifications = () => {
         ApiCall(
           "Get",

@@ -15,14 +15,14 @@ import Picker from "emoji-picker-react";
 import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
 import IconButton from "@material-ui/core/IconButton";
  
-
+//contains the components used to send a message to follower
 export default class MessageCompose extends Component {
     state= {
         anchorEl: ""
 
     }
 
-
+	//adds emojis to the messsage
     onEmojiClick = (event, emojiObject) => {
         document.getElementsByClassName("compose-input")[0].value =
           document.getElementsByClassName("compose-input")[0].value +
@@ -32,7 +32,7 @@ export default class MessageCompose extends Component {
         });
       };
 
-    
+    //shows the emoji dialog box 
     ShowPicker = (event) => {
         this.setState({
           anchorEl: event.currentTarget

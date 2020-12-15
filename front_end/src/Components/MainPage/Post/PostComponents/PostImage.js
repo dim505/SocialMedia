@@ -3,9 +3,11 @@ import "react-awesome-lightbox/build/style.css";
 import Lightbox from "react-awesome-lightbox";
 import Typography from "@material-ui/core/Typography";
 
+//renders image when post contains an image 
 export default class PostImage extends Component {
   state = { OpenLightBox: false };
   
+	//when opening photo gallery, it makes the nav bar disappear 
   OpenLightBox = () => {
     window.NavBarDrawer = document.getElementById("NavBarDrawer");
     window.NavBarDrawer.classList.add("disappear");
@@ -17,6 +19,8 @@ export default class PostImage extends Component {
     });
   };
 
+	//when closing photo gallery, it makes the nav bar reappear/photo gallery disappear
+	
   CloseLightBox = () => {
     window.NavBarDrawer.classList.remove("disappear");
     window.NavBar.classList.remove("disappear");
