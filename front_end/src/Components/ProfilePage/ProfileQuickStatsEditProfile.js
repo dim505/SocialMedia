@@ -69,6 +69,8 @@ export default class ProfileQuickStatsEditProfile extends Component {
           return (
           
           <div>
+
+            
           <Button
             onClick={() => {
               this.OpenDialog();
@@ -77,13 +79,8 @@ export default class ProfileQuickStatsEditProfile extends Component {
           >
               View Profile Info
           </Button>
-          {/* <IconButton onClick={() => this.context.CallFollower(this.props.ConvoSelected, this.props.FollowingAuth0ID)}>
-                <PhoneIcon />
-              </IconButton>
-              <IconButton>
-                <VideoCallIcon onClick={() => this.context.CallVideoChat(true)} />
-              </IconButton>
-             */}
+
+             
          
              
 

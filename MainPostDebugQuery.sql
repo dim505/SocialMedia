@@ -1,5 +1,5 @@
 ﻿select * from SM_Account_Info
-select * from SM_posts
+--select * from SM_posts
 
 
 

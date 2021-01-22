@@ -29,6 +29,7 @@ export default class Post extends Component {
 
   }
   render() {
+    
     return (
       <div>
         <CardHeader
@@ -38,14 +39,14 @@ export default class Post extends Component {
             />
           }
           action={
-            window.ViewUserProfile === '-1' ? <div>
-              <IconButton
+            !window.ViewUserProfile === '-1' || this.props.post.disablePostMenu === 'True' ? <div>
+
+            </div> : <div>              <IconButton
                 onClick={(e) => this.props.OpnPostMenu(e)}
                 aria-label="settings"
               >
                 <MoreVertIcon />
-              </IconButton>
-            </div> : <div></div>
+              </IconButton></div>
           }
           classes={{
             root: "TextAllignLeft",

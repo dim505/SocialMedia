@@ -20,7 +20,7 @@ export default class VoiceCalling extends Component  {
   }
 
   componentDidUpdate = () => {
-      if  (this.props.Users.length > 0) {
+      if  (this.props.Users.length > 0 && !window.Token ) {
         this.GetVoiceToken()
       }
     
@@ -42,9 +42,9 @@ export default class VoiceCalling extends Component  {
       Mydata
     )
       .then(async (result) => {
-      var Token = result.data
+       window.Token = result.data
         // Setup Twilio.Device
-        window.device = new Device(Token, {
+        window.device = new Device(window.Token, {
           // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
           // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
           codecPreferences: ["opus", "pcmu"],
@@ -66,15 +66,19 @@ export default class VoiceCalling extends Component  {
         });
         //listen event for incoming calls
         window.device.on("incoming", (conn) => {
+          debugger;
          console.log(conn)
-         var CallingPersonName = this.props.users.filter((user) => { return user.FollowingAuth0ID.replace("-","") ===  conn.parameters.From.replace("client:", "")})
+         var CallingPersonName = this.props.Users.filter((user) => { return user.FollowingAuth0ID.replace("|","") ===  conn.parameters.From.replace("client:", "")})
          this.setState({
            IncomingCall: true,
           conn: conn,
-          CallingPerson: CallingPersonName[0]
+          CallingPerson: /*conn.parameters.From  */CallingPersonName[0].FullName
         })
          
-        
+        window.device.on("connect", function(conn) {
+          console.log("Successfully established call!");
+     
+        });
 
         });
     //listen event for errors
@@ -94,11 +98,18 @@ export default class VoiceCalling extends Component  {
     }
 
 
+
+
+
+
+
+
+
     //this function actually calls someone 
     CallFollower = (ConvoSelected,FollowingAuth0ID) => {
     if  (window.device) {
           this.setState({CallingPerson: ConvoSelected})
-          var OutgoingConnection = window.device.connect({To: FollowingAuth0ID.replace("|","")})
+          var OutgoingConnection = window.device.connect({To: /*this.props.Users[0].LoggedInUserAuth0ID.replace("|","")*/ FollowingAuth0ID.replace("|","")})
           OutgoingConnection.on("ringing", () => {console.log("ringing")})
     }
 }
@@ -115,13 +126,15 @@ export default class VoiceCalling extends Component  {
 
   //THIS FUNCTION ENDS A CALL
   EndCall = () => {
-  console.log("Hanging up...");
+  
   if (window.device) {
+    window.device.disconnectAll();
     this.setState({
       IncomingCall: null,
       CallingPerson: null
     })
-    window.device.disconnectAll();
+ 
+    console.log("Hanging up...");
   }
 
 }

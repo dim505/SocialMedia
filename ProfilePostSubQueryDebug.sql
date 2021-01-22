@@ -1,7 +1,7 @@
 ﻿
 declare @LoggedInUser varchar(255) = 'auth0|5e08ad7807b79e0e86d202be'
 
-declare @Auth0IDAuthor varchar(255) = 'auth0|5e08ad7807b79e0e86d202be'
+declare @Auth0IDAuthor varchar(255) = 'auth0|5e41402580d9c20e8eb32770'
 
 IF DBO.IsUserAFollower(@LoggedInUser, @Auth0IDAuthor) > 0 
 BEGIN

@@ -203,7 +203,7 @@ export default class PostParent extends Component {
     await this.setState({
       ShowComment: !this.state.ShowComment,
     });
-      if (this.state.ShowComment === false ) {
+      if (this.state.DisableAddComments === false && !this.props.post.disableComments ) {
         document.getElementById(this.props.post.postGuid).style.opacity = "0%"
       }
     
@@ -233,6 +233,7 @@ export default class PostParent extends Component {
  
 
   render() {
+     
     return (
       <Card>
         <Post

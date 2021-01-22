@@ -49,11 +49,10 @@ export default class MessageList extends Component {
 
 	//gets more conversations when user scrolls up
   HandleScroll = async () => {
+  if (this.channel) {
     var ChannelMessageCount = await this.channel.getMessagesCount();
     var index = ChannelMessageCount - this.state.Messages.length;
-
     var Element = document.getElementsByClassName("scrollable content");
-
     if (
       Element[0].scrollTop < 500 &&
       Element[0].scrollTop > 1 &&
@@ -66,6 +65,9 @@ export default class MessageList extends Component {
         .getMessages(100, index)
         .then((messages) => this.LoadMessages(messages));
     }
+    
+  }
+
   };
 
   componentWillUnmount() {
