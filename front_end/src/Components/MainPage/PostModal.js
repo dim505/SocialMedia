@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from 'axios';
+import Axios from "axios";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -24,14 +24,15 @@ import Mic from "../SharedComponents/mic/mic";
 //component loads the first add post or edit post modal
 export default class PostModal extends Component {
   static contextType = Context;
-  state = {     Post: "",
-  UploadFile: false,
-  FileUploaded: null,
-  ShowLoader: false,
-  FileType: "",
-  SupportedFileTypes: "",
-  StartMic: false
-};
+  state = {
+    Post: "",
+    UploadFile: false,
+    FileUploaded: null,
+    ShowLoader: false,
+    FileType: "",
+    SupportedFileTypes: "",
+    StartMic: false,
+  };
 
   componentDidMount = () => {
     if (this.props.ModalType === "Edit") {
@@ -44,7 +45,7 @@ export default class PostModal extends Component {
   //submits the post information to the appropriate end point
   SubmitPost = async () => {
     this.setState({
-      ShowLoader: true
+      ShowLoader: true,
     });
 
     if (this.props.ModalType === "Edit") {
@@ -55,7 +56,6 @@ export default class PostModal extends Component {
         PostContent: this.state.Post,
         DateCreated: this.props.post.dateCreated,
       };
-      
 
       ApiCall(
         "Post",
@@ -69,62 +69,56 @@ export default class PostModal extends Component {
       });
     } else {
       var MyData = {};
-      var PostGuid  = uuidv4()
-      var FileUrl = ""
+      var PostGuid = uuidv4();
+      var FileUrl = "";
       var TempTagList = "";
-      
+
       if (this.state.FileUploaded !== null) {
         var ext = this.state.FileUploaded[0].name.split(".").pop();
-         var Filename =  PostGuid + uuidv4()  + "." + ext;
-         window.containerClient = window.blobServiceClient.getContainerClient(
-          "socialmedia"
-        );
-         
-        const blockBlobClient = window.containerClient.getBlockBlobClient(
-          Filename
-        );
-        const uploadBlobResponse = blockBlobClient.uploadBrowserData(
+        var Filename = PostGuid + uuidv4() + "." + ext;
+        window.containerClient =
+          window.blobServiceClient.getContainerClient("socialmedia");
+
+        const blockBlobClient =
+          window.containerClient.getBlockBlobClient(Filename);
+        const uploadBlobResponse = await blockBlobClient.uploadBrowserData(
           this.state.FileUploaded[0]
         );
-        FileUrl = "https://shellstorage123.blob.core.windows.net/socialmedia/" + Filename;
-        } else {
-          FileUrl = ""
+        FileUrl =
+          "https://shellstorage123.blob.core.windows.net/socialmedia/" +
+          Filename;
+
+        if (!this.state.FileUploaded[0].type.includes("video")) {
+          MyData.Url = FileUrl;
+          //makes api call
+          var Results = await Axios.post(
+            `https://computervision123456789.cognitiveservices.azure.com/vision/v2.0/tag?language=en`,
+            MyData,
+            {
+              headers: {
+                "Ocp-Apim-Subscription-Key": `89074e4bd4ab4f84b38d5c7811cc831a`,
+              },
+            }
+          ).then((results) => {
+            const TempTagArr = results.data.tags.filter(
+              (result) => result.confidence > 0.75
+            );
+            TempTagArr.map((tag) => (TempTagList += " " + tag.name + ","));
+            TempTagList = TempTagList.slice(0, -1);
+          });
+        }
+      } else {
+        FileUrl = "";
       }
 
-      if (!this.state.FileUploaded[0].type.includes("video"))
-      {
-
-        MyData.Url = FileUrl;
-        //makes api call
-  var Results =  await Axios.post(
-    `https://computervision123456789.cognitiveservices.azure.com/vision/v2.0/tag?language=en`,
-    MyData,
-    {
-      headers: {
-        "Ocp-Apim-Subscription-Key": `89074e4bd4ab4f84b38d5c7811cc831a`
-      }
-    }
-  ).then((results) => {
-    const TempTagArr = results.data.tags.filter(
-      (result) => result.confidence > 0.75
-    );
-    TempTagArr.map((tag) => (TempTagList += " " + tag.name + ","));
-    TempTagList = TempTagList.slice(0, -1);
-  });
-      }
-
-
-
-      
       MyData.AddPost = {
         PostGuid: PostGuid,
         PostContent: this.state.Post,
         DateCreated: moment().format("LL"),
         FileUrl: FileUrl,
         FileType: this.state.FileType,
-        TempTagList : TempTagList
+        TempTagList: TempTagList,
       };
-
 
       ApiCall(
         "Post",
@@ -139,63 +133,53 @@ export default class PostModal extends Component {
     }
   };
 
- 
-
-  UploadFile = (FileType,SupportedFileTypes ) => {
+  UploadFile = (FileType, SupportedFileTypes) => {
     this.setState({
       UploadFile: !this.state.UploadFile,
       FileType: FileType,
-	  SupportedFileTypes: SupportedFileTypes
+      SupportedFileTypes: SupportedFileTypes,
     });
   };
 
-		
   HandleFiles = (files) => {
-    
     if (files.length !== 0) {
       this.setState({
-        FileUploaded: files
+        FileUploaded: files,
       });
     }
   };
-
 
   //keeps track of user input as they type text in
   HandleUpdate = (NewState) => {
     this.setState(NewState);
   };
 
-	//updates state as the user speaks into the mIC 
+  //updates state as the user speaks into the mIC
   HandleMicOutput = (MicOutput) => {
- 
     this.setState({
-      Post: this.state.Post.concat(MicOutput)
+      Post: this.state.Post.concat(MicOutput),
     });
   };
-
-
 
   render() {
     return (
       <div>
         <Card>
-        {this.state.ShowLoader ? (
-          <LinearProgress
-            classes={{
-              root: "UploadLoader"
-            }}
-          />
-        ) : (
-          ""
-        )}
+          {this.state.ShowLoader ? (
+            <LinearProgress
+              classes={{
+                root: "UploadLoader",
+              }}
+            />
+          ) : (
+            ""
+          )}
           <CardHeader
             avatar={
-              
-              <Avatar 
-              alt={this.context.AccountInfo[0].fullName}
-              src={this.context.AccountInfo[0].profilePhotoUrl}/>
-                
-              
+              <Avatar
+                alt={this.context.AccountInfo[0].fullName}
+                src={this.context.AccountInfo[0].profilePhotoUrl}
+              />
             }
             classes={{
               root: "TextAllignLeft",
@@ -204,10 +188,10 @@ export default class PostModal extends Component {
           />
           <CardContent>
             <TextField
-            multiline={true}
+              multiline={true}
               value={this.state.Post}
               classes={{
-                root: "Add_EditPostTextBox"
+                root: "Add_EditPostTextBox",
               }}
               onChange={(event) =>
                 this.HandleUpdate({ Post: event.target.value })
@@ -215,42 +199,40 @@ export default class PostModal extends Component {
               fullWidth={true}
               label="What's new with you?"
             />
-            
-          <Mic
-            class="mic"
-            HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
-          />
+
+            <Mic
+              class="mic"
+              HandleMicOutput={(MicOutput) => this.HandleMicOutput(MicOutput)}
+            />
           </CardContent>
 
-
           <CardContent>
-          <IconButton
-          disabled={this.props.ModalType === "Edit" ? true : false}
-            onClick={() => {
-              this.UploadFile("Image", "image/*");
-            }}
-          >
-            <ImageIcon />
-          </IconButton>
-          <IconButton
-          disabled={this.props.ModalType === "Edit" ? true : false}
-            onClick={() => {
-              this.UploadFile("Video", "video/*");
-            }}
-          >
-            <VideocamIcon />
-          </IconButton>
+            <IconButton
+              disabled={this.props.ModalType === "Edit" ? true : false}
+              onClick={() => {
+                this.UploadFile("Image", "image/*");
+              }}
+            >
+              <ImageIcon />
+            </IconButton>
+            <IconButton
+              disabled={this.props.ModalType === "Edit" ? true : false}
+              onClick={() => {
+                this.UploadFile("Video", "video/*");
+              }}
+            >
+              <VideocamIcon />
+            </IconButton>
 
-          <Fade opposite collapse when={this.state.UploadFile}>
-            <DropzoneArea
-				acceptedFiles={[this.state.SupportedFileTypes]}
-              onChange={(event) => this.HandleFiles(event)}
-              filesLimit={1}
-              maxFileSize={100000000}
-            />
-          </Fade>
-        </CardContent>
-
+            <Fade opposite collapse when={this.state.UploadFile}>
+              <DropzoneArea
+                acceptedFiles={[this.state.SupportedFileTypes]}
+                onChange={(event) => this.HandleFiles(event)}
+                filesLimit={1}
+                maxFileSize={100000000}
+              />
+            </Fade>
+          </CardContent>
 
           <CardActions disableSpacing>
             <div className="PostIconStyle">
@@ -260,7 +242,7 @@ export default class PostModal extends Component {
                 onClick={this.SubmitPost}
                 disabled={this.state.Post.trim() !== "" ? "" : true}
               >
-                {this.props.ModalType === "Edit" ? "UPDATE POST" : "POST"} 
+                {this.props.ModalType === "Edit" ? "UPDATE POST" : "POST"}
               </Button>
             </div>
           </CardActions>

@@ -8207,11 +8207,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\scratch\\projects\\SocialMedia\\BackEnd\\SocialMedia.csproj",
+      "projectUniqueName": "C:\\scratch\\Code\\projects\\SocialMedia\\BackEnd\\SocialMedia.csproj",
       "projectName": "SocialMedia",
-      "projectPath": "C:\\scratch\\projects\\SocialMedia\\BackEnd\\SocialMedia.csproj",
+      "projectPath": "C:\\scratch\\Code\\projects\\SocialMedia\\BackEnd\\SocialMedia.csproj",
       "packagesPath": "C:\\Users\\bob\\.nuget\\packages\\",
-      "outputPath": "C:\\scratch\\projects\\SocialMedia\\BackEnd\\obj\\",
+      "outputPath": "C:\\scratch\\Code\\projects\\SocialMedia\\BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -8328,7 +8328,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.117\\RuntimeIdentifierGraph.json"
       }
     }
   },

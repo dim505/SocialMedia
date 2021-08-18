@@ -10,6 +10,7 @@ export default class PostVideo extends Component {
   render() {
     return (
       <div>
+
         <ReactPlayer
           width="100%"
           controls={true}
